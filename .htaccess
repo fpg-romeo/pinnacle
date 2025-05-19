@@ -1,0 +1,83 @@
+# Use PHP5.6 as default
+#AddHandler application/x-httpd-php56 .php
+# Use PHP5.6 Single php.ini as default
+#AddHandler application/x-httpd-phpbetas .php
+
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !(/$|\.) 
+RewriteRule (.*) %{REQUEST_URI}/ [R=301,L] 
+
+### REMOVE FILE EXTENSION ( .php )
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)/$ $1.php
+
+### TEMPLATE RENAMING FOLDER
+RewriteRule ^public/css/(.*) /template/style/$1 [NC,L]
+RewriteRule ^public/img/(.*) /template/image/$1 [NC,L]
+RewriteRule ^public/js/(.*) /template/javascript/$1 [NC,L]
+RewriteRule ^public/scss/(.*) /template/scss/$1 [NC,L]
+RewriteRule ^public/lib/(.*) /template/jquery/$1 [NC,L]
+RewriteRule ^public/skins/(.*) /template/skins/$1 [NC,L]
+RewriteRule ^public/font/(.*) /template/fonts/$1 [NC,L]
+RewriteRule ^public/sound/(.*) /template/audio/$1 [NC,L]
+RewriteRule ^public/film/(.*) /template/video/$1 [NC,L]
+RewriteRule ^public/doc/(.*) /template/document/$1 [NC,L]
+RewriteRule ^public/guide/(.*) /template/file/$1 [NC,L]
+
+### UPLOAD
+RewriteRule ^file/(.*) /upload/$1 [NC,L]
+
+### BACKUP
+RewriteRule ^storage/(.*) /backup/$1 [NC,L]
+
+### ACCOUNT
+RewriteRule ^account/verify/([^/]+)/([^/]+)/?$ index.php?controller=account&view=verify&email=$1&code=$2 [NC,L]
+RewriteRule ^account/new-password/([^/]+)/([^/]+)/?$ index.php?controller=account&view=new-password&email=$1&code=$2 [NC,L]
+RewriteRule ^login/([^/]+)/$ index.php?controller=account&view=login&redirect=$1 [NC,L]
+RewriteRule ^login/$ index.php?controller=account&view=login [NC,L]
+RewriteRule ^forgot-password/$ index.php?controller=account&view=forgot-password [NC,L]
+RewriteRule ^resend-validation/$ index.php?controller=account&view=resend-validation [NC,L]
+RewriteRule ^change-password/$ index.php?controller=account&view=change-password [NC,L]
+RewriteRule ^logout/$ index.php?controller=account&view=logout [NC,L]
+RewriteRule ^reset-password/([a-zA-Z0-9-]*)/([a-zA-Z0-9-]*)/?$ index.php?controller=account&view=reset-password&email=$1&code=$2 [NC,L]
+RewriteRule ^account/manage/([0-9]+)/?$ index.php?controller=account&view=manage&id=$1 [NC,L]
+RewriteRule ^account/manage/?$ index.php?controller=account&view=manage [NC,L]
+RewriteRule ^account/profile/([a-zA-Z0-9-]*)/?$ index.php?controller=account&view=profile&id=$1 [NC,L]
+RewriteRule ^account/all/([0-9]+)/?$ index.php?controller=account&view=all&page=$1 [NC,L]
+RewriteRule ^account/user/([0-9]+)/?$ index.php?controller=account&view=user&page=$1 [NC,L]
+
+### GCASH
+RewriteRule ^gcash/claim/([0-9]+)/?$ index.php?controller=gcash&view=claim&page=$1 [NC,L]
+RewriteRule ^gcash/policy/([0-9]+)/?$ index.php?controller=gcash&view=policy&page=$1 [NC,L]
+
+### PAGE
+RewriteRule ^dashboard/$ index.php?controller=page&view=dashboard [NC,L]
+
+### NOTIFICATION
+RewriteRule ^notification/email/([0-9]+)/?$ index.php?controller=notification&view=email&page=$1 [NC,L]
+
+### DEFAULT
+RewriteRule ^([a-z]+)/([^/]+)/([a-zA-Z0-9-]*)/?$ index.php?controller=$1&view=$2&id=$3 [QSA] 
+RewriteRule ^([a-z]+)/([^/]+)/?$ index.php?controller=$1&view=$2 [QSA] 
+RewriteRule ^([a-z]+)/?$ index.php?controller=$1&view=index [QSA]
+
+### ERROR PAGE
+RewriteRule ^bad-request/$ index.php?controller=page&view=error400 [QSA]
+RewriteRule ^unauthorized/$ index.php?controller=page&view=error401 [QSA]
+RewriteRule ^forbidden/$ index.php?controller=page&view=error403 [QSA]
+RewriteRule ^page-not-found/$ index.php?controller=page&view=error404 [QSA]
+RewriteRule ^internal-server-error/$ index.php?controller=page&view=error500 [QSA]
+RewriteRule ^coming-soon/$ index.php?controller=page&view=coming-soon [QSA]
+RewriteRule ^under-maintenance/$ index.php?controller=page&view=under-maintenance [QSA]
+
+RewriteRule ^modal-not-found/$ index.php?controller=page&view=errorModal [QSA]
+
+ErrorDocument 400 /bad-request/
+ErrorDocument 401 /unauthorized/
+ErrorDocument 403 /forbidden/
+ErrorDocument 404 /page-not-found/
+ErrorDocument 500 /internal-server-error/

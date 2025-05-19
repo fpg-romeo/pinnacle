@@ -1,0 +1,307 @@
+<?php
+	class Master{
+
+		public function __construct(){
+		
+		}
+
+        public static function getDynamic($table, $sort=' name ASC '){          
+            $result = mysql::select($table, '*', '', $sort);        
+            return $result;
+        }
+
+        public static function getDynamicById($table, $id, $sort=' name ASC '){
+            $result = mysql::select($table, '*', "id = '{$id}'", $sort);       
+            return $result;
+        }
+
+        public static function getDynamicByName($table, $name){
+            $result = mysql::select($table, '*', "name = '{$name}'");
+            return $result;
+        }
+
+        public static function getDynamicByCode($table, $code){
+            $result = mysql::select($table, '*', "code = '{$code}'");
+            return $result;
+        }
+
+        public static function getDynamicByIds($table, $ids, $columns=''){
+
+            if(is_array($ids)){
+                $list = trim(implode("','",$ids)); 
+            }else{
+                $list = trim($ids);
+            } 
+
+            if(is_array($columns) && !empty($columns)){
+                $columns = trim(implode("','",$columns)); 
+            }else{
+                $columns = '*';
+            } 
+
+            $result = mysql::select($table, $columns, "id IN ('{$list}')");
+            return $result;
+        }
+
+        public static function getDynamicIn($table, $column, $value, $sort=' name ASC '){
+
+            if(is_array($value)){
+                $list = trim(implode("','",$value)); 
+            }else{
+                $list = trim($value);
+            } 
+
+            $result = mysql::select($table, '*', "{$column} IN ('{$list}')", $sort);      
+            return $result;
+        }
+
+        public static function getDynamicNotIn($table, $column, $value, $sort=' name ASC '){
+
+            if(is_array($value)){
+                $list = trim(implode("','",$value)); 
+            }else{
+                $list = trim($value);
+            } 
+
+            $result = mysql::select($table, '*', "{$column} NOT IN ('{$list}')", $sort);       
+            return $result;
+        }
+
+        public static function addDynamic($table, $post){
+            $name   = $post['name'];
+            $record = self::getDynamicByName($table, $name);
+
+            if(!is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::insert($table, $fields)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = mysql::insertedId();
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record already exist';
+            }
+            return $result;
+        }
+
+        public static function editDynamic($table, $post){
+            $id     = $post['id'];
+            $record = self::getDynamicById($table, $id);
+
+            if(is_array($record)){   
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update($table, $fields, "id = '{$id}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                    $result['id']      = $id;
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';                
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'No Record Found';
+            }
+            return $result;        
+        }
+
+        public static function deleteDynamic($table, $id){
+            $record = self::getDynamicById($table, $id);
+
+            if(is_array($record)){
+                if(mysql::delete($table, "id = '{$id}'")){
+                    $result['status']   = 'success';
+                    $result['message']  = 'Record Successfully Deleted';
+                    $result['record']   = recastArray($record);
+                }else{
+                    $result['status']   = 'failed';
+                    $result['message']  = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'No Record Found';
+            }
+
+
+            return $result;
+        }
+
+        public static function getAccountDepartment(){
+            $result = mysql::select('master_account_department mad
+                                     LEFT JOIN master_account_application mc
+                                     ON mad.application_id = mc.id',
+                                    'mad.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mad.name ASC');
+            return $result;
+        }
+
+        public static function getAccountType(){
+            $result = mysql::select('master_account_type mat
+                                     LEFT JOIN master_account_application mc
+                                     ON mat.application_id = mc.id',
+                                    'mat.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mat.name ASC');
+            return $result;
+        }
+
+        public static function getAccountTeam(){
+            $result = mysql::select('master_account_team mat
+                                     LEFT JOIN master_account_application mc
+                                     ON mat.application_id = mc.id',
+                                    'mat.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mat.name ASC');
+            return $result;
+        }
+
+        public static function getAccountLevel(){
+            $result = mysql::select('master_account_level mal
+                                     LEFT JOIN master_account_application mc
+                                     ON mal.application_id = mc.id',
+                                    'mal.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mal.name ASC');
+            return $result;
+        }
+
+        public static function getAccountRoleMaster(){
+            $result = mysql::select('master_account_role mar
+                                     LEFT JOIN master_account_application mc
+                                     ON mar.application_id = mc.id',
+                                    'mar.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mar.name ASC');
+            return $result;
+        }
+
+        public static function getAccountStatus(){
+            $result = mysql::select('master_account_status mas
+                                     LEFT JOIN master_account_application mc
+                                     ON mas.application_id = mc.id',
+                                    'mas.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mas.name ASC');
+            return $result;
+        }
+
+        public static function getAccountUnitRole(){
+            $result = mysql::select('master_account_unit_role maur
+                                     LEFT JOIN master_account_application mc
+                                     ON maur.application_id = mc.id',
+                                    'maur.*,
+                                     mc.name AS application_name',
+                                    "",
+                                    'maur.name ASC');
+            return $result;
+        }
+
+        public static function getAccountDesignation(){
+            $result = mysql::select('master_account_designation mad
+                                     LEFT JOIN master_account_department mae
+                                     ON mad.department_id = mae.id
+                                     LEFT JOIN master_account_application mc
+                                     ON mad.application_id = mc.id',
+                                    'mad.*,
+                                     mae.name AS department_name,
+                                     mc.name AS application_name',
+                                    "",
+                                    'mae.name ASC, mad.name ASC');
+            return $result;
+        }
+
+        public static function getAccountDesignationByDepartmentId($department_id){
+            $result = mysql::select('master_account_designation mad  
+                                     LEFT JOIN master_account_department mae
+                                     ON mad.department_id = mae.id',  
+                                    'mad.*,
+                                     mae.name AS department_name',
+                                    "mad.department_id = '{$department_id}'",
+                                    'mae.name ASC, mad.name ASC');
+            return $result;
+        }
+
+        public static function getAccountDesignationById($id){
+            $result = mysql::select('master_account_designation', '*', "id = '{$id}'");
+            return $result;
+        }
+
+        public static function getAccountDesignationByName($name){
+            $result = mysql::select('master_account_designation', '*', "name = '{$name}'");
+            return $result;
+        }
+
+        public static function getAccountDesignationByDepartmentIdAndName($department_id, $name){
+            $result = mysql::select('master_account_designation', '*', "department_id = '{$department_id}' AND name = '{$name}'");
+            return $result;
+        }
+
+        public static function addAccountDesignation($post){
+            $department_id = $post['department_id'];
+            $name          = $post['name'];
+            $record        = self::getAccountDesignationByDepartmentIdAndName($department_id, $name);
+
+            if(!is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::insert('master_account_designation', $fields)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record already exist';
+            }
+            return $result;
+        }
+
+        public static function editAccountDesignation($post){
+            $id     = $post['id'];
+            $record = self::getAccountDesignationById($id);
+
+            if(is_array($record)){ 
+                $department_id = $post['department_id'];
+                $name          = $post['name'];
+                $data          = self::getAccountDesignationByDepartmentIdAndName($department_id, $name);
+                if(!is_array($data)){ 
+                    $fields = mysql::buildFields($post, ", ");
+                    if(mysql::update('master_account_designation', $fields, "id = '{$id}'")){
+                        $result['status']  = 'success';
+                        $result['message'] = 'Record Successfully Updated';
+                        $result['id']      = $id;
+                    }else{
+                        $result['status']  = 'failed';
+                        $result['message'] = 'Encounter technical error. Pls try again';                
+                    }
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Name already used';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'No Record Found';
+            }
+            return $result;        
+        }
+
+        public static function getAccountRole($controller, $view){     
+            $result = mysql::select('master_account_role', '*', 
+                                    "controller = '{$controller}' AND FIND_IN_SET ('{$view}', view)", 
+                                    'name ASC');        
+            return $result;
+        }
+    }
+?>
