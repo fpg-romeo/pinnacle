@@ -41,17 +41,11 @@
                                                 <td>'.htmlDecode($value['name']).'</td>
                                                 <td>
                                                     <center>
-                                                    <a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-warning edit" data-action="edit" title="Update Record"><i class="fa fa-pencil-square-o"></i></a>
-                                                  ';
-                                        if(ACCOUNT_TYPE_ID == arrayKeyExist($data, 'account_type_administrator')) {
-                                            echo '<a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-danger delete" data-action="delete" data-title="'.htmlDecode($value['name']).'" title="Delete Record"><i class="fa fa-trash"></i></a>';
-                                        }
-
-                                        echo ' 
-                                                </center>
-                                            </td>
-                                        </tr>
-                                    ';
+                                                        <a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-warning edit" data-action="edit" title="Update Record"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-danger delete" data-action="delete" data-title="'.htmlDecode($value['name']).'" title="Delete Record"><i class="fa fa-trash"></i></a>
+                                                    </center>
+                                                </td>
+                                            </tr>';
                                     }
                                 }
                             ?> 

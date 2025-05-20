@@ -196,17 +196,6 @@
             return $result;
         }
 
-        public static function getAccountUnitRole(){
-            $result = mysql::select('master_account_unit_role maur
-                                     LEFT JOIN master_account_application mc
-                                     ON maur.application_id = mc.id',
-                                    'maur.*,
-                                     mc.name AS application_name',
-                                    "",
-                                    'maur.name ASC');
-            return $result;
-        }
-
         public static function getAccountDesignation(){
             $result = mysql::select('master_account_designation mad
                                      LEFT JOIN master_account_department mae

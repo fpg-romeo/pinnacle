@@ -77,9 +77,37 @@
             </ul>
 
             <label class="sidebar-label pd-x-10 mg-t-20 op-3">MAINTENANCE</label>
+            <ul class="br-sideleft-menu">        
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub 
+                        <?php activeView(['master'], [
+                                                      'account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'
+                                                      ], 'active'); 
+                        ?>
+                    ">
+                        <i class="fa fa-cogs tx-18"></i>
+                        <span class="menu-item-label">Master</span>
+                    </a>
+                    <ul class="br-menu-sub">
+                        <li class="sub-item">
+                            <a href="" class="sub-link <?php activeView(['master'], ['account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'], 'active'); ?>">Account</a>
+                            <ul>
+                                <li class="sub-item"><a href="/master/account-department" class="sub-link <?php activeView(['master'], ['account-department'], 'active'); ?>">Department</a></li>
+                                <li class="sub-item"><a href="/master/account-designation" class="sub-link <?php activeView(['master'], ['account-designation'], 'active'); ?>">Designation</a></li>
+                                <li class="sub-item"><a href="/master/account-type" class="sub-link <?php activeView(['master'], ['account-type'], 'active'); ?>">Type</a></li>
+                                <li class="sub-item"><a href="/master/account-team" class="sub-link <?php activeView(['master'], ['account-team'], 'active'); ?>">Team</a></li>
+                                <li class="sub-item"><a href="/master/account-level" class="sub-link <?php activeView(['master'], ['account-level'], 'active'); ?>">Level</a></li>
+                                <li class="sub-item"><a href="/master/account-role" class="sub-link <?php activeView(['master'], ['account-role'], 'active'); ?>">Role</a></li>
+                                <li class="sub-item"><a href="/master/account-status" class="sub-link <?php activeView(['master'], ['account-status'], 'active'); ?>">Status</a></li>
+                            </ul>
+                        </li> 
+                    </ul>
+                </li>
+            </ul>
+            <hr>
             <ul class="br-sideleft-menu">
                 <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub <?php activeView(['account'], ['all', 'manage', 'view', 'applicant', 'blacklist', 'user'], 'active'); ?>">
+                    <a href="#" class="br-menu-link with-sub <?php activeView(['account'], ['all', 'manage', 'view'], 'active'); ?>">
                         <i class="fa fa-users tx-20"></i>
                         <span class="menu-item-label">Human Resources</span>
                     </a>
