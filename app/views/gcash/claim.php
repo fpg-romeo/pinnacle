@@ -20,7 +20,7 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <?php flash(promptMessage('message')); ?>
-        </div>      
+        </div>
         <div class="br-pagebody">
             <div class="br-section-wrapper" id="list">
                 <div class="card bd">
@@ -46,10 +46,10 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 hidden">
                                         <select name="pagination_account_id" class="form-control select pagination" data-placeholder="Filter By Account">
-                                            <?php 
-                                                    if(isset($data['accounts']) && count($data['accounts']) >1 ){
-                                                        echo '<option value="all" '.(getVar('account_id') == 'all' ? 'selected' : "").'>All</option>';
-                                                    }
+                                            <?php
+                                            if (isset($data['accounts']) && count($data['accounts']) > 1) {
+                                                echo '<option value="all" ' . (getVar('account_id') == 'all' ? 'selected' : "") . '>All</option>';
+                                            }
                                             ?>
                                             <?php echo tool_dropdown_option($data['accounts'], (getVar('account_id') ? getVar('account_id') : ''), 'full_name'); ?>
                                         </select>
@@ -71,9 +71,9 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                                if(isset($data['records']) && !empty($data['records'])){
-                                                    foreach($data['records'] as $key => $value){
-                                                        $action = '
+                                            if (isset($data['records']) && !empty($data['records'])) {
+                                                foreach ($data['records'] as $key => $value) {
+                                                    $action = '
                                                                 <div class="dropdown d-inline-block">
                                                                     <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
                                                                         <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
@@ -83,33 +83,33 @@
                                                                     </a>
                                                                     <div class="dropdown-menu pd-5">
                                                                         <nav class="nav nav-style-2 flex-column">
-                                                                            <a href="#" class="nav-link edit-encode" data-action="edit" data-company_encode="'.idEncrypt(htmlDecode($value['id'])).'" "title="Edit Record" title="Update Lead"><i class="fa fa-pencil-square-o"></i> Update</a>
-                                                                            <a href="#" class="nav-link delete-encode" data-action="delete" data-company_encode="'.idEncrypt(htmlDecode($value['id'])).'" "title="Delete" title="Remove Lead"><i class="fa fa-trash"></i> Delete</a>
+                                                                            <a href="#" class="nav-link edit-encode" data-action="edit" data-company_encode="' . idEncrypt(htmlDecode($value['id'])) . '" "title="Edit Record" title="Update Lead"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                            <a href="#" class="nav-link delete-encode" data-action="delete" data-company_encode="' . idEncrypt(htmlDecode($value['id'])) . '" "title="Delete" title="Remove Lead"><i class="fa fa-trash"></i> Delete</a>
                                                                         </nav>
                                                                     </div>
                                                                 </div>
                                                         ';
-                                                 
-                                                        echo '
-                                                            <tr id="'.$value['id'].'">
-                                                                <td>'.htmlDecode($value['name']).'</td>
-                                                                <td>'.htmlDecode($value['contact_no']).'</td>
-                                                                <td>'.htmlDecode($value['uploader_name']).'</td>
-                                                                <td>'.dateDisplaySystem($value['created_when']).'</td>
+
+                                                    echo '
+                                                            <tr id="' . $value['id'] . '">
+                                                                <td>' . htmlDecode($value['first_name']) . '</td>
+                                                                <td>' . htmlDecode($value['mobile_number']) . '</td>
+                                                                <td>' . htmlDecode($value['uploader_name']) . '</td>
+                                                                <td>' . dateDisplaySystem($value['created_when']) . '</td>
                                                                 <td class="tx-center"> 
-                                                                    '.$action.'
+                                                                    ' . $action . '
                                                                 </td>
                                                             </tr>
                                                         ';
-                                                    }
-                                                }else{
-                                                    echo '<tr><td colspan="5" class="tx-center">No record found</td></tr>';
                                                 }
-                                            ?> 
+                                            } else {
+                                                echo '<tr><td colspan="5" class="tx-center">No record found</td></tr>';
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php if(isset($data['records']) && is_array($data['records'])){ ?>
+                                <?php if (isset($data['records']) && is_array($data['records'])) { ?>
                                     <div class="row mg-t-40">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
                                             <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
@@ -142,83 +142,88 @@
 
     <script type="text/javascript">
         //DATATABLE FILTER
-        $(document).ready(function(){
-            $('.pagination').bind('blur change',function(e){
+        $(document).ready(function() {
+            $('.pagination').bind('blur change', function(e) {
                 e.preventDefault();
 
-                var link       = "/<?php echo getVar('controller').'/'.getVar('view'); ?>/";
-                var limit      = $('select[name=pagination_limit]').find(":selected").val();
+                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit = $('select[name=pagination_limit]').find(":selected").val();
                 var account_id = $('select[name=pagination_account_id]').find(":selected").val();
-                var keyword    = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
 
-                var parameter  = '?page=1&limit='+limit+'&keyword='+keyword+'&account_id='+account_id;
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&account_id=' + account_id;
 
-                window.location.replace(link+parameter);
+                window.location.replace(link + parameter);
             });
         });
     </script>
 
     <script type="text/javascript">
         //IMPORT
-        $(document).ready(function(){
-            $(document).on('click', '.import', function(e){
+        $(document).ready(function() {
+            $(document).on('click', '.import', function(e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                
-                var display     = $('#modal-import .modal-body');
-                var redirect    = "<?php echo getCurrentUrl(); ?>";
+
+                var display = $('#modal-import .modal-body');
+                var redirect = "<?php echo getCurrentUrl(); ?>";
 
                 $.ajax({
                     url: '/gcash/import-claim/',
                     type: 'GET',
-                    data: {redirect:redirect},
-                    beforeSend: function(){
+                    data: {
+                        redirect: redirect
+                    },
+                    beforeSend: function() {
                         display.html('');
                     },
-                    success: function(data){
+                    success: function(data) {
                         $(data).appendTo(display);
 
                         $('#modal-import').modal('show');
                     },
-                    error: function(xhr, desc, err){ 
+                    error: function(xhr, desc, err) {
                         console.warn(xhr.responseText);
                     }
                 });
             });
         });
-    </script>    
+    </script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $(document).on('click', '.delete-encode', function(e){
+        $(document).ready(function() {
+            $(document).on('click', '.delete-encode', function(e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                
-                var id      = $(this).data('company_encode');
-                var action  = $(this).data('action');
+
+                var id = $(this).data('company_encode');
+                var action = $(this).data('action');
                 var display = $('#modal-encode .modal-body');
 
-                if(confirm("Are you sure you want to delete this record?")){
+                if (confirm("Are you sure you want to delete this record?")) {
                     $.ajax({
                         url: '/company/manage-encode-json/',
                         type: 'POST',
-                        data: {id:id, action:action},
-                        success: function(data){
+                        data: {
+                            id: id,
+                            action: action
+                        },
+                        success: function(data) {
                             alert(data.message);
                             window.location = document.URL;
                         },
-                        error: function(xhr, desc, err){ 
+                        error: function(xhr, desc, err) {
                             console.warn(xhr.responseText);
                         }
                     });
                 }
             });
         });
-    </script> 
+    </script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $(document).on('click','.tab-link',function(e){
+        $(document).ready(function() {
+            $(document).on('click', '.tab-link', function(e) {
                 $('select[name=pagination_limit]').val(10);
                 $('.pagination').trigger('change');
             });
