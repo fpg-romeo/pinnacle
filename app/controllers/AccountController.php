@@ -5,166 +5,233 @@
             
         }
 
+        // public function login(){
+        //     checkLoggedIn('false');
+        //     $data                   = array();
+        //     $CONFIGURATION          = Configuration::general();
+        //     $data['site_key']   = $CONFIGURATION['GOOGLE_RECAPTCHA_SITE_KEY'];
+
+        //     if(isset($_POST['submit_form']) && !isset($_POST['google-signin'])){ 
+        //         $field['username'] = htmlEncode($_POST['username']);
+        //         $field['password'] = passwordEncode(htmlEncode($_POST['password']));       
+
+        //         $data = checkRequiredPost(array('username', 'password'));
+
+        //         if(!array_key_exists('error', $data)){
+
+        //             //FROM HERE: API LOGIN FROM HRIS DATABASE
+        //             $record = recastArray(Account::login($field['username'], $field['password']));
+        //             if(!empty($record)){
+        //                 //FROM HERE: UPDATE "ACCOUNT" TABLE, get data from HRIS login return msg. 
+        //                 if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])){  
+
+        //                     $api_url = 'https://www.google.com/recaptcha/api/siteverify';  
+        //                     $resq_data = array(  
+        //                         'secret' => $CONFIGURATION['GOOGLE_RECAPTCHA_SECRET_KEY'],  
+        //                         'response' => $_POST['g-recaptcha-response'],  
+        //                         'remoteip' => $_SERVER['REMOTE_ADDR']  
+        //                     );  
+                
+        //                     $curlConfig = array(  
+        //                         CURLOPT_URL => $api_url,  
+        //                         CURLOPT_POST => true,  
+        //                         CURLOPT_RETURNTRANSFER => true,  
+        //                         CURLOPT_POSTFIELDS => $resq_data  
+        //                     );  
+                
+        //                     $ch = curl_init();  
+        //                     curl_setopt_array($ch, $curlConfig);  
+        //                     $response = curl_exec($ch);  
+        //                     curl_close($ch);  
+                
+        //                     // Decode JSON data of API response in array  
+        //                     $responseData = json_decode($response);  
+            
+        //                     if($responseData->success){ 
+        //                         $_SESSION['login_id'] = idEncrypt($record['id']);
+        //                         $ipAdress = getUserIpAddress();
+        //                         if(isset($_POST['remember_me']) && !empty($_POST['remember_me'])){
+
+        //                             $cookie_expiration_time = time() + $CONFIGURATION['COOKIES_EXPIRATION'];
+
+        //                             $remember_me['username']   = $field['username'];
+        //                             $remember_me['expiration'] = $cookie_expiration_time;
+
+        //                             $token = safe_b64encode(serialize($remember_me));
+        //                             setcookie("member", $token, $cookie_expiration_time,"/");
+
+        //                             $post['id']          = $record['id'];
+        //                             $post['remember_me'] = $cookie_expiration_time;
+        //                             $post['ip_address']  = $ipAdress;
+        //                             $post['relogin']     = '';
+        //                             Account::editRecord($post);//set backend expiration
+        //                         }else{
+
+        //                             $post['id']          = $record['id'];
+        //                             $post['ip_address']  = $ipAdress;
+        //                             $post['relogin']     = '';
+        //                             Account::editRecord($post);
+        //                             setcookie("member","",1);
+        //                         }
+
+        //                         header('location: '.(!empty(getVar('redirect')) ? safe_b64decode(getVar('redirect')) : '/'));
+                                
+        //                     }else{  
+        //                         $statusMsg = 'The reCAPTCHA verification failed, please try again.';  
+        //                         promptMessage('message', $statusMsg , 'danger');
+        //                     }  
+        //                 }
+                        
+        //             }else{
+        //                 $data['site_key']   = $CONFIGURATION['GOOGLE_RECAPTCHA_SITE_KEY'];
+        //                 promptMessage('message', 'Invalid Username or Password. Please try again', 'danger');
+        //             } 
+        //         }   
+        //     }
+
+        //     if(isset($_POST['google-signin'])){
+        //         includeDefault('google-signin');
+
+        //         if(isset($_POST['remember_me']) && !empty($_POST['remember_me'])){
+        //             $_SESSION['remember_me'] = 1;
+        //         }
+
+        //         $client = GoogleSignin::getClient();
+        //         header('Location: '.$client->createAuthUrl());
+        //         die();
+        //     }
+
+        //     views('account.login', $data);
+        // }
+
         public function login(){
             checkLoggedIn('false');
-            $data                   = array();
-            $CONFIGURATION          = Configuration::general();
-            $data['site_key']   = $CONFIGURATION['GOOGLE_RECAPTCHA_SITE_KEY'];
 
-            if(isset($_POST['submit_form']) && !isset($_POST['google-signin'])){ 
+            $data = array();
+
+            if(isset($_POST['submit_form'])){ 
                 $field['username'] = htmlEncode($_POST['username']);
-                $field['password'] = passwordEncode(htmlEncode($_POST['password']));       
+                $field['password'] = htmlEncode($_POST['password']);       
 
                 $data = checkRequiredPost(array('username', 'password'));
 
-                if(!array_key_exists('error', $data)){
+                if(!array_key_exists('error', $data)){   
 
-                    //FROM HERE: API LOGIN FROM HRIS DATABASE
-                    $record = recastArray(Account::login($field['username'], $field['password']));
-                    if(!empty($record)){
-                        //FROM HERE: UPDATE "ACCOUNT" TABLE, get data from HRIS login return msg. 
-                        if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])){  
+                    $adServer = "ad.fpgins.com";
+                    $ldapconn = ldap_connect($adServer) or die("Could not connect to LDAP server.");
+                    $username = $field['username'];
+                    $password = $field['password'];
+                    $ldapuser = 'fpgins\\'.$username;
+                    $ldaptree = "DC=ad,DC=fpgins,DC=com";
+                    $filter   = "(samaccountname=$username)";
+                    $find     = array("sn", "givenname", "samaccountname", "mail", "title");
 
-                            $api_url = 'https://www.google.com/recaptcha/api/siteverify';  
-                            $resq_data = array(  
-                                'secret' => $CONFIGURATION['GOOGLE_RECAPTCHA_SECRET_KEY'],  
-                                'response' => $_POST['g-recaptcha-response'],  
-                                'remoteip' => $_SERVER['REMOTE_ADDR']  
-                            );  
-                
-                            $curlConfig = array(  
-                                CURLOPT_URL => $api_url,  
-                                CURLOPT_POST => true,  
-                                CURLOPT_RETURNTRANSFER => true,  
-                                CURLOPT_POSTFIELDS => $resq_data  
-                            );  
-                
-                            $ch = curl_init();  
-                            curl_setopt_array($ch, $curlConfig);  
-                            $response = curl_exec($ch);  
-                            curl_close($ch);  
-                
-                            // Decode JSON data of API response in array  
-                            $responseData = json_decode($response);  
-            
-                            if($responseData->success){ 
-                                $_SESSION['login_id'] = idEncrypt($record['id']);
-                                $ipAdress = getUserIpAddress();
-                                if(isset($_POST['remember_me']) && !empty($_POST['remember_me'])){
+                   
 
-                                    $cookie_expiration_time = time() + $CONFIGURATION['COOKIES_EXPIRATION'];
+                    if($ldapconn){
 
-                                    $remember_me['username']   = $field['username'];
-                                    $remember_me['expiration'] = $cookie_expiration_time;
+                        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+                        ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
 
-                                    $token = safe_b64encode(serialize($remember_me));
-                                    setcookie("member", $token, $cookie_expiration_time,"/");
-
-                                    $post['id']          = $record['id'];
-                                    $post['remember_me'] = $cookie_expiration_time;
-                                    $post['ip_address']  = $ipAdress;
-                                    $post['relogin']     = '';
-                                    Account::editRecord($post);//set backend expiration
-                                }else{
-
-                                    $post['id']          = $record['id'];
-                                    $post['ip_address']  = $ipAdress;
-                                    $post['relogin']     = '';
-                                    Account::editRecord($post);
-                                    setcookie("member","",1);
-                                }
-
-                                header('location: '.(!empty(getVar('redirect')) ? safe_b64decode(getVar('redirect')) : '/'));
-                                
-                            }else{  
-                                $statusMsg = 'The reCAPTCHA verification failed, please try again.';  
-                                promptMessage('message', $statusMsg , 'danger');
-                            }  
-                        }
+                        $ldapbind = @ldap_bind($ldapconn, $ldapuser, $password);// or die ("Error trying to bind: ".ldap_error($ldapconn));
                         
+                        if($ldapbind){
+
+                            $result = ldap_search($ldapconn, $ldaptree, $filter, $find) or die ("Error in search query: ".ldap_error($ldapconn));
+                                    
+                            $data   = ldap_get_entries($ldapconn, $result);
+
+                            unset($field['password']);
+                            $return = Account::ldap($field['username']);
+                            if($return['status'] == 'success'){ 
+
+                                $record = $return['record'];
+                                // $_SESSION['login_session']      = $return['record']['id'].date('YmdHis');
+                                $_SESSION['login_id'] = idEncrypt($record['id']);
+                                ldap_close($ldapconn);
+                                header('location: /');  
+                            }else{
+                                promptMessage('message', $return['message'], 'danger');
+                            } 
+                            
+                            header('location: /');                             
+                        }else{
+                            ldap_close($ldapconn);
+                            promptMessage('message', 'Username or Password is incorrect. Please try again or Please contact Service Desk for reset password.', 'danger');
+                        }
                     }else{
-                        $data['site_key']   = $CONFIGURATION['GOOGLE_RECAPTCHA_SITE_KEY'];
-                        promptMessage('message', 'Invalid Username or Password. Please try again', 'danger');
-                    } 
-                }   
-            }
-
-            if(isset($_POST['google-signin'])){
-                includeDefault('google-signin');
-
-                if(isset($_POST['remember_me']) && !empty($_POST['remember_me'])){
-                    $_SESSION['remember_me'] = 1;
+                        ldap_close($ldapconn);
+                        promptMessage('message', 'Cannot connect to server. Please check whether the Network or Active directory is available', 'danger');
+                    }
+                    
                 }
-
-                $client = GoogleSignin::getClient();
-                header('Location: '.$client->createAuthUrl());
-                die();
-            }
-
+                
+            } 
             views('account.login', $data);
         }
+       
+    
+        // public function googleSigninCallback(){
+        //     checkLoggedIn('false');
+        //     includeDefault('google-signin');
 
-        public function googleSigninCallback(){
-            checkLoggedIn('false');
-            includeDefault('google-signin');
-
-            $CONFIGURATION = Configuration::general();
+        //     $CONFIGURATION = Configuration::general();
             
-            if ( isset($_GET['code']) ) {
-                $client  = GoogleSignin::callback();
-                $profile = GoogleSignin::getProfile($client);
-                if ( !isset($profile['email']) ) {
-                    promptMessage('message', 'Problem logging in with Google. Please contact the developer.', 'danger');
-                    header('location: /login');
-                }else if( isset($profile['email']) && substr($profile['email'], strpos($profile['email'], "@") + 1) !== $CONFIGURATION['SYSTEM_LOGIN_DOMAIN']){
-                    promptMessage('message', 'Your Google account is not allowed to access the system.', 'danger');
-                    header('location: /login');
-                }else{
-                    $record = recastArray(Account::getRecordByEmail($profile['email']));
-                    if(!empty($record)){
-                        if ( isset($record['account_status_id']) && $record['account_status_id'] != '1' ) {
-                            promptMessage('message', 'There is a problem with your account. Please contact '.$CONFIGURATION['SYSTEM_COMPANY'].' ServiceDesk', 'danger');
-                            header('location: /login');
-                        }else{
-                            $_SESSION['login_id']       = idEncrypt($record['id']);
-                            $_SESSION['google_picture'] = arrayKeyExist($profile,'picture');
-                            $ipAdress                   = getUserIpAddress();
-                            if(isset($_SESSION['remember_me']) && !empty($_SESSION['remember_me'])){
+        //     if ( isset($_GET['code']) ) {
+        //         $client  = GoogleSignin::callback();
+        //         $profile = GoogleSignin::getProfile($client);
+        //         if ( !isset($profile['email']) ) {
+        //             promptMessage('message', 'Problem logging in with Google. Please contact the developer.', 'danger');
+        //             header('location: /login');
+        //         }else if( isset($profile['email']) && substr($profile['email'], strpos($profile['email'], "@") + 1) !== $CONFIGURATION['SYSTEM_LOGIN_DOMAIN']){
+        //             promptMessage('message', 'Your Google account is not allowed to access the system.', 'danger');
+        //             header('location: /login');
+        //         }else{
+        //             $record = recastArray(Account::getRecordByEmail($profile['email']));
+        //             if(!empty($record)){
+        //                 if ( isset($record['account_status_id']) && $record['account_status_id'] != '1' ) {
+        //                     promptMessage('message', 'There is a problem with your account. Please contact '.$CONFIGURATION['SYSTEM_COMPANY'].' ServiceDesk', 'danger');
+        //                     header('location: /login');
+        //                 }else{
+        //                     $_SESSION['login_id']       = idEncrypt($record['id']);
+        //                     $_SESSION['google_picture'] = arrayKeyExist($profile,'picture');
+        //                     $ipAdress                   = getUserIpAddress();
+        //                     if(isset($_SESSION['remember_me']) && !empty($_SESSION['remember_me'])){
 
-                                $cookie_expiration_time = time() + $CONFIGURATION['COOKIES_EXPIRATION'];
+        //                         $cookie_expiration_time = time() + $CONFIGURATION['COOKIES_EXPIRATION'];
 
-                                $remember_me['username']   = $record['email'];
-                                $remember_me['expiration'] = $cookie_expiration_time;
+        //                         $remember_me['username']   = $record['email'];
+        //                         $remember_me['expiration'] = $cookie_expiration_time;
 
-                                $token = safe_b64encode(serialize($remember_me));
-                                setcookie("member", $token, $cookie_expiration_time,"/");
+        //                         $token = safe_b64encode(serialize($remember_me));
+        //                         setcookie("member", $token, $cookie_expiration_time,"/");
 
-                                $post['id']          = $record['id'];
-                                $post['remember_me'] = $cookie_expiration_time;
-                                $post['ip_address']  = $ipAdress;
-                                $post['relogin']     = '';
-                                Account::editRecord($post);//set backend expiration
-                            }else{
-                                $post['id']          = $record['id'];
-                                $post['ip_address']  = $ipAdress;
-                                $post['relogin']     = '';
-                                Account::editRecord($post);//set backend expiration
-                                setcookie("member","",1);
-                            }
+        //                         $post['id']          = $record['id'];
+        //                         $post['remember_me'] = $cookie_expiration_time;
+        //                         $post['ip_address']  = $ipAdress;
+        //                         $post['relogin']     = '';
+        //                         Account::editRecord($post);//set backend expiration
+        //                     }else{
+        //                         $post['id']          = $record['id'];
+        //                         $post['ip_address']  = $ipAdress;
+        //                         $post['relogin']     = '';
+        //                         Account::editRecord($post);//set backend expiration
+        //                         setcookie("member","",1);
+        //                     }
                             
-                            header('location: /');
-                        }
-                    }else{
-                        promptMessage('message', 'Your google account is not associated with any of '.$CONFIGURATION['SYSTEM_COMPANY'].' accounts.', 'danger');
-                        header('location: /login');
-                    }
-                }
-            }else{
-                promptMessage('message', 'Problem logging in with Goggle. Please contact '.$CONFIGURATION['SYSTEM_COMPANY'].' ServiceDesk', 'danger');
-                header('location: /login');
-            }
-            exit;
-        }
+        //                     header('location: /');
+        //                 }
+        //             }else{
+        //                 promptMessage('message', 'Your google account is not associated with any of '.$CONFIGURATION['SYSTEM_COMPANY'].' accounts.', 'danger');
+        //                 header('location: /login');
+        //             }
+        //         }
+        //     }else{
+        //         promptMessage('message', 'Problem logging in with Goggle. Please contact '.$CONFIGURATION['SYSTEM_COMPANY'].' ServiceDesk', 'danger');
+        //         header('location: /login');
+        //     }
+        //     exit;
+        // }
         
         public function logout(){
             checkLoggedIn('true');
