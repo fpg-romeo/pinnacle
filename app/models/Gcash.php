@@ -56,9 +56,37 @@ class Gcash
             $keyword = " '%{$keyword}%' ";
             $filter  = " AND 
                             (
-                                gcl.name LIKE {$keyword}
+                                gcl.first_name LIKE {$keyword}
                                 OR
-                                gcl.contact_no LIKE {$keyword}
+                                gcl.middle_name LIKE {$keyword}
+                                OR
+                                gcl.last_name LIKE {$keyword}
+                                OR
+                                gcl.date_of_birth LIKE {$keyword}
+                                OR
+                                gcl.mobile_number LIKE {$keyword}
+                                OR
+                                gcl.email_address LIKE {$keyword}
+                                OR
+                                gcl.date_of_transaction LIKE {$keyword}
+                                OR
+                                gcl.reference_number LIKE {$keyword}
+                                OR
+                                gcl.load_amount LIKE {$keyword}
+                                OR
+                                gcl.load_status LIKE {$keyword}
+                                OR
+                                gcl.consent_status LIKE {$keyword}
+                                OR
+                                gcl.policy_id LIKE {$keyword}
+                                OR
+                                gcl.policy_status LIKE {$keyword}
+                                OR
+                                gcl.protect_premium_taxes LIKE {$keyword}
+                                OR
+                                gcl.date_insurance_start LIKE {$keyword}
+                                OR
+                                gcl.date_insurance_end LIKE {$keyword}
                             )
                           ";
         } else {
@@ -68,14 +96,14 @@ class Gcash
         $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
 
         $result = mysql::select(
-            'gcash_claim gcl
-                                     LEFT JOIN account_personal ape
-                                     ON ape.account_id = gcl.created_by',
-            'gcl.*,
-                                     CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
-            "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
-            "gcl.id DESC",
-            $startLimit
+                                'gcash_claim gcl
+                                 LEFT JOIN account_personal ape
+                                 ON ape.account_id = gcl.created_by',
+                                'gcl.*,
+                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
+                                "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
+                                "gcl.id DESC",
+                                $startLimit
         );
 
         return $result;

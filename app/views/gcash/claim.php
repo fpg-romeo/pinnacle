@@ -62,54 +62,64 @@
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
                                         <thead class="thead-colored thead-dark">
                                             <tr>
+                                                <th class="wd-1p">POLICY ID</th>
                                                 <th class="wd-20p">NAME</th>
-                                                <th class="wd-20p">CONTACT NO</th>
+                                                <th class="wd-8p">CONTACT NO</th>
+                                                <th class="wd-20p">DATE OF BIRTH</th>
+                                                <th class="wd-1p">EMAIL ADDRESS</th>
+                                                <th class="wd-10p">DATE OF INSURANCE START</th>
+                                                <th class="wd-10p">DATE OF INSURANCE END</th>
                                                 <th class="wd-20p">CREATED BY</th>
                                                 <th class="wd-20p">CREATED WHEN</th>
                                                 <th class="wd-5p tx-center">ACTION</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
+                                        <?php
                                             if (isset($data['records']) && !empty($data['records'])) {
                                                 foreach ($data['records'] as $key => $value) {
                                                     $action = '
-                                                                <div class="dropdown d-inline-block">
-                                                                    <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
-                                                                        <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
-                                                                            <span><i class="fa fa-cog"></i></span>
-                                                                            <i class="fa fa-angle-down mg-l-10"></i>
+                                                                    <div class="dropdown d-inline-block">
+                                                                        <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
+                                                                            <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
+                                                                                <span><i class="fa fa-cog"></i></span>
+                                                                                <i class="fa fa-angle-down mg-l-10"></i>
+                                                                            </div>
+                                                                        </a>
+                                                                        <div class="dropdown-menu pd-5">
+                                                                            <nav class="nav nav-style-2 flex-column">
+                                                                                <a data-id="' . idEncrypt(htmlDecode($value['id'])) . '"   class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
+                                                                                
+                                                                            </nav>
                                                                         </div>
-                                                                    </a>
-                                                                    <div class="dropdown-menu pd-5">
-                                                                        <nav class="nav nav-style-2 flex-column">
-                                                                            <a data-id="' . idEncrypt(htmlDecode($value['id'])) . '"   class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
-                                                                            
-                                                                        </nav>
                                                                     </div>
-                                                                </div>
-                                                        ';
+                                                            ';
 
                                                     echo '
-                                                            <tr id="' . $value['id'] . '">
-                                                                <td>' . htmlDecode($value['first_name']) . '</td>
-                                                                <td>' . htmlDecode($value['mobile_number']) . '</td>
-                                                                <td>' . htmlDecode($value['uploader_name']) . '</td>
-                                                                <td>' . dateDisplaySystem($value['created_when']) . '</td>
-                                                                <td class="tx-center"> 
-                                                                    ' . $action . '
-                                                                </td>
-                                                            </tr>
-                                                        ';
+                                                                <tr id="' . $value['id'] . '">
+                                                                    <td>' . htmlDecode($value['policy_id']) . '</td>
+                                                                    <td>' . htmlDecode($value['first_name']) . '</td> 
+                                                                    <td>' . htmlDecode($value['mobile_number']) . '</td>
+                                                                    <td>' . htmlDecode($value['date_of_birth']) . '</td>
+                                                                    <td>' . htmlDecode($value['email_address']) . '</td>
+                                                                    <td>' . htmlDecode($value['date_insurance_start']) . '</td>
+                                                                    <td>' . htmlDecode($value['date_insurance_end']) . '</td>
+                                                                    <td>' . htmlDecode($value['uploader_name']) . '</td>
+                                                                    <td>' . dateDisplaySystem($value['created_when']) . '</td>
+                                                                    <td class="tx-center"> 
+                                                                        ' . $action . '
+                                                                    </td>
+                                                                </tr>
+                                                            ';
                                                 }
                                             } else {
-                                                echo '<tr><td colspan="5" class="tx-center">No record found</td></tr>';
+                                                echo '<tr><td colspan="10" class="tx-center">No record found</td></tr>';
                                             }
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php if (isset($data['records']) && is_array($data['records'])) { ?>
+                                <?php if (isset($data['records']) && !empty($data['records'])) { ?>
                                     <div class="row mg-t-40">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
                                             <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
