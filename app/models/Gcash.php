@@ -93,23 +93,23 @@ class Gcash
 
     public static function addClaimEncode($post)
     {
-        $name   = $post['first_name'] . ' ' . $post['last_name'] . ' ' . $post['middle_name'];
-        $record = self::getClaimEncodeByName($name);
+        // $name   = $post['first_name'] . ' ' . $post['last_name'] . ' ' . $post['middle_name'];
+        // $record = self::getClaimEncodeByName($name);
 
-        if (!is_array($record)) {
-            $fields = mysql::buildFields($post, ", ");
-            if (mysql::insert('gcash_claim', $fields)) {
-                $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            } else {
-                $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
-            }
+        // if (!is_array($record)) {
+        $fields = mysql::buildFields($post, ", ");
+        if (mysql::insert('gcash_claim', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
         } else {
             $result['status']  = 'failed';
-            $result['message'] = 'Record already exist';
+            $result['message'] = 'Encounter technical error. Pls try again';
         }
+        // } else {
+        //     $result['status']  = 'failed';
+        //     $result['message'] = 'Record already exist';
+        // }
 
         return $result;
     }
@@ -153,6 +153,19 @@ class Gcash
         );
 
         return $result;
+    }
+
+    public static function checkIfExistingFilename($file_name)
+    {
+        $result = mysql::select(
+            'gcash_claim_summary gcs
+                                    ',
+            'count(gcs.file_name) as file_name_count',
+            "gcs.file_name = '{$file_name}'"
+        );
+
+
+        return $result[0]['file_name_count'];
     }
 
     public static function countClaimEncodeSummary($account_id = '')

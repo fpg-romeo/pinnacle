@@ -101,9 +101,14 @@ class GcashController
             $file_new_name = 'Claim-' . dateTimeAsId() . '.' . $file_ext;
             $extensions    = $CONFIGURATION['ALLOWED_EXCEL'];
 
+            $checkIfExistingFile = Gcash::checkIfExistingFilename($file_name);
+
             if (!in_array($file_ext, $extensions)) {
                 $result['status']  = 'Error';
                 $result['message'] = 'File format is not allow';
+            } else if ($checkIfExistingFile > 0) {
+                $result['status']  = 'Error';
+                $result['message'] = 'File already exist';
             } else {
                 if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                     if (!array_key_exists('error', $result)) {
@@ -276,6 +281,7 @@ class GcashController
                             $encode['created_when'] = dateTimeStamp();
 
                             $encode_result = Gcash::addClaimEncode($encode);
+
                             if ($encode_result['status'] == 'success') {
                                 $ctr_success++;
                             } else {
