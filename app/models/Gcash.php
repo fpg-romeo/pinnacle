@@ -7,21 +7,9 @@ class Gcash
     public static function getClaimEncodeById($id)
     {
         $result = mysql::select(
-            'company com
-                                     LEFT JOIN account_personal ape
-                                     ON com.created_by = ape.account_id
-                                    ',
-            'com.*,
-                                     com.name AS company_name,
-                                     (CASE 
-                                        WHEN ape.alias = "" OR ape.alias IS NULL
-                                            THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
-                                        ELSE 
-                                            ape.alias
-                                        END
-                                     ) AS account_name,
-                                    ',
-            "com.id = '{$id}'"
+            'gcash_claim gcl',
+            'gcl.*',
+            "gcl.id = '{$id}'"
         );
         return $result;
     }
@@ -31,7 +19,7 @@ class Gcash
         $result = mysql::select(
             'gcash_claim gcl',
             'gcl.*',
-            "gcl.name = '{$name}'"
+            "CONCAT(gcl.first_name, ' ', gcl.last_name, ' ', gcl.middle_name) = '{$name}'"
         );
         return $result;
     }

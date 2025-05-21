@@ -35,12 +35,10 @@ class GcashController
     {
         $data = array();
 
-        $id              = idDecrypt(getVar('id'));
-        $data['company'] = recastArray(Gcash::getClaimEncodeById($id));
+        $id              = idDecrypt(getVar('account_id'));
+        $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
-        emptyRedirectPage($data['company'], '/modal-not-found');
-
-        views('company.import-view', $data);
+        views('gcash.import-view', $data);
     }
 
     public function claim()
@@ -256,8 +254,6 @@ class GcashController
 
                             $encode['created_by']   = ACCOUNT_ID;
                             $encode['created_when'] = dateTimeStamp();
-
-                            pre($encode);
 
                             $encode_result = Gcash::addClaimEncode($encode);
                             if ($encode_result['status'] == 'success') {

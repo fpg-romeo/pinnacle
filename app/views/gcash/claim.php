@@ -83,8 +83,8 @@
                                                                     </a>
                                                                     <div class="dropdown-menu pd-5">
                                                                         <nav class="nav nav-style-2 flex-column">
-                                                                            <a href="#" class="nav-link edit-encode" data-action="edit" data-company_encode="' . idEncrypt(htmlDecode($value['id'])) . '" "title="Edit Record" title="Update Lead"><i class="fa fa-pencil-square-o"></i> Update</a>
-                                                                            <a href="#" class="nav-link delete-encode" data-action="delete" data-company_encode="' . idEncrypt(htmlDecode($value['id'])) . '" "title="Delete" title="Remove Lead"><i class="fa fa-trash"></i> Delete</a>
+                                                                            <a data-id="' . idEncrypt(htmlDecode($value['id'])) . '"   class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
+                                                                            
                                                                         </nav>
                                                                     </div>
                                                                 </div>
@@ -140,6 +140,16 @@
         </div>
     </div>
 
+    <div id="modal_view" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
+            <div class="modal-content bd-0">
+                <div class="modal-body pd-25">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
         //DATATABLE FILTER
         $(document).ready(function() {
@@ -186,6 +196,33 @@
                         console.warn(xhr.responseText);
                     }
                 });
+            });
+        });
+
+        $(document).on('click', '.view', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+
+            var display = $('#modal_view .modal-body');
+            $.ajax({
+                url: '/gcash/import-view/',
+                type: 'GET',
+                data: {
+                    account_id: id
+                },
+                beforeSend: function() {
+                    display.html('');
+                },
+                success: function(data) {
+                    // console.log('success');
+                    $(data).appendTo(display);
+
+                    $('#modal_view').modal('show');
+                },
+                error: function(xhr, desc, err) {
+                    //console.log(xhr);
+                    console.warn(xhr.responseText);
+                }
             });
         });
     </script>
