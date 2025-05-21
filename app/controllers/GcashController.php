@@ -142,16 +142,15 @@ class GcashController
                                     $cellValue = $cell->getValue();
 
                                     // Check if it's a date AND numeric (i.e., Excel serial format)
-                                    if (($value == 'date_of_birth' || $value == 'date_of_transaction' || $value == 'date_insurance_start' || $value == 'date_insurance_end') && is_numeric($cellValue)) {
+                                    $date = array('date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end');
+                                    if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)){
                                         $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
-                                        ${$value} = date('Y-m-d', $timestamp);
+                                        ${$value}  = date('Y-m-d', $timestamp);
                                     } elseif ($cellValue instanceof PHPExcel_RichText) {
                                         ${$value} = $cellValue->getPlainText();
                                     } else {
                                         ${$value} = $cellValue;
                                     }
-
-
 
                                     $columnarray['row'][$value] = ${$value};
                                     $column++;
