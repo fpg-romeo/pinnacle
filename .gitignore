@@ -1,3 +1,5 @@
 /app/default/key.php
 .DS_Store
-
+/upload/account/
+/upload/gcash/
+/upload/temp/
