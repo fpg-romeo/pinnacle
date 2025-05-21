@@ -1,222 +1,299 @@
 <?php
-    class GcashController{
+class GcashController
+{
 
-        public function __construct() {
-            checkLoggedIn('true');
-        }
+    public function __construct()
+    {
+        checkLoggedIn('true');
+    }
 
-        public function importView(){
-            $data = array();
+    public function getColumns()
+    {
 
-            $id              = idDecrypt(getVar('id'));
-            $data['company'] = recastArray(Gcash::getClaimEncodeById($id));
-            
-            emptyRedirectPage($data['company'], '/modal-not-found');
+        $column_name = [
+            'A' => 'first_name',
+            'B' => 'last_name',
+            'C' => 'middle_name',
+            'D' => 'date_of_birth',
+            'E' => 'mobile_number',
+            'F' => 'email_address',
+            'G' => 'date_of_transaction',
+            'H' => 'reference_number',
+            'I' => 'load_amount',
+            'J' => 'load_status',
+            'K' => 'consent_status',
+            'L' => 'policy_id',
+            'M' => 'policy_status',
+            'N' => 'protect_premium_taxes',
+            'O' => 'date_insurance_start',
+            'P' => 'date_insurance_end',
+        ];
+        return $column_name;
+    }
 
-            views('company.import-view', $data);  
-        }
+    public function importView()
+    {
+        $data = array();
 
-        public function claim(){
-            includeModel(['Account']);
+        $id              = idDecrypt(getVar('account_id'));
+        $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
-            $data          = array();
-            $CONFIGURATION = Configuration::general();
+        views('gcash.import-view', $data);
+    }
 
-            $account_id           = urldecode(getVar('account_id'));
-            $account_ids          = ACCOUNT_ID;
-            $keyword              = urldecode(getVar('keyword'));
-            $data['records']      = Gcash::getClaimEncode($keyword, $account_ids, '', pagination('start'), pagination('limit'));
-            $data['total_record'] = Gcash::countClaimEncode($keyword, $account_ids, '');
-            $data['total_page']   = pagination('total', $data['total_record']);
+    public function claim()
+    {
+        includeModel(['Account']);
 
-            $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+        $data          = array();
+        $CONFIGURATION = Configuration::general();
 
-            views('gcash.claim', $data);
-        }
+        $account_id           = urldecode(getVar('account_id'));
+        $account_ids          = ACCOUNT_ID;
+        $keyword              = urldecode(getVar('keyword'));
+        $data['records']      = Gcash::getClaimEncode($keyword, $account_ids, '', pagination('start'), pagination('limit'));
+        $data['total_record'] = Gcash::countClaimEncode($keyword, $account_ids, '');
+        $data['total_page']   = pagination('total', $data['total_record']);
 
-        public function claimSummary(){
-            includeModel(['Account']);
+        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
-            $data                 = array();
-            $CONFIGURATION        = Configuration::general();
+        views('gcash.claim', $data);
+    }
 
-            $account_id           = urldecode(getVar('account_id'));
-            $account_ids          = ACCOUNT_ID;
+    public function claimSummary()
+    {
+        includeModel(['Account']);
 
-            $data['summary']      = Gcash::getClaimEncodeSummary($account_ids, pagination('start'), pagination('limit'));
-            $data['total_record'] = Gcash::countClaimEncodeSummary($account_ids);
-            $data['total_page']   = pagination('total', $data['total_record']);
+        $data                 = array();
+        $CONFIGURATION        = Configuration::general();
 
-            $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+        $account_id           = urldecode(getVar('account_id'));
+        $account_ids          = ACCOUNT_ID;
 
-            views('gcash.claim-summary', $data);
-        }
+        $data['summary']      = Gcash::getClaimEncodeSummary($account_ids, pagination('start'), pagination('limit'));
+        $data['total_record'] = Gcash::countClaimEncodeSummary($account_ids);
+        $data['total_page']   = pagination('total', $data['total_record']);
 
-        public function importClaim(){
-            $data = array();
+        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
-            views('gcash.import-claim', $data);  
-        }
+        views('gcash.claim-summary', $data);
+    }
 
-        public function importClaimJson(){
-            $result = array();
+    public function importClaim()
+    {
+        $data = array();
 
-            $CONFIGURATION = Configuration::general();
+        views('gcash.import-claim', $data);
+    }
 
-            if(isset($_FILES['file']) && !empty($_FILES)){     
-                $file_name     = $_FILES['file']['name'];
-                $file_size     = $_FILES['file']['size'];
-                $file_tmp      = $_FILES['file']['tmp_name'];
-                $file_type     = $_FILES['file']['type'];   
-                $file_ext      = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-                $file_new_name = 'Claim-'.dateTimeAsId().'.'.$file_ext; 
-                $extensions    = $CONFIGURATION['ALLOWED_EXCEL']; 
+    public function importClaimJson()
+    {
+        $result = array();
 
-                if(!in_array($file_ext, $extensions)){
-                    $result['status']  = 'Error';
-                    $result['message'] = 'File format is not allow';    
-                }else{
-                    if(move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))){
-                        if(!array_key_exists('error', $result)){   
+        $CONFIGURATION = Configuration::general();
 
-                            $file = getDocumentRoot().'/upload/temp/'.$file_new_name;
-                            //$file = $_FILES['file']['tmp_name'];
-                            try{
-                                includeLibrary(['excel/PHPExcel.php']);
+        if (isset($_FILES['file']) && !empty($_FILES)) {
+            $file_name     = $_FILES['file']['name'];
+            $file_size     = $_FILES['file']['size'];
+            $file_tmp      = $_FILES['file']['tmp_name'];
+            $file_type     = $_FILES['file']['type'];
+            $file_ext      = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            $file_new_name = 'Claim-' . dateTimeAsId() . '.' . $file_ext;
+            $extensions    = $CONFIGURATION['ALLOWED_EXCEL'];
 
-                                $objPHPExcel   = new PHPExcel();
-                                $inputFileType = PHPExcel_IOFactory::identify($file);
-                                $objReader     = PHPExcel_IOFactory::createReader($inputFileType)->setReadDataOnly(true); //setReadDataOnly - para ignore yung style or function sa cell. prevent na mag error sa excel file na manipulated
-                                // $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
-                                $objPHPExcel   = $objReader->load($file);
-                                $sheet         = $objPHPExcel->getActiveSheet(); 
-                                $highestRow    = $sheet->getHighestRow(); 
-                                $highestColumn = $sheet->getHighestColumn();
-                                
-                                $duplicate_contact_no       = [];
-                                $duplicate_company_name     = [];
-                                $duplicate_rows             = [];
-                                $duplicate = 0;
-                                for ($row = 1; $row <= $highestRow; $row++){
+            if (!in_array($file_ext, $extensions)) {
+                $result['status']  = 'Error';
+                $result['message'] = 'File format is not allow';
+            } else {
+                if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
+                    if (!array_key_exists('error', $result)) {
 
-                                    $name       = ($sheet->getCell('A'.$row)->getValue() instanceof PHPExcel_RichText ? $sheet->getCell('A'.$row)->getValue()->getPlainText() : $sheet->getCell('A'.$row)->getValue()); 
-                                    $contact_no = ($sheet->getCell('B'.$row)->getValue() instanceof PHPExcel_RichText ? $sheet->getCell('B'.$row)->getValue()->getPlainText() : $sheet->getCell('B'.$row)->getValue());                               
-                                   
-                                    if('A'.$row != 'A1' && !empty($name)){
-                                        $result['row'][] = array(
-                                                                'row'                   => $row,
-                                                                'name'                  => htmlDecode($name),
-                                                                'contact_no'            => htmlDecode($contact_no),
-                                                                'similar_company_name'  => '',
-                                                                'is_similar_only'       => '',
-                                                                'status'                => 'New'
-                                                                ); 
+                        $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
+                        //$file = $_FILES['file']['tmp_name'];
+                        try {
+                            includeLibrary(['excel/PHPExcel.php']);
 
-                                    }   
-                                }
-                                $result['file_temporary'] = $file_new_name;
-                                $result['file_name']      = $file_name;
-                                $result['duplicate']      = count($duplicate_rows);
-
-                            }catch(Exception $e){
-                                $result['status']  = 'Error';
-                                $result['message'] = 'Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage();
+                            $objPHPExcel   = new PHPExcel();
+                            $inputFileType = PHPExcel_IOFactory::identify($file);
+                            $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
+                            if (method_exists($objReader, 'setReadDataOnly')) {
+                                $objReader->setReadDataOnly(true);
                             }
-                        } 
-                    }else{
-                        $result['status']  = 'Error';
-                        $result['message'] = 'Encounter technical error. Pls try again';
-                    }  
-                }
-            }elseif(isset($_POST['submit-import'])){
-                $field['file_temporary'] = postVar('file_temporary');
-                $field['row']            = postVar('row'); 
 
-                $data = checkRequiredPost(array('file_temporary', 'row'));
+                            $objPHPExcel   = $objReader->load($file);
+                            $sheet         = $objPHPExcel->getActiveSheet();
 
-                if(!array_key_exists('error', $data)){
-                    
-                    $list = explode(',', $field['row']);
-                    $file = getDocumentRoot().'/upload/temp/'.$field['file_temporary'];
-                    try{
+                            $highestRow    = $sheet->getHighestRow();
+                            $highestColumn = $sheet->getHighestColumn();
 
-                        includeLibrary(['excel/PHPExcel.php']);
+                            $duplicate_contact_no       = [];
+                            $duplicate_company_name     = [];
+                            $duplicate_rows             = [];
+                            $duplicate = 0;
 
-                        $objPHPExcel   = new PHPExcel();
-                        $inputFileType = PHPExcel_IOFactory::identify($file);
-                        // $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
-                        $objReader     = PHPExcel_IOFactory::createReader($inputFileType)->setReadDataOnly(true); //setReadDataOnly - para ignore yung style or function sa cell. prevent na mag error sa excel file na manipulated
-                        $objPHPExcel   = $objReader->load($file);
-                        $sheet         = $objPHPExcel->getActiveSheet(); 
-                        $highestRow    = $sheet->getHighestRow(); 
-                        $highestColumn = $sheet->getHighestColumn();
-                        
-                        $ctr_success   = 0;
-                        $ctr_failed    = 0;
-                        $ctr_duplicate = postVar('duplicate',0);
+                            $column_name = $this->getColumns();
 
-                        //save dataentry summary
-                        $encode_summary['success']          = $ctr_success;
-                        $encode_summary['duplicate']        = $ctr_duplicate;
-                        $encode_summary['failed']           = $ctr_failed;
-                        $encode_summary['file']             = postVar('file_temporary');
-                        $encode_summary['file_name']        = postVar('file_name');
-                        $encode_summary['created_by']       = ACCOUNT_ID;
-                        $encode_summary['created_when']     = dateTimeStamp();
-                        $result                             = Gcash::addClaimEncodeSummary($encode_summary);
-                        
-                        foreach ($list as $row) {
-                            if(empty($duplicate)){
+                            for ($row = 1; $row <= $highestRow; $row++) {
+                                $columnarray = [];
+                                $column = 'A';
+                                foreach ($column_name as $key => $value) {
 
-                                $encode['id']           = 0;
-                                $encode['duplicate']    = 'No';
-                                $encode['batch_id']     = $result['id'];
-                                $encode['name']         = htmlEncode($sheet->getCell('A'.$row)->getValue());
-                                $encode['contact_no']   = htmlEncode($sheet->getCell('B'.$row)->getValue());
-                                $encode['created_by']   = ACCOUNT_ID;
-                                $encode['created_when'] = dateTimeStamp();
+                                    $cell = $sheet->getCell($column . $row);
+                                    $cellValue = $cell->getValue();
 
-                                $encode_result = Gcash::addClaimEncode($encode);
-                                if($encode_result['status'] == 'success'){
-                                    $ctr_success++;
-                                }else{
-                                    $ctr_failed++;
+                                    // Check if it's a date AND numeric (i.e., Excel serial format)
+                                    if (($value == 'date_of_birth' || $value == 'date_of_transaction' || $value == 'date_insurance_start' || $value == 'date_insurance_end') && is_numeric($cellValue)) {
+                                        $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
+                                        ${$value} = date('Y-m-d', $timestamp);
+                                    } elseif ($cellValue instanceof PHPExcel_RichText) {
+                                        ${$value} = $cellValue->getPlainText();
+                                    } else {
+                                        ${$value} = $cellValue;
+                                    }
+
+
+
+                                    $columnarray['row'][$value] = ${$value};
+                                    $column++;
                                 }
-                            }else{
-                                $ctr_duplicate ++;
+
+                                if ('A' . $row != 'A1' && !empty($first_name)) {
+
+                                    $result['row'][] = array(
+                                        'row'                   => $row,
+                                        'similar_company_name'  => '',
+                                        'is_similar_only'       => '',
+                                        'status'                => 'New'
+                                    );
+                                    $lastIndex = count($result['row']) - 1;
+
+                                    // Merge column data into that row
+                                    $result['row'][$lastIndex] = array_merge(
+                                        $result['row'][$lastIndex],
+                                        $columnarray['row']
+                                    );
+                                }
                             }
+                            $result['file_temporary'] = $file_new_name;
+                            $result['file_name']      = $file_name;
+                            $result['duplicate']      = count($duplicate_rows);
+                        } catch (Exception $e) {
+                            $result['status']  = 'Error';
+                            $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
                         }
-
-                        moveFile($file, getDocumentRoot().'/upload/gcash/'.$field['file_temporary'], 'delete');
-
-                        //update register encode
-                        $update_encode['id']           = $result['id'];
-                        $total_uploaded_rows           = postVar('total_rows');
-                        $total_processed_rows          = $ctr_duplicate + $ctr_success + $ctr_failed;
-                        // calculate the first validation count for duplicates
-                        $first_stage_duplicate_count   = $total_uploaded_rows - $total_processed_rows;
-                        $total_duplicate               = $ctr_duplicate +$first_stage_duplicate_count;
-                        $update_encode['duplicate']    = $total_duplicate;
-                        $update_encode['success']      = $ctr_success;
-                        $update_encode['failed']       = $ctr_failed;
-                        Gcash::editClaimEncodeSummary($update_encode);
-
-                        $result['alert'] = 'Total Saved = '.$ctr_success.' / Total Failed = '.$ctr_failed.' / Total Duplicate = '.$total_duplicate;
-
-                    }catch(Exception $e){
-                        // die('Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage());
-                        $result['status']  = 'forbidden';
-                        $result['message'] = 'Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage();
                     }
+                } else {
+                    $result['status']  = 'Error';
+                    $result['message'] = 'Encounter technical error. Pls try again';
                 }
+            }
+        } elseif (isset($_POST['submit-import'])) {
+            $field['file_temporary'] = postVar('file_temporary');
+            $field['row']            = postVar('row');
 
-                $result['redirect'] = htmlDecode(postVar('redirect'));
-            }else{
-                $result['status']  = 'forbidden';
-                $result['message'] = 'Access to this resource on the server is denied';
+            $data = checkRequiredPost(array('file_temporary', 'row'));
+
+            if (!array_key_exists('error', $data)) {
+
+                $list = explode(',', $field['row']);
+                $file = getDocumentRoot() . '/upload/temp/' . $field['file_temporary'];
+                try {
+
+                    includeLibrary(['excel/PHPExcel.php']);
+
+                    $objPHPExcel   = new PHPExcel();
+                    $inputFileType = PHPExcel_IOFactory::identify($file);
+                    // $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
+                    $objReader     = PHPExcel_IOFactory::createReader($inputFileType)->setReadDataOnly(true); //setReadDataOnly - para ignore yung style or function sa cell. prevent na mag error sa excel file na manipulated
+                    $objPHPExcel   = $objReader->load($file);
+                    $sheet         = $objPHPExcel->getActiveSheet();
+                    $highestRow    = $sheet->getHighestRow();
+                    $highestColumn = $sheet->getHighestColumn();
+
+                    $ctr_success   = 0;
+                    $ctr_failed    = 0;
+                    $ctr_duplicate = postVar('duplicate', 0);
+
+                    //save dataentry summary
+                    $encode_summary['success']          = $ctr_success;
+                    $encode_summary['duplicate']        = $ctr_duplicate;
+                    $encode_summary['failed']           = $ctr_failed;
+                    $encode_summary['file']             = postVar('file_temporary');
+                    $encode_summary['file_name']        = postVar('file_name');
+                    $encode_summary['created_by']       = ACCOUNT_ID;
+                    $encode_summary['created_when']     = dateTimeStamp();
+                    $result                             = Gcash::addClaimEncodeSummary($encode_summary);
+
+                    $column_name = $this->getColumns();
+
+                    foreach ($list as $row) {
+                        if (empty($duplicate)) {
+
+                            $encode['id']           = 0;
+                            $encode['duplicate']    = 'No';
+                            $encode['batch_id']     = $result['id'];
+
+                            $column = 'A';
+                            foreach ($column_name as $key => $value) {
+
+                                $cell = $sheet->getCell($column . $row);
+                                $cellValue = $cell->getValue();
+
+                                // Check if it's a date AND numeric (i.e., Excel serial format)
+                                if (($value == 'date_of_birth' || $value == 'date_of_transaction' || $value == 'date_insurance_start' || $value == 'date_insurance_end') && is_numeric($cellValue)) {
+                                    $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
+                                    $encode[$value] = date('Y-m-d', $timestamp);
+                                } elseif ($cellValue instanceof PHPExcel_RichText) {
+                                    $encode[$value] = $cellValue->getPlainText();
+                                } else {
+                                    $encode[$value] = $cellValue;
+                                }
+
+                                $column++;
+                            }
+
+                            $encode['created_by']   = ACCOUNT_ID;
+                            $encode['created_when'] = dateTimeStamp();
+
+                            $encode_result = Gcash::addClaimEncode($encode);
+                            if ($encode_result['status'] == 'success') {
+                                $ctr_success++;
+                            } else {
+                                $ctr_failed++;
+                            }
+                        } else {
+                            $ctr_duplicate++;
+                        }
+                    }
+
+                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $field['file_temporary'], 'delete');
+
+                    //update register encode
+                    $update_encode['id']           = $result['id'];
+                    $total_uploaded_rows           = postVar('total_rows');
+                    $total_processed_rows          = $ctr_duplicate + $ctr_success + $ctr_failed;
+                    // calculate the first validation count for duplicates
+                    $first_stage_duplicate_count   = $total_uploaded_rows - $total_processed_rows;
+                    $total_duplicate               = $ctr_duplicate + $first_stage_duplicate_count;
+                    $update_encode['duplicate']    = $total_duplicate;
+                    $update_encode['success']      = $ctr_success;
+                    $update_encode['failed']       = $ctr_failed;
+                    Gcash::editClaimEncodeSummary($update_encode);
+
+                    $result['alert'] = 'Total Saved = ' . $ctr_success . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $total_duplicate;
+                } catch (Exception $e) {
+                    // die('Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage());
+                    $result['status']  = 'forbidden';
+                    $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
+                }
             }
 
-            echo json_encode($result);
+            $result['redirect'] = htmlDecode(postVar('redirect'));
+        } else {
+            $result['status']  = 'forbidden';
+            $result['message'] = 'Access to this resource on the server is denied';
         }
+
+        echo json_encode($result);
     }
-?>
+}

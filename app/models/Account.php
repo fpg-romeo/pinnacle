@@ -24,6 +24,24 @@
             return $result;
         } 
 
+        public static function ldap($username){ 
+            $record = mysql::select('account', 
+                                    '*', 
+                                     "active_directory = '{$username}'"); 
+                                     
+            if(is_array($record) ){
+                $result['record']  = recastArray($record);
+
+                $result['status']  = 'success';
+                $result['message'] = 'Welcome';
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Invalid Username or Password. Please try again';
+            } 
+
+            return $result;
+        }
+
         public static function login($username, $password){
             $result = mysql::select('account acc
                                      LEFT JOIN account_personal ape
@@ -742,7 +760,8 @@
             $record = self::getDynamicById('account',$id); 
 
             if(is_array($record)){
-                $fields = mysql::buildFields($post, ", ");
+                //$fields = mysql::buildFields($post, ", "); //This is passing a comma-prefixed string as the $fields to your update() function, which leads to invalid SQL
+                $fields = ltrim(mysql::buildFields($post, ", "), ", "); //IDK why but this fixes my issue
                 if(mysql::update('account', $fields, "id = '{$id}'")){
                     $result['status']  = 'success';
                     $result['message'] = 'Record Successfully Updated';
