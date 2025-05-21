@@ -113,23 +113,32 @@ class GcashController
                         try {
                             includeLibrary(['excel/PHPExcel.php']);
 
-                            $objPHPExcel   = new PHPExcel();
                             $inputFileType = PHPExcel_IOFactory::identify($file);
-                            $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
-                            if (method_exists($objReader, 'setReadDataOnly')) {
-                                $objReader->setReadDataOnly(true);
+
+                            // Use CSV reader explicitly if it's a CSV file
+                            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
+                                $objReader = new PHPExcel_Reader_CSV();
+                                $objReader->setDelimiter(','); // Optional: set delimiter if needed
+                                $objReader->setEnclosure('"');
+                                $objReader->setLineEnding("\r\n");
+                                $objReader->setSheetIndex(0);
+                            } else {
+                                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                                if (method_exists($objReader, 'setReadDataOnly')) {
+                                    $objReader->setReadDataOnly(true);
+                                }
                             }
 
-                            $objPHPExcel   = $objReader->load($file);
-                            $sheet         = $objPHPExcel->getActiveSheet();
+                            $objPHPExcel = $objReader->load($file);
+                            $sheet = $objPHPExcel->getActiveSheet();
 
                             $highestRow    = $sheet->getHighestRow();
                             $highestColumn = $sheet->getHighestColumn();
 
-                            $duplicate_contact_no       = [];
-                            $duplicate_company_name     = [];
-                            $duplicate_rows             = [];
-                            $duplicate = 0;
+                            $duplicate_contact_no   = [];
+                            $duplicate_company_name = [];
+                            $duplicate_rows         = [];
+                            $duplicate              = 0;
 
                             $column_name = $this->getColumns();
 
@@ -143,7 +152,7 @@ class GcashController
 
                                     // Check if it's a date AND numeric (i.e., Excel serial format)
                                     $date = array('date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end');
-                                    if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)){
+                                    if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)) {
                                         $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
                                         ${$value}  = date('Y-m-d', $timestamp);
                                     } elseif ($cellValue instanceof PHPExcel_RichText) {
@@ -157,7 +166,6 @@ class GcashController
                                 }
 
                                 if ('A' . $row != 'A1' && !empty($first_name)) {
-
                                     $result['row'][] = array(
                                         'row'                   => $row,
                                         'similar_company_name'  => '',
@@ -166,13 +174,13 @@ class GcashController
                                     );
                                     $lastIndex = count($result['row']) - 1;
 
-                                    // Merge column data into that row
                                     $result['row'][$lastIndex] = array_merge(
                                         $result['row'][$lastIndex],
                                         $columnarray['row']
                                     );
                                 }
                             }
+
                             $result['file_temporary'] = $file_new_name;
                             $result['file_name']      = $file_name;
                             $result['duplicate']      = count($duplicate_rows);
@@ -202,10 +210,23 @@ class GcashController
 
                     $objPHPExcel   = new PHPExcel();
                     $inputFileType = PHPExcel_IOFactory::identify($file);
-                    // $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
-                    $objReader     = PHPExcel_IOFactory::createReader($inputFileType)->setReadDataOnly(true); //setReadDataOnly - para ignore yung style or function sa cell. prevent na mag error sa excel file na manipulated
-                    $objPHPExcel   = $objReader->load($file);
-                    $sheet         = $objPHPExcel->getActiveSheet();
+
+                    // Use CSV reader explicitly if it's a CSV file
+                    if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
+                        $objReader = new PHPExcel_Reader_CSV();
+                        $objReader->setDelimiter(','); // Optional: set delimiter if needed
+                        $objReader->setEnclosure('"');
+                        $objReader->setLineEnding("\r\n");
+                        $objReader->setSheetIndex(0);
+                    } else {
+                        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                        if (method_exists($objReader, 'setReadDataOnly')) {
+                            $objReader->setReadDataOnly(true);
+                        }
+                    }
+
+                    $objPHPExcel = $objReader->load($file);
+                    $sheet = $objPHPExcel->getActiveSheet();
                     $highestRow    = $sheet->getHighestRow();
                     $highestColumn = $sheet->getHighestColumn();
 
