@@ -52,7 +52,7 @@ class Account
     public static function login($username, $password)
     {
         $result = mysql::select(
-            'account acc
+                                    'account acc
                                      LEFT JOIN account_personal ape
                                      ON acc.id = ape.account_id
                                      LEFT JOIN account_employment aem
@@ -61,7 +61,7 @@ class Account
                                      ON aem.account_type_id = mat.id
                                      LEFT JOIN master_account_status mas
                                      ON aem.account_status_id = mas.id',
-            'ape.*,
+                                    'ape.*,
                                      aem.*, 
                                      acc.*,
                                      (CASE 
@@ -81,7 +81,7 @@ class Account
     public static function getRecordByIdAndPassword($id, $password)
     {
         $result = mysql::select(
-            'account acc
+                                    'account acc
                                      LEFT JOIN account_personal ape
                                      ON acc.id = ape.account_id
                                      LEFT JOIN account_employment aem
@@ -90,7 +90,7 @@ class Account
                                      ON aem.account_type_id = mat.id
                                      LEFT JOIN master_account_status mas
                                      ON aem.account_status_id = mas.id',
-            'ape.*, 
+                                    'ape.*, 
                                      aem.*, 
                                      acc.*,
                                      (CASE 
@@ -110,7 +110,7 @@ class Account
     public static function getRecordById($id)
     {
         $result = mysql::select(
-            'account_employment aem USE INDEX(account_id)
+                                    'account_employment aem USE INDEX(account_id)
                                      LEFT JOIN account_personal ape
                                      ON aem.account_id = ape.account_id
                                      LEFT JOIN master_account_department mad
@@ -128,7 +128,7 @@ class Account
                                      LEFT JOIN account acc
                                      ON aem.account_id = acc.id
                                     ',
-            'aem.*, 
+                                    'aem.*, 
                                      ape.*, 
                                      mad.name AS account_department_name,
                                      mai.name AS account_designation_name,
@@ -188,7 +188,7 @@ class Account
         }
 
         $result = mysql::select(
-            'account_employment aem USE INDEX(account_id)
+                                    'account_employment aem USE INDEX(account_id)
                                      LEFT JOIN account_personal ape
                                      ON aem.account_id = ape.account_id
                                      LEFT JOIN master_account_department mad
@@ -200,7 +200,7 @@ class Account
                                      LEFT JOIN account acc
                                      ON aem.account_id = acc.id
                                     ',
-            'aem.*,
+                                    'aem.*,
                                      ape.*, 
                                      aem.account_id as id,
                                      aem.email,
@@ -242,14 +242,14 @@ class Account
             $filter_ids = '';
         }
         $result = mysql::select(
-            'account_employment aem USE INDEX(account_id)
+                                    'account_employment aem USE INDEX(account_id)
                                      LEFT JOIN account_personal ape
                                      ON ape.account_id = aem.account_id
                                      LEFT JOIN master_account_type mat
                                      ON aem.account_type_id = mat.id
                                      LEFT JOIN master_account_status mas
                                      ON aem.account_status_id = mas.id',
-            'ape.*, 
+                                    'ape.*, 
                                      aem.*, 
                                      aem.account_id as id,
                                      aem.email,
@@ -271,14 +271,14 @@ class Account
     public static function getRecordByFirstName($first_name)
     {
         $result = mysql::select(
-            'account_employment aem
+                                    'account_employment aem
                                      LEFT JOIN account_personal ape
                                      ON ape.account_id = aem.account_id
                                      LEFT JOIN master_account_type mat
                                      ON aem.account_type_id = mat.id
                                      LEFT JOIN master_account_status mas
                                      ON aem.account_status_id = mas.id',
-            'ape.*, 
+                                    'ape.*, 
                                      aem.*, 
                                      aem.account_id as id,
                                      aem.email,
@@ -1304,17 +1304,6 @@ class Account
             $filter = '';
         }
 
-        // Add filter for client_appointment if the appointment is Yes
-        $filter_appointment = "";
-        if ($appointment === 'Yes') {
-            $filter_appointment = " AND aem.client_appointment = 'Yes'";
-        }
-
-        $filter_auto_allocate = "";
-        if ($auto_allocate === 'Yes') {
-            $filter_auto_allocate = " AND aem.auto_allocate_leads = 'Yes'";
-        }
-
         $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
 
         $result = mysql::select(
@@ -1333,10 +1322,6 @@ class Account
                                      ON aem.account_level_id = mal.id 
                                      LEFT JOIN master_account_designation mai
                                      ON aem.account_designation_id = mai.id 
-                                     LEFT JOIN master_account_company mc
-                                     ON aem.company_id = mc.id
-                                     LEFT JOIN master_account_application maa
-                                     ON aem.application_id = maa.id
                                      ',
             'ape.*, 
                                      aem.*, 
@@ -1355,11 +1340,9 @@ class Account
                                      mad.name AS account_department_name,
                                      mae.name AS account_team_name,
                                      mal.name AS account_level_name,
-                                     mai.name AS account_designation_name,
-                                     mc.name AS company_name,
-                                     maa.name AS application_name
+                                     mai.name AS account_designation_name
                                     ',
-            $account_status . $filter_department . $filter . $filter_appointment . $filter_auto_allocate,
+            $account_status . $filter_department . $filter,
             'full_name ASC',
             $startLimit
         );
@@ -1785,18 +1768,6 @@ class Account
             $filter_designation = "";
         }
 
-        if ($client_appointment == 'Yes') {
-            $filter_client_appointment = " AND aem.client_appointment = 'Yes'";
-        } else {
-            $filter_client_appointment = '';
-        }
-
-        if ($auto_allocate_leads == 'Yes') {
-            $filter_auto_allocate_leads = " AND aem.auto_allocate_leads = 'Yes'";
-        } else {
-            $filter_auto_allocate_leads = '';
-        }
-
         $result = mysql::select(
             'account_employment aem
                                      LEFT JOIN account_personal ape
@@ -1823,7 +1794,7 @@ class Account
                                      mas.name AS account_status_name,
                                      mae.name AS account_team_name
                                     ',
-            "aem.account_status_id = 1 AND aem.account_region_id = 1" . $filter_department . $filter_designation . $filter_client_appointment . $filter_auto_allocate_leads
+            "aem.account_status_id = 1 AND aem.account_region_id = 1" . $filter_department . $filter_designation . $filter_client_appointment
         );
         return $result;
     }
