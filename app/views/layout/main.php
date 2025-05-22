@@ -75,62 +75,69 @@
                     </ul>
                 </li>  
             </ul>
+            
+            <?php if(ACCOUNT_TYPE_ID == 1 || accessGranted(['1'])){ ?>
+                <label class="sidebar-label pd-x-10 mg-t-20 op-3">MAINTENANCE</label>
+                <ul class="br-sideleft-menu">        
+                    <li class="br-menu-item">
+                        <a href="#" class="br-menu-link with-sub 
+                            <?php activeView(['master'], [
+                                                        'account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'
+                                                        ], 'active'); 
+                            ?>
+                        ">
+                            <i class="fa fa-cogs tx-18"></i>
+                            <span class="menu-item-label">Master</span>
+                        </a>
+                        <ul class="br-menu-sub">
+                            <li class="sub-item">
+                                <a href="" class="sub-link <?php activeView(['master'], ['account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'], 'active'); ?>">Account</a>
+                                <ul>
+                                    <li class="sub-item"><a href="/master/account-department" class="sub-link <?php activeView(['master'], ['account-department'], 'active'); ?>">Department</a></li>
+                                    <li class="sub-item"><a href="/master/account-designation" class="sub-link <?php activeView(['master'], ['account-designation'], 'active'); ?>">Designation</a></li>
+                                    <li class="sub-item"><a href="/master/account-type" class="sub-link <?php activeView(['master'], ['account-type'], 'active'); ?>">Type</a></li>
+                                    <li class="sub-item"><a href="/master/account-team" class="sub-link <?php activeView(['master'], ['account-team'], 'active'); ?>">Team</a></li>
+                                    <li class="sub-item"><a href="/master/account-level" class="sub-link <?php activeView(['master'], ['account-level'], 'active'); ?>">Level</a></li>
+                                    <li class="sub-item"><a href="/master/account-role" class="sub-link <?php activeView(['master'], ['account-role'], 'active'); ?>">Role</a></li>
+                                    <li class="sub-item"><a href="/master/account-status" class="sub-link <?php activeView(['master'], ['account-status'], 'active'); ?>">Status</a></li>
+                                </ul>
+                            </li> 
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
+            <?php } ?>
 
-            <label class="sidebar-label pd-x-10 mg-t-20 op-3">MAINTENANCE</label>
-            <ul class="br-sideleft-menu">        
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub 
-                        <?php activeView(['master'], [
-                                                      'account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'
-                                                      ], 'active'); 
-                        ?>
-                    ">
-                        <i class="fa fa-cogs tx-18"></i>
-                        <span class="menu-item-label">Master</span>
-                    </a>
-                    <ul class="br-menu-sub">
-                        <li class="sub-item">
-                            <a href="" class="sub-link <?php activeView(['master'], ['account-department', 'account-designation', 'account-type', 'account-team', 'account-level', 'account-role', 'account-status'], 'active'); ?>">Account</a>
-                            <ul>
-                                <li class="sub-item"><a href="/master/account-department" class="sub-link <?php activeView(['master'], ['account-department'], 'active'); ?>">Department</a></li>
-                                <li class="sub-item"><a href="/master/account-designation" class="sub-link <?php activeView(['master'], ['account-designation'], 'active'); ?>">Designation</a></li>
-                                <li class="sub-item"><a href="/master/account-type" class="sub-link <?php activeView(['master'], ['account-type'], 'active'); ?>">Type</a></li>
-                                <li class="sub-item"><a href="/master/account-team" class="sub-link <?php activeView(['master'], ['account-team'], 'active'); ?>">Team</a></li>
-                                <li class="sub-item"><a href="/master/account-level" class="sub-link <?php activeView(['master'], ['account-level'], 'active'); ?>">Level</a></li>
-                                <li class="sub-item"><a href="/master/account-role" class="sub-link <?php activeView(['master'], ['account-role'], 'active'); ?>">Role</a></li>
-                                <li class="sub-item"><a href="/master/account-status" class="sub-link <?php activeView(['master'], ['account-status'], 'active'); ?>">Status</a></li>
-                            </ul>
-                        </li> 
-                    </ul>
-                </li>
-            </ul>
-            <hr>
-            <ul class="br-sideleft-menu">
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub <?php activeView(['account'], ['all', 'manage', 'view'], 'active'); ?>">
-                        <i class="fa fa-users tx-20"></i>
-                        <span class="menu-item-label">Human Resources</span>
-                    </a>
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a href="/account/all/1" class="sub-link <?php activeView(['account'], ['all', 'manage', 'view'], 'active'); ?>">Employee Record</a></li>
-                    </ul>
-                </li>   
-            </ul>
-            <hr>
+            <?php if(ACCOUNT_TYPE_ID == 1 || accessGranted(['1'])){ ?>
+                <ul class="br-sideleft-menu">
+                    <li class="br-menu-item">
+                        <a href="#" class="br-menu-link with-sub <?php activeView(['account'], ['all', 'manage', 'view'], 'active'); ?>">
+                            <i class="fa fa-users tx-20"></i>
+                            <span class="menu-item-label">Human Resources</span>
+                        </a>
+                        <ul class="br-menu-sub">
+                            <li class="sub-item"><a href="/account/all/1" class="sub-link <?php activeView(['account'], ['all', 'manage', 'view'], 'active'); ?>">Employee Record</a></li>
+                        </ul>
+                    </li>   
+                </ul>
+                <hr>
+            <?php } ?>
 
-            <ul class="br-sideleft-menu">
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub <?php activeView(['notification', 'miscellaneous', 'company', 'finance'], ['tv', 'email', 'database', 'cron-job', 'owner-manage', 'quickbooks-token'], 'active'); ?>">
-                        <i class="fa fa-sliders tx-20"></i>
-                        <span class="menu-item-label">Control Panel</span>
-                    </a>
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a href="/notification/email/1" class="sub-link <?php activeView(['notification'], ['email'], 'active'); ?>">Email Notification</a></li>
-                        <li class="sub-item"><a href="/miscellaneous/cron-job" class="sub-link <?php activeView(['miscellaneous'], ['cron-job'], 'active'); ?>">Cron Jobs</a></li>
-                        <li class="sub-item"><a href="/miscellaneous/database" class="sub-link <?php activeView(['miscellaneous'], ['database'], 'active'); ?>">Database Backup</a></li>
-                    </ul>
-                </li>  
-            </ul>
+            <?php if(ACCOUNT_TYPE_ID == 1 || accessGranted(['1'])){ ?>
+                <ul class="br-sideleft-menu">
+                    <li class="br-menu-item">
+                        <a href="#" class="br-menu-link with-sub <?php activeView(['notification', 'miscellaneous', 'company', 'finance'], ['tv', 'email', 'database', 'cron-job', 'owner-manage', 'quickbooks-token'], 'active'); ?>">
+                            <i class="fa fa-sliders tx-20"></i>
+                            <span class="menu-item-label">Control Panel</span>
+                        </a>
+                        <ul class="br-menu-sub">
+                            <li class="sub-item"><a href="/notification/email/1" class="sub-link <?php activeView(['notification'], ['email'], 'active'); ?>">Email Notification</a></li>
+                            <li class="sub-item"><a href="/miscellaneous/cron-job" class="sub-link <?php activeView(['miscellaneous'], ['cron-job'], 'active'); ?>">Cron Jobs</a></li>
+                            <li class="sub-item"><a href="/miscellaneous/database" class="sub-link <?php activeView(['miscellaneous'], ['database'], 'active'); ?>">Database Backup</a></li>
+                        </ul>
+                    </li>  
+                </ul>
+            <?php } ?>
         </div>
 
         <div class="br-header">

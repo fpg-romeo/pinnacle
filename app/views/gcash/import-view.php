@@ -15,7 +15,7 @@
                             </tr>
                             <tr>
                                 <td class="wd-30p">Date of Birth</td>
-                                <td class="wd-70p tx-bold"><?php echo dateDisplayFull($data['claim']['date_of_birth']); ?></td>
+                                <td class="wd-70p tx-bold"><?php echo dateDisplaySystem($data['claim']['date_of_birth']); ?></td>
                             </tr>
                             <tr>
                                 <td class="wd-30p">Mobile Number</td>
@@ -27,7 +27,7 @@
                             </tr>
                             <tr>
                                 <td class="wd-30p">Date of By Load Transaction</td>
-                                <td class="wd-70p tx-bold"><?php echo dateDisplayFull($data['claim']['date_of_transaction']); ?></td>
+                                <td class="wd-70p tx-bold"><?php echo dateDisplaySystem($data['claim']['date_of_transaction']); ?></td>
                             </tr>
                             <tr>
                                 <td class="wd-30p">Buy Load Reference Number</td>
@@ -59,11 +59,11 @@
                             </tr>
                             <tr>
                                 <td class="wd-30p">Date of Insurance Start</td>
-                                <td class="wd-70p tx-bold"><?php echo dateDisplayFull($data['claim']['date_insurance_start']); ?></td>
+                                <td class="wd-70p tx-bold"><?php echo dateDisplaySystem($data['claim']['date_insurance_start']); ?></td>
                             </tr>
                             <tr>
                                 <td class="wd-30p">Date of Insurance End</td>
-                                <td class="wd-70p tx-bold"><?php echo dateDisplayFull($data['claim']['date_insurance_end']); ?></td>
+                                <td class="wd-70p tx-bold"><?php echo dateDisplaySystem($data['claim']['date_insurance_end']); ?></td>
                             </tr>
                         </tbody>
                     </table>

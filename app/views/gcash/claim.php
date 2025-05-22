@@ -62,15 +62,15 @@
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
                                         <thead class="thead-colored thead-dark">
                                             <tr>
-                                                <th class="wd-1p">POLICY ID</th>
-                                                <th class="wd-20p">NAME</th>
-                                                <th class="wd-8p">CONTACT NO</th>
-                                                <th class="wd-20p">DATE OF BIRTH</th>
-                                                <th class="wd-1p">EMAIL ADDRESS</th>
-                                                <th class="wd-10p">DATE OF INSURANCE START</th>
-                                                <th class="wd-10p">DATE OF INSURANCE END</th>
-                                                <th class="wd-20p">CREATED BY</th>
-                                                <th class="wd-20p">CREATED WHEN</th>
+                                                <th class="wd-10p">POLICY ID<br>(GCASH)</th>
+                                                <th class="wd-15p">FULL NAME</th>
+                                                <th class="wd-10p tx-center">CONTACT NO</th>
+                                                <th class="wd-10p tx-center">DATE OF BIRTH</th>
+                                                <th class="wd-10p">EMAIL ADDRESS</th>
+                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>START</th>
+                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>END</th>
+                                                <th class="wd-10p tx-center">UPLOADED<br>BY</th>
+                                                <th class="wd-10p tx-center">UPLOADED<br>WHEN</th>
                                                 <th class="wd-5p tx-center">ACTION</th>
                                             </tr>
                                         </thead>
@@ -99,13 +99,13 @@
                                                                 <tr id="' . $value['id'] . '">
                                                                     <td>' . htmlDecode($value['policy_id']) . '</td>
                                                                     <td>' . htmlDecode($value['first_name']) . '</td> 
-                                                                    <td>' . htmlDecode($value['mobile_number']) . '</td>
-                                                                    <td>' . htmlDecode($value['date_of_birth']) . '</td>
+                                                                    <td class="tx-center">' . htmlDecode($value['mobile_number']) . '</td>
+                                                                    <td class="tx-center">' . dateDisplaySystem($value['date_of_birth']) . '</td>
                                                                     <td>' . htmlDecode($value['email_address']) . '</td>
-                                                                    <td>' . htmlDecode($value['date_insurance_start']) . '</td>
-                                                                    <td>' . htmlDecode($value['date_insurance_end']) . '</td>
-                                                                    <td>' . htmlDecode($value['uploader_name']) . '</td>
-                                                                    <td>' . dateDisplaySystem($value['created_when']) . '</td>
+                                                                    <td class="tx-center">' . dateDisplaySystem($value['date_insurance_start']) . '</td>
+                                                                    <td class="tx-center">' . dateDisplaySystem($value['date_insurance_end']) . '</td>
+                                                                    <td class="tx-center">' . htmlDecode($value['uploader_name']) . '</td>
+                                                                    <td class="tx-center">' . dateDisplaySystem($value['created_when']) . '</td>
                                                                     <td class="tx-center"> 
                                                                         ' . $action . '
                                                                     </td>
