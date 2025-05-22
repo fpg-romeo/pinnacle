@@ -57,6 +57,11 @@
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                                     </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <a href="/gcash/claim/1" type="button" class="btn btn-info mg-l-2 reset">
+                                            <small><i class="fa fa-refresh fa-lg"></i> RESET</small>
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="table-responsive bd rounded">
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
@@ -75,7 +80,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <?php
+                                            <?php
                                             if (isset($data['records']) && !empty($data['records'])) {
                                                 foreach ($data['records'] as $key => $value) {
                                                     $action = '
