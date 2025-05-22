@@ -48,22 +48,6 @@
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'employment_type_name') ?></td>
                             </tr>
                             <tr>
-                                <td>Baseline Sales Target</td>
-                                <td class="tx-bold"><?php echo '$'. formatMoney(multiArrayKeyExist($data, 'account_employment', 'monthly_sales_target') ?? 0.00) ?></td>
-                            </tr>
-                            <tr>
-                                <td>Minimum Baseline Sales Target</td>
-                                <td class="tx-bold"><?php echo '$'. formatMoney(multiArrayKeyExist($data, 'account_employment', 'minimum_sales_target') ?? 0.00) ?></td>
-                            </tr>
-                            <tr>
-                                <td>Maximum Baseline Sales Target</td>
-                                <td class="tx-bold"><?php echo '$'. formatMoney(multiArrayKeyExist($data, 'account_employment', 'maximum_sales_target') ?? 0.00) ?></td>
-                            </tr>
-                            <tr>
-                                <td>Client Appointment</td>
-                                <td class="tx-bold"><?php echo (!empty(multiArrayKeyExist($data, 'account_employment', 'client_appointment')) ? multiArrayKeyExist($data, 'account_employment', 'client_appointment') : 'No'); ?> <small>(Include in Round Robin Scheduling)</small></td>
-                            </tr>
-                            <tr>
                                 <td>Joined Date</td>
                                 <td class="tx-bold"><?php echo  multiArrayKeyExist($data, 'account_employment', 'start_date') != null && multiArrayKeyExist($data, 'account_employment', 'start_date') !='1970-01-01' ? dateDisplaySystem(multiArrayKeyExist($data, 'account_employment', 'start_date')): '' ?></td>
                             </tr>
@@ -150,10 +134,6 @@
                             <tr>
                                 <td>Personal Email Address</td>
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'email') ?></td>
-                            </tr>
-                            <tr>
-                                <td>NRIC Number</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'nric_no') ?></td>
                             </tr>
                             <tr>
                                 <td>Current Address</td>
@@ -268,50 +248,6 @@
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_equipment', 'accessories') ?></td>
                             </tr>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" role="tab" id="headingFive">
-                <h6 class="mg-b-0">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#tab-account-promotion" aria-expanded="false" class="collapsed tx-gray-800 transition mg-b-0-force"><i class="fa fa-caret-right"></i> EMPLOYEE PROMOTION</a>
-                </h6>
-            </div>
-            <div id="tab-account-promotion" class="collapse">
-                <div class="card-block pd-10">
-                    <div class="bd rounded">
-                            <table class="table table-bordered table-responsive d-md-table">
-                                <thead class="bg-gray-100 tx-bold tx-center">
-                                    <tr>
-                                        <th class="wd-20p tx-center">DEPARTMENT</th>
-                                        <th class="wd-20p">DESIGNATION</th>
-                                        <th class="wd-20p">TEAM</th>
-                                        <th class="wd-20p">LEVEL</th>
-                                        <th class="wd-20p">ACTIVE?</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                         if(is_array($data['account_promotion'])){
-                                            foreach($data['account_promotion'] as $key => $value){
-                                                $is_active = $value['promotion_status'] == 'Active' ? 'Yes' : 'No';
-                                                echo '<tr>
-                                                    <td  class="tx-center">'.$value['account_department_name'].'</td>
-                                                    <td  class="tx-center">'.$value['account_designation_name'].'</td>
-                                                    <td  class="tx-center">'.$value['account_team_name'].'</td>
-                                                    <td  class="tx-center">'.$value['account_level_name'].'</td>
-                                                    <td  class="tx-center">'.$is_active.'</td>
-                                                    </tr>';
-                                            }
-                                         }else{
-                                            echo '<tr><td colspan="6" class="tx-center">No record found</td></tr>';
-                                         }
-                                    ?>
-                                    
-                                </tbody>
-                            </table>
                     </div>
                 </div>
             </div>
