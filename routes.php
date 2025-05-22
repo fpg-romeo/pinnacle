@@ -36,7 +36,6 @@
                                                     'forgotPassword', 'resetPassword', 'profile', 
                                                     'googleSigninCallback', 'importOnlineMember',
                                                      'importView',
-                                                    'accountPromotionJson',
                                                     'attachmentJson','removeAttachmentJson','perDepartmentManagerJson'
                                                    ],
                             'page'              => [

@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <a href="/gcash/claim/1" type="button" class="btn btn-info mg-l-2 reset">
-                                            <small><i class="fa fa-refresh fa-lg"></i> RESET</small>
+                                            <i class="fa fa-refresh fa-lg"></i> <small>RESET</small>
                                         </a>
                                     </div>
                                 </div>

@@ -136,11 +136,7 @@ class Account
                                      mae.name AS account_team_name,
                                      aem.account_id as id,
                                      aem.email,
-                                     acc.migrate_hris,
-                                     acc.transfer_leads,
-                                     acc.migrate_academy,
                                      acc.relogin,
-                                     acc.share_google_calendar,
                                      (CASE 
                                         WHEN ape.alias = "" OR ape.alias IS NULL
                                             THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
@@ -1381,118 +1377,6 @@ class Account
         }
     }
 
-    public static function getAccountPromotionByAccountId($account_id)
-    {
-
-        $result = mysql::select(
-            'account_promotion apr USE INDEX(account_id)
-                                     LEFT JOIN account_personal ape
-                                     ON ape.account_id = apr.account_id
-                                     LEFT JOIN master_account_department mad
-                                     ON apr.account_department_id = mad.id 
-                                     LEFT JOIN master_account_designation mai
-                                     ON apr.account_designation_id = mai.id 
-                                     LEFT JOIN master_account_team mae
-                                     ON apr.account_team_id = mae.id 
-                                     LEFT JOIN master_account_level mal
-                                     ON apr.account_level_id = mal.id 
-                                     ',
-            'apr.*,
-                                     ape.*, 
-                                     mad.name AS account_department_name,
-                                     mai.name AS account_designation_name,
-                                     mae.name AS account_team_name,
-                                     mal.name AS account_level_name
-                                    ',
-            "apr.account_id = '{$account_id}'",
-            'apr.created_when ASC'
-        );
-        return $result;
-    }
-
-    public static function getAccountPromotionById($id)
-    {
-        $result = mysql::select(
-            'account_promotion apr
-                                LEFT JOIN account_personal ape
-                                ON ape.account_id = apr.account_id
-                                LEFT JOIN master_account_department mad
-                                ON apr.account_department_id = mad.id 
-                                LEFT JOIN master_account_designation mai
-                                ON apr.account_designation_id = mai.id 
-                                LEFT JOIN master_account_team mae
-                                ON apr.account_team_id = mae.id 
-                                LEFT JOIN master_account_level mal
-                                ON apr.account_level_id = mal.id 
-                                ',
-            'apr.*,
-                                    ape.*, 
-                                    mad.name AS account_department_name,
-                                    mai.name AS account_designation_name,
-                                    mae.name AS account_team_name,
-                                    mal.name AS account_level_name
-                                ',
-            "apr.id = '{$id}'"
-        );
-        return $result;
-    }
-
-    public static function addAccountPromotion($post)
-    {
-        $fields = mysql::buildFields($post, ", ");
-        if (mysql::insert('account_promotion', $fields)) {
-            $result['status']  = 'success';
-            $result['message'] = 'New Record Saved';
-            $result['id']      = mysql::insertedId();
-        } else {
-            $result['status']  = 'failed';
-            $result['message'] = 'Encounter technical error. Pls try again 2';
-        }
-        return $result;
-    }
-
-    public static function editAccountPromotion($post)
-    {
-        $id     = $post['id'];
-        $record = self::getDynamicById('account_promotion', $id);
-
-        if (is_array($record)) {
-            $fields = mysql::buildFields($post, ", ");
-            if (mysql::update('account_promotion', $fields, "id = '{$id}'")) {
-                $result['status']               = 'success';
-                $result['message']              = 'Record Successfully Updated';
-                $result['id']                   = $id;
-            } else {
-                $result['status']         = 'failed';
-                $result['message']        = 'Encounter technical error. Pls try again 1';
-            }
-        } else {
-            $result['status']  = 'failed';
-            $result['message'] = 'No Record Found';
-        }
-
-        return $result;
-    }
-
-    public static function deleteAccountPromotion($id)
-    {
-        $record = self::getDynamicById('account_promotion', $id);
-
-        if (is_array($record)) {
-            if (mysql::delete('account_promotion', "id = '{$id}'")) {
-                $result['status']  = 'success';
-                $result['message'] = 'Record Successfully Deleted';
-            } else {
-                $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
-            }
-        } else {
-            $result['status']  = 'failed';
-            $result['message'] = 'No Record Found';
-        }
-        return $result;
-    }
-
     public static function getAccountTeamLeaderByAccountId($account_id)
     {
         $result = mysql::select(
@@ -2031,12 +1915,6 @@ class Account
         return $result;
     }
 
-    public static function getAccountPromotionRecordById($id)
-    {
-        $result = mysql::select('account_promotion', '*', "id = '{$id}'");
-        return $result;
-    }
-
     public static function getRecordByDesignationIdSAndTeamIds($account_designation_ids, $team_ids)
     {
 
@@ -2079,12 +1957,6 @@ class Account
                                      mas.name AS account_status_name',
             "aem.account_id IS NOT NULL AND aem.account_status_id = 1 " . $filter_team . $filter_designation
         );
-        return $result;
-    }
-
-    public static function getAccountPromotionRecordByAccountId($account_id)
-    {
-        $result = mysql::select('account_promotion', '*', "account_id = '{$account_id}'");
         return $result;
     }
 

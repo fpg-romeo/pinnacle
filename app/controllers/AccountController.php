@@ -325,7 +325,6 @@ class AccountController
             $personal['contact_no']               = postvar('contact_no', '');
             $personal['landline_no']              = postvar('landline_no', '');
             $personal['email']                    = (isset($_POST['personal_email']) ? strtolower(postvar('personal_email', '')) : '');
-            $personal['nric_no']                  = postvar('nric_no', '');
             $personal['address_current']          = postvar('address_current', '');
             $personal['address_hometown']         = postvar('address_hometown', '');
             $personal['medical_history']          = postvar('medical_history', '');
@@ -452,7 +451,6 @@ class AccountController
         $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
         $data['account_blacklist']          = recastArray(Account::getDynamicByAccountId('account_blacklist', $account_id));
         $data['account_equipment']          = recastArray(Account::getDynamicByAccountId('account_equipment', $account_id));
-        $data['account_promotion']          = Account::getAccountPromotionByAccountId($account_id);
         $data['account_department']         = Master::getDynamic('master_account_department');
         $data['account_level']              = Master::getDynamic('master_account_level');
         $data['account_type']               = Master::getDynamic('master_account_type');
@@ -561,9 +559,6 @@ class AccountController
                 $employment['account_id']             = $account_id;
                 $employment['account_department_id']  = postVar('account_department_id', 0);
                 $employment['account_designation_id'] = postVar('account_designation_id', 0);
-                $employment['monthly_sales_target']   = moneyClean(postVar('monthly_sales_target'));
-                $employment['minimum_sales_target']   = moneyClean(postVar('minimum_sales_target'));
-                $employment['maximum_sales_target']   = moneyClean(postVar('maximum_sales_target'));
                 $employment['account_team_id']        = postVar('account_team_id', 0);
                 $employment['account_level_id']       = postVar('account_level_id', 0);
                 $employment['report_to']              = postvar('report_to', 0);
@@ -903,8 +898,7 @@ class AccountController
         $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
         $data['account_blacklist']          = recastArray(Account::getDynamicByAccountId('account_blacklist', $account_id));
         $data['account_equipment']          = recastArray(Account::getDynamicByAccountId('account_equipment', $account_id));
-        $data['account_promotion']          = Account::getAccountPromotionByAccountId($account_id);
-
+        
         if (is_array($data['account'])) {
 
             $data['account']['account_role_name'] = '';
@@ -964,79 +958,6 @@ class AccountController
         }
 
         views('account.import-online-member', $data);
-    }
-
-    public function accountPromotionJson()
-    {
-
-        if (isset($_POST) && !empty($_POST)) {
-
-            if (!empty($_POST['id']) && isset($_POST['action']) && $_POST['action'] == 'edit') {
-
-                $record = Account::getAccountPromotionById($_POST['id']);
-                if (is_array($record)) {
-                    $result = recastArray($record);
-                }
-            } elseif (!empty($_POST['id']) && isset($_POST['action']) && $_POST['action'] == 'delete') {
-                $result = Account::deleteAccountPromotion($_POST['id']);
-            } else {
-
-                $id                                = postVar('id', 0);
-                $field['account_id']               = postVar('account_id', 0);
-                $field['account_department_id']    = postVar('account_promotion_department_id', 0);
-                $field['account_designation_id']   = postVar('account_promotion_designation_id', 0);
-                $field['account_team_id']          = postVar('account_promotion_team_id', 0);
-                $field['account_level_id']         = postVar('account_promotion_level_id', 0);
-                $field['promotion_status']         = postVar('is_promotion_active') == "true" ? 'Active' : '';
-
-                $data = checkRequiredPost(array('account_id', 'account_promotion_department_id'));
-                if (!array_key_exists('error', $data)) {
-                    if (!empty($id)) {
-                        $field['id']                = $id;
-                        $field['updated_by']        = ACCOUNT_ID;
-                        $field['updated_when']      = dateTimeStamp();
-
-                        $result                     = Account::editAccountPromotion($field);
-                    } else {
-                        $field['created_by']        = ACCOUNT_ID;
-                        $field['created_when']      = dateTimeStamp();
-                        $result                     = Account::addAccountPromotion($field);
-                    }
-
-                    if ($result['status'] == 'success') {;
-                        if ($field['promotion_status'] == 'Active') {
-
-                            $promotions = Account::getAccountPromotionByAccountId($field['account_id']);
-                            if (is_array($promotions)) {
-                                foreach ($promotions as $promotion) {
-                                    if ($promotion['id'] != $result['id']) {
-                                        $promotionDetails['id'] = $promotion['id'];
-                                        $promotionDetails['promotion_status'] = '';
-                                        Account::editAccountPromotion($promotionDetails);
-                                        $promotionDetails = [];
-                                    }
-                                }
-                            }
-                            $employment['account_id']             = $field['account_id'];
-                            $employment['account_department_id']  = $field['account_department_id'];
-                            $employment['account_designation_id'] = $field['account_designation_id'];
-                            $employment['account_team_id']        = $field['account_team_id'];
-                            $employment['account_level_id']       = $field['account_level_id'];
-
-                            $employment = Account::manageDynamic('account_employment', $employment);
-                        }
-                    }
-                } else {
-                    $result['status']  = 'error';
-                    $result['message'] = 'Error On creating promotion record Please Check all fields';
-                }
-            }
-        } else {
-            $result['status']  = 'forbidden';
-            $result['message'] = 'Access to this resource on the server is denied';
-        }
-
-        echo json_encode($result);
     }
 
     public function attachmentJson()
