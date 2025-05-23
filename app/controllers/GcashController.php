@@ -311,7 +311,7 @@ class GcashController
 
                     $result['alert'] = 'Total Saved = ' . $ctr_success . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $total_duplicate;
 
-                    $email_body = Email::emailBodyForClaimUpload($ctr_success, $ctr_failed, $result['id']);
+                    $email_body = Email::emailBodyForClaimUpload($ctr_success, $ctr_duplicate, $ctr_failed, $result['id']);
                     $email_body = Email::templateDefault($email_body);
 
                     Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file);

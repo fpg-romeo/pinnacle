@@ -314,7 +314,7 @@ class Email
         return self::templateDefault($message);
     }
 
-    public static function emailBodyForClaimUpload($ctr_success, $ctr_failed, $batch)
+    public static function emailBodyForClaimUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch)
     {
         $email_body = '<html>
                             <head>
@@ -336,6 +336,7 @@ class Email
                                         <li><strong>Uploaded By:</strong> ' . ACCOUNT_NAME . '</li>
                                         <li><strong>Date Uploaded:</strong> ' . date('F d, Y') . '</li>
                                         <li><strong>Total Saved:</strong> ' . $ctr_success . '</li>
+                                        <li><strong>Total Duplicate:</strong> ' . $ctr_duplicate . '</li>
                                         <li><strong>Total Failed:</strong> ' . $ctr_failed . '</li>
                                         <li><strong>Batch:</strong> ' . $batch . '</li>
                                     </ul>
