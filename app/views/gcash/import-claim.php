@@ -73,6 +73,7 @@
     //UPLOAD
     $(document).on('click', '.upload', function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var tbody = $('#modal-import tbody');
         var fd = new FormData();
         fd.append('file', document.getElementById('file').files[0]);

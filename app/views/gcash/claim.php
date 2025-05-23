@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <div id="modal_view" class="modal fade">
+    <div id="modal-view" class="modal fade">
         <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
@@ -218,7 +218,7 @@
             e.preventDefault();
             var id = $(this).data('id');
 
-            var display = $('#modal_view .modal-body');
+            var display = $('#modal-view .modal-body');
             $.ajax({
                 url: '/gcash/import-view/',
                 type: 'GET',
@@ -232,7 +232,7 @@
                     // console.log('success');
                     $(data).appendTo(display);
 
-                    $('#modal_view').modal('show');
+                    $('#modal-view').modal('show');
                 },
                 error: function(xhr, desc, err) {
                     //console.log(xhr);
