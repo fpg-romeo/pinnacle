@@ -72,8 +72,8 @@ class GcashController
         $account_id           = urldecode(getVar('account_id'));
         $account_ids          = ACCOUNT_ID;
 
-        $data['summary']      = Gcash::getClaimEncodeSummary($account_ids, pagination('start'), pagination('limit'));
-        $data['total_record'] = Gcash::countClaimEncodeSummary($account_ids);
+        $data['summary']      = Gcash::getClaimEncodeSummary($account_id, pagination('start'), pagination('limit'));
+        $data['total_record'] = Gcash::countClaimEncodeSummary($account_id);
         $data['total_page']   = pagination('total', $data['total_record']);
 
         $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
