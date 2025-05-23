@@ -1,141 +1,135 @@
 <?php
-    class Email{
-        
-        public function __construct(){
+class Email
+{
 
+    public function __construct() {}
+
+    public static function sendEmail($to, $subject, $message, $cc = '', $bcc = '', $attachment = '', $reply_to = '')
+    {
+        includeLibrary(['mail/phpMailer.php']);
+        includeDefault(['configuration']);
+
+        $CONFIGURATION = Configuration::general();
+
+        //TEST MODE : STAGING & DEVELOPMENT
+        if (SYSTEM_ENVIRONMENT != PRODUCTION) {
+            $to       = ACCOUNT_EMAIL;
+            $cc       = $CONFIGURATION['IT_TEAM_EMAIL'];
+            $bcc      = '';
+            $reply_to = '';
+            $subject  = 'PLEASE IGNORE - ' . strtoupper(SYSTEM_SUBDOMAIN) . ' : ' . strtoupper(SYSTEM_ENVIRONMENT) . ' SERVER TEST | ' . $subject;
         }
 
-        public static function sendEmail($to, $subject, $message, $cc='', $bcc='', $attachment='', $reply_to=''){
-            includeLibrary(['mail/phpMailer.php']);
-            includeDefault(['configuration']);
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->SetLanguage('en', 'phpmailer/language/');
+        $mail->Host = $CONFIGURATION['MAIL_HOST'];
+        $mail->Port = $CONFIGURATION['MAIL_PORT'];
+        $mail->SMTPAuth = false;
 
-            $CONFIGURATION = Configuration::general();
-
-            //TEST MODE : STAGING & DEVELOPMENT
-            if(SYSTEM_ENVIRONMENT != PRODUCTION){
-                $to       = ACCOUNT_EMAIL;
-                $cc       = $CONFIGURATION['IT_TEAM_EMAIL'];
-                $bcc      = '';
-                $reply_to = '';
-                $subject  = 'PLEASE IGNORE - '.strtoupper(SYSTEM_SUBDOMAIN).' : '.strtoupper(SYSTEM_ENVIRONMENT).' SERVER TEST | '.$subject;
-            }
-
-            $mail = new PHPMailer();
-            $mail->IsSMTP();
-            $mail->IsHTML(true);
-
-            $mail->SMTPDebug    = SMTP::DEBUG_OFF;  // debugging: 1 = errors and messages, 2 = messages only
-            $mail->SMTPAuth     = false; 
-            //$mail->SMTPSecure = 'tls'; 
-            $mail->SMTPSecure   = PHPMailer::ENCRYPTION_SMTPS; // ssl
-            $mail->CharSet      = 'UTF-8';
-            $mail->Host         = $CONFIGURATION['MAIL_HOST'];
-            $mail->Port         = $CONFIGURATION['MAIL_PORT'];
-            //$mail->Username   = $CONFIGURATION['MAIL_EMAIL'];
-            //$mail->Password   = $CONFIGURATION['MAIL_PASSWORD'];
-            
-            if(is_array($to)){
-                foreach($to as $to_email){
-                    if(!empty($to_email) && Shortcode::checkIfValidEmail($to_email)){
-                        $mail->addAddress($to_email);
-                    }
-                }
-            }else{
-                if(!empty($to) && Shortcode::checkIfValidEmail($to)){
-                    $mail->addAddress($to);
+        if (is_array($to)) {
+            foreach ($to as $to_email) {
+                if (!empty($to_email) && Shortcode::checkIfValidEmail($to_email)) {
+                    $mail->addAddress($to_email);
                 }
             }
-
-            if(!empty($cc)){
-                if(is_array($cc)){
-                    foreach($cc as $cc_email){
-                        if(!empty($cc_email) && Shortcode::checkIfValidEmail($cc_email)){
-                            $mail->AddCC($cc_email);
-                        }
-                    }
-                }else{
-                    if(!empty($cc) && Shortcode::checkIfValidEmail($cc)){
-                        $mail->AddCC($cc);
-                    }
-                }
+        } else {
+            if (!empty($to) && Shortcode::checkIfValidEmail($to)) {
+                $mail->addAddress($to);
             }
-
-            if(!empty($bcc)){
-                $bcc = $bcc; 
-            }else{
-                $bcc = $CONFIGURATION['IT_TEAM_EMAIL'];
-            }
-
-            if(is_array($bcc)){
-                foreach($bcc as $bcc_email){
-                    if(!empty($bcc_email) && Shortcode::checkIfValidEmail($bcc_email)){
-                        $mail->AddBCC($bcc_email);
-                    }
-                }
-            }else{
-                if(!empty($bcc) && Shortcode::checkIfValidEmail($bcc)) {
-                        $mail->AddBCC($bcc);
-                }
-            }
-
-            if(!empty($attachment)){
-                if(is_array($attachment)){
-                    foreach ($attachment as $key_attachment => $value_attachment){
-                        if(file_exists($value_attachment['file']) && !empty($value_attachment['file'])){
-                            $mail->AddAttachment($value_attachment['file'], $value_attachment['name']);
-                        }
-                    }
-                }
-            }
-
-            if(!empty($reply_to)){
-                $reply_to = $reply_to; 
-            }else{
-                $reply_to = $CONFIGURATION['MAIL_REPLYTO'];
-            }
-
-            if(is_array($reply_to)){
-                foreach($reply_to as $reply_to_email){
-                    if(!empty($reply_to_email) && Shortcode::checkIfValidEmail($reply_to_email)){
-                        $mail->addReplyTo($reply_to_email);
-                    }
-                }
-            }else{
-                if(!empty($reply_to) && Shortcode::checkIfValidEmail($reply_to)){
-                        $mail->addReplyTo($reply_to);
-                }
-            }        
- 
-            $mail->Subject = htmlDecode($subject);
-            $mail->SetFrom($CONFIGURATION['MAIL_SENDER'], $CONFIGURATION['MAIL_FROM_NAME']);
-            $mail->msgHTML($message);
-
-            if(!$mail->Send()){
-                $return['status']  = 'failed';
-                $return['message'] = 'Encounter sending email error. Mailer Error: '.$mail->ErrorInfo;
-            }else{
-                $return['status']  = 'success';
-                $return['message'] = 'Email sent';
-            }
-
-            $mail->clearAddresses();
-            $mail->clearAttachments();
-
-            return $return;
         }
 
-		public static function templateDefault($content, $size=''){
-
-			includeDefault(['configuration']);
-			$CONFIGURATION = Configuration::general();
-
-            if($size == 'fullsize'){
-                $width = '90%';
-            }else{
-                $width = '690px';
+        if (!empty($cc)) {
+            if (is_array($cc)) {
+                foreach ($cc as $cc_email) {
+                    if (!empty($cc_email) && Shortcode::checkIfValidEmail($cc_email)) {
+                        $mail->AddCC($cc_email);
+                    }
+                }
+            } else {
+                if (!empty($cc) && Shortcode::checkIfValidEmail($cc)) {
+                    $mail->AddCC($cc);
+                }
             }
+        }
 
-			$template = '	
+        if (!empty($bcc)) {
+            $bcc = $bcc;
+        } else {
+            $bcc = $CONFIGURATION['IT_TEAM_EMAIL'];
+        }
+
+        if (is_array($bcc)) {
+            foreach ($bcc as $bcc_email) {
+                if (!empty($bcc_email) && Shortcode::checkIfValidEmail($bcc_email)) {
+                    $mail->AddBCC($bcc_email);
+                }
+            }
+        } else {
+            if (!empty($bcc) && Shortcode::checkIfValidEmail($bcc)) {
+                $mail->AddBCC($bcc);
+            }
+        }
+
+        if (!empty($attachment)) {
+            if (is_array($attachment)) {
+                foreach ($attachment as $key_attachment => $value_attachment) {
+                    if (file_exists($value_attachment['file']) && !empty($value_attachment['file'])) {
+                        $mail->AddAttachment($value_attachment['file'], $value_attachment['name']);
+                    }
+                }
+            }
+        }
+
+        if (!empty($reply_to)) {
+            $reply_to = $reply_to;
+        } else {
+            $reply_to = $CONFIGURATION['MAIL_REPLYTO'];
+        }
+
+        if (is_array($reply_to)) {
+            foreach ($reply_to as $reply_to_email) {
+                if (!empty($reply_to_email) && Shortcode::checkIfValidEmail($reply_to_email)) {
+                    $mail->addReplyTo($reply_to_email);
+                }
+            }
+        } else {
+            if (!empty($reply_to) && Shortcode::checkIfValidEmail($reply_to)) {
+                $mail->addReplyTo($reply_to);
+            }
+        }
+
+        $mail->Subject = htmlDecode($subject);
+        $mail->SetFrom($CONFIGURATION['MAIL_SENDER'], $CONFIGURATION['MAIL_FROM_NAME']);
+        $mail->msgHTML($message);
+
+        if (!$mail->Send()) {
+            $return['status']  = 'failed';
+            $return['message'] = 'Encounter sending email error. Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+            $return['status']  = 'success';
+            $return['message'] = 'Email sent';
+        }
+
+        $mail->clearAddresses();
+        $mail->clearAttachments();
+
+        return $return;
+    }
+
+    public static function templateDefault($content, $size = '')
+    {
+
+        includeDefault(['configuration']);
+        $CONFIGURATION = Configuration::general();
+
+        if ($size == 'fullsize') {
+            $width = '90%';
+        } else {
+            $width = '690px';
+        }
+
+        $template = '	
                             <html>
                             <head>
                             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -143,7 +137,7 @@
                             <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
                             <meta charset="utf-8">
                             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no">
-                            <title>'.$CONFIGURATION['SYSTEM_NAME'].'</title>
+                            <title>' . $CONFIGURATION['SYSTEM_NAME'] . '</title>
                             <style>
                             html, body, div, span, applet, object, iframe,
                             h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -247,7 +241,7 @@
                             .margin-bottom-40   { margin-bottom: 40px !important; }
                             .margin-bottom-50   { margin-bottom: 50px !important; }
 
-                            @media screen and (min-width: 768px) { .box { width: '.$width.'; } }
+                            @media screen and (min-width: 768px) { .box { width: ' . $width . '; } }
                             @media screen and (max-width: 767px) { .box { width: 90%; padding: 15px; } }
                             @media screen and (max-width: 600px) { 
                                 .block          { padding: 0; }
@@ -261,60 +255,62 @@
                             <div class="block">
                                 <div class="box">
                                     <table width="100%" cellpadding="10">
-										'.$content.'
+										' . $content . '
 									</table>
 								</div>
 								<div class="footer">
-									If you require further assistance, email us at <a href="mailto:'.$CONFIGURATION['SYSTEM_EMAIL'].'" target="_blank">'.$CONFIGURATION['SYSTEM_EMAIL'].'</a>
+									If you require further assistance, email us at <a href="mailto:' . $CONFIGURATION['SYSTEM_EMAIL'] . '" target="_blank">' . $CONFIGURATION['SYSTEM_EMAIL'] . '</a>
                                     <br>
-                                    <a href="'.$CONFIGURATION['SYSTEM_COMPANY_URL'].'" target="_blank" class="link-href">'.$CONFIGURATION['SYSTEM_COMPANY'].'</a>
-                                    '.$CONFIGURATION['SYSTEM_SLOGAN'].'
+                                    <a href="' . $CONFIGURATION['SYSTEM_COMPANY_URL'] . '" target="_blank" class="link-href">' . $CONFIGURATION['SYSTEM_COMPANY'] . '</a>
+                                    ' . $CONFIGURATION['SYSTEM_SLOGAN'] . '
                                     <br>
                                     <br>
-                                    All Rights Reserved. Copyright &copy; '.date("Y").'. '.$CONFIGURATION['SYSTEM_ALIAS'].'.<small>'.$CONFIGURATION['SYSTEM_VERSION'].'</small>
+                                    All Rights Reserved. Copyright &copy; ' . date("Y") . '. ' . $CONFIGURATION['SYSTEM_ALIAS'] . '.<small>' . $CONFIGURATION['SYSTEM_VERSION'] . '</small>
 								</div>
 							</div>
 							</body>
 							</html>
-					    ';		
-		
-			return $template;
-		}
+					    ';
 
-        public static function testEmail($message){
-            return self::templateDefault($message);
-        }
+        return $template;
+    }
 
-		public static function resetPassword($post=''){
-            $CONFIGURATION = Configuration::general();
+    public static function testEmail($message)
+    {
+        return self::templateDefault($message);
+    }
 
-			$message = '
-						<p>Hi '.$post['name'].',</p>
+    public static function resetPassword($post = '')
+    {
+        $CONFIGURATION = Configuration::general();
+
+        $message = '
+						<p>Hi ' . $post['name'] . ',</p>
 						<br>
 						<p>
 							A request has been received to reset your password.
 							<br>
-							If you made this request, click the link below to reset your password. If you didn\'t make this request you can just ignore this e-mail or you may contact as at '.$CONFIGURATION['SYSTEM_EMAIL'].'
+							If you made this request, click the link below to reset your password. If you didn\'t make this request you can just ignore this e-mail or you may contact as at ' . $CONFIGURATION['SYSTEM_EMAIL'] . '
 							<br>
 							<br>
-                            <a href="'.$CONFIGURATION['SYSTEM_URL'].'/reset-password/'.$post['email']."/".$post['code'].'" target="_blank" class="link-href">'.$CONFIGURATION['SYSTEM_URL'].'/reset-password/'.$post['email']."/".$post['code'].'</a>
+                            <a href="' . $CONFIGURATION['SYSTEM_URL'] . '/reset-password/' . $post['email'] . "/" . $post['code'] . '" target="_blank" class="link-href">' . $CONFIGURATION['SYSTEM_URL'] . '/reset-password/' . $post['email'] . "/" . $post['code'] . '</a>
                             <br>
                             <br>
                             or 
                             <br>
                             <br>
-                            <a href="'.$CONFIGURATION['SYSTEM_URL'].'/reset-password/'.$post['email']."/".$post['code'].'" target="_blank" class="button-href">CLICK HERE to reset your password</a>
+                            <a href="' . $CONFIGURATION['SYSTEM_URL'] . '/reset-password/' . $post['email'] . "/" . $post['code'] . '" target="_blank" class="button-href">CLICK HERE to reset your password</a>
 						</p>
 					   ';
 
-			return self::templateDefault($message);
-        }
+        return self::templateDefault($message);
+    }
 
-		public static function remarks($post){
+    public static function remarks($post)
+    {
 
-			$message = htmlDecode($post['content']);
-		
-			return self::templateDefault($message);
-		}
-	}
-?>
+        $message = htmlDecode($post['content']);
+
+        return self::templateDefault($message);
+    }
+}

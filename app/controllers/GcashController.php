@@ -35,6 +35,9 @@ class GcashController
     {
         $data = array();
 
+        includeDefault(['email']);
+        $email = Email::sendEmail('ranchinges@fpgins.com', 'test email', 'test email', '');
+
         $id              = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
@@ -88,6 +91,7 @@ class GcashController
 
     public function importClaimJson()
     {
+        includeDefault(['email']);
         $result = array();
 
         $CONFIGURATION = Configuration::general();
@@ -307,6 +311,38 @@ class GcashController
                     Gcash::editClaimEncodeSummary($update_encode);
 
                     $result['alert'] = 'Total Saved = ' . $ctr_success . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $total_duplicate;
+
+                    $email_body = '<html>
+                                    <head>
+                                    <style>
+                                        body { font-family: Arial, sans-serif; color: #333; }
+                                        .container { padding: 20px; }
+                                        .success { font-weight: bold; }
+                                        .summary { margin-top: 15px; }
+                                        .footer { margin-top: 30px; font-size: 12px; color: #888; }
+                                    </style>
+                                    </head>
+                                    <body>
+                                    <div class="container">
+                                        <h4>Excel Data Import Completed</h4>
+                                        <p class="success">The data from your Excel file has been successfully imported into the system.</p>
+
+                                        <div class="summary">
+                                        <p><strong>Import Summary:</strong></p>
+                                        <ul>
+                                            <li><strong>Total Saved:</strong> ' . $ctr_success . '</li>
+                                            <li><strong>Total Failed:</strong> ' . $ctr_failed . '</li>
+                                        </ul>
+                                        </div>
+
+                                        <div class="footer">
+                                        <p>This is an automated message. Please do not reply to this email.</p>
+                                        </div>
+                                    </div>
+                                    </body>
+                                </html>';
+
+                    Email::sendEmail('', 'Claim Upload', $email_body, '');
                 } catch (Exception $e) {
                     // die('Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage());
                     $result['status']  = 'forbidden';
