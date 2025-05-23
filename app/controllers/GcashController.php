@@ -35,6 +35,8 @@ class GcashController
     {
         $data = array();
 
+        includeDefault(['email']);
+
         $id              = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
@@ -88,6 +90,7 @@ class GcashController
 
     public function importClaimJson()
     {
+        includeDefault(['email']);
         $result = array();
 
         $CONFIGURATION = Configuration::general();
@@ -108,7 +111,9 @@ class GcashController
                 $result['message'] = 'File format is not allow';
             } else if ($checkIfExistingFile > 0) {
                 $result['status']  = 'Error';
-                $result['message'] = 'File already exist';
+                $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
+                                        The file you are trying to upload has the same name as an existing file.</br>
+                                        Please rename your file and try uploading again.';
             } else {
                 if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                     if (!array_key_exists('error', $result)) {
@@ -292,7 +297,6 @@ class GcashController
                         }
                     }
 
-                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $field['file_temporary'], 'delete');
 
                     //update register encode
                     $update_encode['id']           = $result['id'];
@@ -307,6 +311,12 @@ class GcashController
                     Gcash::editClaimEncodeSummary($update_encode);
 
                     $result['alert'] = 'Total Saved = ' . $ctr_success . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $total_duplicate;
+
+                    $email_body = Email::emailBodyForClaimUpload($ctr_success, $ctr_duplicate, $ctr_failed, $result['id']);
+                    $email_body = Email::templateDefault($email_body);
+
+                    Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file);
+                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $field['file_temporary'], 'delete');
                 } catch (Exception $e) {
                     // die('Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage());
                     $result['status']  = 'forbidden';
