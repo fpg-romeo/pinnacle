@@ -35,6 +35,8 @@ class GcashController
     {
         $data = array();
 
+        includeDefault(['email']);
+
         $id              = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
@@ -109,7 +111,9 @@ class GcashController
                 $result['message'] = 'File format is not allow';
             } else if ($checkIfExistingFile > 0) {
                 $result['status']  = 'Error';
-                $result['message'] = 'File already exist';
+                $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
+                                        The file you are trying to upload has the same name as an existing file.</br>
+                                        Please rename your file and try uploading again.';
             } else {
                 if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                     if (!array_key_exists('error', $result)) {

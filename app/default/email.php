@@ -316,34 +316,36 @@ class Email
 
     public static function emailBodyForClaimUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch)
     {
-        $email_body = '<html>
-                            <head>
-                            <style>
-                                body { font-family: Arial, sans-serif; color: #333; }
-                                .container { padding: 20px; }
-                                .success { font-weight: bold; }
-                                .summary { margin-top: 15px; }
-                            </style>
-                            </head>
-                            <body>
-                            <div class="container">
-                                <h4>Excel Data Import Completed</h4>
-                                <p class="success">The data from your Excel file has been successfully imported into the system.</p>
+        $email_body = '
+                        <div class="container">
+                            <h4>GCash Claim Excel Data import is completed</h4>
+                            <p class="success">The data from your Excel file has been successfully imported into the system.</p>
 
-                                <div class="summary">
-                                    <p><strong>Import Summary:</strong></p>
-                                    <ul>
-                                        <li><strong>Uploaded By:</strong> ' . ACCOUNT_NAME . '</li>
-                                        <li><strong>Date Uploaded:</strong> ' . date('F d, Y') . '</li>
-                                        <li><strong>Total Saved:</strong> ' . $ctr_success . '</li>
-                                        <li><strong>Total Duplicate:</strong> ' . $ctr_duplicate . '</li>
-                                        <li><strong>Total Failed:</strong> ' . $ctr_failed . '</li>
-                                        <li><strong>Batch:</strong> ' . $batch . '</li>
-                                    </ul>
-                                </div>
+                            <br><br>
+                            <div class="summary">
+                                <p><strong>Import Summary:</strong></p>
+                                <table style="padding: 0 !important">
+                                    <tr>
+                                        <td>
+                                            <strong>Total Saved:</strong><br>
+                                            <strong>Total Duplicate:</strong><br>
+                                            <strong>Total Failed:</strong><br>
+                                            <strong>Batch:</strong><br>
+                                            <strong>Date Uploaded:</strong><br>
+                                            <strong>Uploaded By:</strong>
+                                        </td>
+                                        <td>
+                                            ' . $ctr_success . '<br>
+                                            ' . $ctr_duplicate . '<br>
+                                            ' . $ctr_failed . '<br>
+                                            ' . $batch . '<br>
+                                            ' . date('F d, Y') . '<br>
+                                            ' . ACCOUNT_NAME . '
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                            </body>
-                        </html>';
+                        </div>';
         return $email_body;
     }
 }

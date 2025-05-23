@@ -1,7 +1,7 @@
 <div class="br-mainpanel mg-0">
     <div class="br-pagebody pd-0 mg-0">
         <form id="form-import-lead" method="post" enctype="multipart/form-data">
-            <h6 class="mg-b-0 tx-uppercase tx-primary tx-bold modal-title">IMPORT DATA</h6>
+            <h6 class="mg-b-0 tx-uppercase tx-primary tx-bold modal-title">IMPORT DATA <small class="ml-3 text-muted">(Note: You can't upload a file with the same name)</small></h6>
             <hr>
             <div class="row">
                 <div class="col-sm-3">
