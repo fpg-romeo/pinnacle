@@ -14,7 +14,7 @@ class Email
         //TEST MODE : STAGING & DEVELOPMENT
         if (SYSTEM_ENVIRONMENT != PRODUCTION) {
             $to       = ACCOUNT_EMAIL;
-            $cc       = ''; //$CONFIGURATION['IT_TEAM_EMAIL'];
+            $cc       = $CONFIGURATION['IT_TEAM_EMAIL'];
             $bcc      = '';
             $reply_to = '';
             $subject  = 'PLEASE IGNORE - ' . strtoupper(SYSTEM_SUBDOMAIN) . ' : ' . strtoupper(SYSTEM_ENVIRONMENT) . ' SERVER TEST | ' . $subject;
