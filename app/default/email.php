@@ -14,7 +14,7 @@ class Email
         //TEST MODE : STAGING & DEVELOPMENT
         if (SYSTEM_ENVIRONMENT != PRODUCTION) {
             $to       = ACCOUNT_EMAIL;
-            $cc       = $CONFIGURATION['IT_TEAM_EMAIL'];
+            $cc       = ''; //$CONFIGURATION['IT_TEAM_EMAIL'];
             $bcc      = '';
             $reply_to = '';
             $subject  = 'PLEASE IGNORE - ' . strtoupper(SYSTEM_SUBDOMAIN) . ' : ' . strtoupper(SYSTEM_ENVIRONMENT) . ' SERVER TEST | ' . $subject;
@@ -73,11 +73,11 @@ class Email
 
         if (!empty($attachment)) {
             if (is_array($attachment)) {
-                foreach ($attachment as $key_attachment => $value_attachment) {
-                    if (file_exists($value_attachment['file']) && !empty($value_attachment['file'])) {
-                        $mail->AddAttachment($value_attachment['file'], $value_attachment['name']);
-                    }
+                foreach ($attachment as $k_attachment) {
+                    $mail->AddAttachment($k_attachment);
                 }
+            } else {
+                $mail->AddAttachment($attachment);
             }
         }
 
@@ -312,5 +312,37 @@ class Email
         $message = htmlDecode($post['content']);
 
         return self::templateDefault($message);
+    }
+
+    public static function emailBodyForClaimUpload($ctr_success, $ctr_failed, $batch)
+    {
+        $email_body = '<html>
+                            <head>
+                            <style>
+                                body { font-family: Arial, sans-serif; color: #333; }
+                                .container { padding: 20px; }
+                                .success { font-weight: bold; }
+                                .summary { margin-top: 15px; }
+                            </style>
+                            </head>
+                            <body>
+                            <div class="container">
+                                <h4>Excel Data Import Completed</h4>
+                                <p class="success">The data from your Excel file has been successfully imported into the system.</p>
+
+                                <div class="summary">
+                                    <p><strong>Import Summary:</strong></p>
+                                    <ul>
+                                        <li><strong>Uploaded By:</strong> ' . ACCOUNT_NAME . '</li>
+                                        <li><strong>Date Uploaded:</strong> ' . date('F d, Y') . '</li>
+                                        <li><strong>Total Saved:</strong> ' . $ctr_success . '</li>
+                                        <li><strong>Total Failed:</strong> ' . $ctr_failed . '</li>
+                                        <li><strong>Batch:</strong> ' . $batch . '</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            </body>
+                        </html>';
+        return $email_body;
     }
 }

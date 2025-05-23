@@ -69,6 +69,7 @@ if (isset($_SESSION['login_id'])) {
 		define('ACCOUNT_LEVEL_ID', htmlDecode($record['account_level_id']));
 		define('ACCOUNT_ID', htmlDecode($record['id']));
 		define('ACCOUNT_ALIAS', (!empty(htmlDecode($record['alias'])) ? htmlDecode($record['alias']) : htmlDecode($record['first_name'])));
+		define('ACCOUNT_NAME', htmlDecode(fullName($record['first_name'], $record['middle_name'], $record['last_name'])));
 		define('ACCOUNT_EMAIL', htmlDecode($record['email']));
 		define('ACCOUNT_PHOTO', userPhoto(htmlDecode($record['photo']), 'account', htmlDecode($record['gender'])));
 		define('ACCOUNT_TEAM_LEADER_ID', htmlDecode($record['team_leader_account_id']));
