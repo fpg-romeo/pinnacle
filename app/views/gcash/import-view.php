@@ -2,7 +2,7 @@
         <div class="br-pagebody pd-0 mg-0">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <h6 class="br-section-label tx-info mg-t-0">CLAIM DETAILS</h6>
+                    <h6 class="br-section-label tx-info mg-t-0">DECLARATION DETAILS</h6>
                     <table class="table table-bordered bd mg-b-0">
                         <tbody>
                             <tr>
