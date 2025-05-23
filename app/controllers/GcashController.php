@@ -35,9 +35,6 @@ class GcashController
     {
         $data = array();
 
-        includeDefault(['email']);
-        $email = Email::sendEmail('ranchinges@fpgins.com', 'test email', 'test email', '');
-
         $id              = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
