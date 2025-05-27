@@ -363,22 +363,6 @@ class GcashController
 
         $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
-        if (isset($_POST['update-declaration'])) {
-            $data = checkRequiredPost(array('declaration_id', 'batch_number', 'workflow_number', 'endorsement_number'));
-            file_put_contents(getDocumentRoot() . '/logs/gcash-declaration-update.log', dateTimeStamp() . ' - ' . json_encode($data) . PHP_EOL, FILE_APPEND);
-            if (!array_key_exists('error', $data)) {
-                $field['id']                 = postVar('declaration_id');
-                $field['batch_number']       = postVar('batch_number');
-                $field['workflow_number']    = postVar('workflow_number');
-                $field['endorsement_number'] = postVar('endorsement_number');
-
-                $update = Gcash::updateClaimDeclarationSummary($field);
-
-
-                $data['alert'] = 'Declaration updated successfully';
-            }
-        }
-
         views('gcash.declaration', $data);
     }
 
@@ -390,5 +374,24 @@ class GcashController
         $data['declaration']    = recastArray(Gcash::getClaimDeclarationSummaryById($id));
 
         views('gcash.import-update-declaration', $data);
+    }
+
+    public function updateDeclarationJson()
+    {
+        $data = checkRequiredPost(array('declaration_id', 'batch_number', 'workflow_number', 'endorsement_number'));
+        file_put_contents(getDocumentRoot() . '/logs/gcash-declaration-update.log', dateTimeStamp() . ' - ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        if (!array_key_exists('error', $data)) {
+            $field['id']                 = postVar('declaration_id');
+            $field['batch_number']       = postVar('batch_number');
+            $field['workflow_number']    = postVar('workflow_number');
+            $field['endorsement_number'] = postVar('endorsement_number');
+
+            $update = Gcash::updateClaimDeclarationSummary($field);
+
+
+            $data['alert'] = 'Declaration updated successfully';
+        }
+
+        echo json_encode($data);
     }
 }

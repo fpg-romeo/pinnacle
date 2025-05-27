@@ -117,14 +117,12 @@
         </div>
     </div>
 
-    <div id="modal-update" class="modal fade">
+    <div id="modal-update-declaration" class="modal fade">
         <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
             <div class="modal-content bd-0">
-                <form>
-                    <div class="modal-body pd-25">
+                <div class="modal-body pd-25">
 
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -152,7 +150,7 @@
             e.preventDefault();
             var id = $(this).data('id');
 
-            var display = $('#modal-update .modal-body');
+            var display = $('#modal-update-declaration .modal-body');
             $.ajax({
                 url: '/gcash/import-update-declaration/',
                 type: 'GET',
@@ -166,7 +164,7 @@
                     // console.log('success');
                     $(data).appendTo(display);
 
-                    $('#modal-update').modal('show');
+                    $('#modal-update-declaration').modal('show');
                 },
                 error: function(xhr, desc, err) {
                     //console.log(xhr);

@@ -1,0 +1,8 @@
+2025-05-27 15:32:41 - {"post":{"declaration_id":"3"},"error":{"batch_number":"<p class=\"required-prompt\">*Required field<\/p>","workflow_number":"<p class=\"required-prompt\">*Required field<\/p>","endorsement_number":"<p class=\"required-prompt\">*Required field<\/p>"}}
+2025-05-27 15:33:35 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"test","endorsement_number":"test"}}
+2025-05-27 15:34:48 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"tests","endorsement_number":"tests"}}
+2025-05-27 15:35:15 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"testss","endorsement_number":"testss"}}
+2025-05-27 15:36:11 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"test","endorsement_number":"test"}}
+2025-05-27 15:36:47 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"test","endorsement_number":"test"}}
+2025-05-27 15:37:32 - {"post":{"declaration_id":"3","batch_number":"batch 200","workflow_number":"test","endorsement_number":"test"}}
+2025-05-27 15:38:04 - {"post":{"declaration_id":"1","batch_number":"batch 100","workflow_number":"wf234324324","endorsement_number":"ensd324324234"}}
