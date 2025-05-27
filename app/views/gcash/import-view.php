@@ -2,12 +2,13 @@
         <div class="br-pagebody pd-0 mg-0">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <h6 class="br-section-label tx-info mg-t-0">DECLARATION DETAILS</h6>
+                    <h6 class="br-section-label tx-info mg-t-0 float-left">DECLARATION DETAILS</h6>
+                    <h6 class="br-section-label tx-info mg-t-0 float-right"><?php echo multiArrayKeyExist($data, 'claim', 'batch_id'); ?></h6>
                     <table class="table table-bordered bd mg-b-0">
                         <tbody>
                             <tr>
-                                <td class="wd-30p">Batch</td>
-                                <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'batch_id'); ?></td>
+                                <td class="wd-30p">Batch Number</td>
+                                <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'batch_number'); ?></td>
                             </tr>
                             <tr>
                                 <td class="wd-30p">Name</td>
