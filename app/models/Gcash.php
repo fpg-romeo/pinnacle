@@ -260,4 +260,128 @@ class Gcash
 
         return $result;
     }
+
+
+    public static function countClaimDeclarationSummary($keyword = '', $account_id = '', $status_id = '')
+    {
+        $result = self::getClaimDeclarationSummary($keyword, $account_id, $status_id);
+        if (is_array($result)) {
+            return count($result);
+        } else {
+            return 0;
+        }
+    }
+
+    public static function getClaimDeclarationSummary($keyword = '', $account_id, $start = '', $limit = '')
+    {
+
+        if (is_array($account_id)) {
+            $account_ids        = implode(',', $account_id);
+            $filter_created_by     = " AND gcl.created_by IN ({$account_ids})";
+        } else {
+            if (!empty($account_id)) {
+                $filter_created_by      = " AND gcl.created_by = '{$account_id}'";
+            } else {
+                $filter_created_by      = "";
+            }
+        }
+
+        if (!empty(trim($keyword))) {
+
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " 
+                            (
+                                gcb.batch_number LIKE {$keyword}
+                                OR
+                                gcb.endorsement_number LIKE {$keyword}
+                                OR
+                                gcb.workflow_number LIKE {$keyword}
+                            )
+                          ";
+        } else {
+            $filter = '';
+        }
+
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+
+        $result = mysql::select(
+            'gcash_claim_batch_declaration gcb
+                                 LEFT JOIN account_personal ape
+                                 ON ape.account_id = gcb.created_by',
+            'gcb.*,
+                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
+            " " . $filter_created_by . $filter,
+            "gcb.id DESC",
+            $startLimit
+        );
+
+        return $result;
+    }
+
+    public static function addBatchDeclaration($batch_declaration)
+    {
+        $result = array();
+        $checkIfDeclarationExists = self::checkIfDeclarationExists($batch_declaration['batch_number']);
+        $fields = mysql::buildFields($batch_declaration, ", ");
+        if ($checkIfDeclarationExists == 0) {
+            if (mysql::insert('gcash_claim_batch_declaration', $fields)) {
+                $result['status']  = 'success';
+                $result['message'] = 'New Batch Declaration Saved';
+                $result['id']      = mysql::insertedId();
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record already exists for this batch number' . $batch_declaration['batch_number'];
+        }
+        return $result;
+    }
+
+    public static function checkIfDeclarationExists($batch_number)
+    {
+        $result = mysql::select(
+            'gcash_claim_batch_declaration gcb',
+            'count(gcb.id) as count',
+            "gcb.batch_number = '{$batch_number}'"
+        );
+
+        return $result[0]['count'];
+    }
+
+
+    public static function getClaimDeclarationSummaryById($id)
+    {
+        $result = mysql::select(
+            'gcash_claim_batch_declaration gcb',
+            'gcb.*',
+            "gcb.id = '{$id}'"
+        );
+        return $result;
+    }
+
+
+    public static function updateClaimDeclarationSummary($post)
+    {
+        $id     = $post['id'];
+        $record = self::getClaimDeclarationSummaryById($id);
+
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('gcash_claim_batch_declaration', $fields, "id = '{$id}'")) {
+                $result['status']  = 'success';
+                $result['message'] = 'Record Successfully Updated';
+                $result['id']      = $id;
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+
+        return $result;
+    }
 }

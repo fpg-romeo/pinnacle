@@ -258,6 +258,7 @@ class GcashController
                     $encode_summary['created_by']       = ACCOUNT_ID;
                     $encode_summary['created_when']     = dateTimeStamp();
                     $result                             = Gcash::addClaimEncodeSummary($encode_summary);
+                    $batch_declaration                  = array();
 
                     $column_name = $this->getColumns();
 
@@ -289,6 +290,8 @@ class GcashController
                             $encode['created_by']   = ACCOUNT_ID;
                             $encode['created_when'] = dateTimeStamp();
 
+                            $batch_declaration['batch_number'] = $encode['batch_number'];
+
                             $encode_result = Gcash::addClaimEncode($encode);
 
                             if ($encode_result['status'] == 'success') {
@@ -301,6 +304,10 @@ class GcashController
                         }
                     }
 
+                    $batch_declaration['created_by'] = ACCOUNT_ID;
+                    $batch_declaration['created_when'] = dateTimeStamp();
+
+                    ($batch_declaration['batch_number'] != "") ? Gcash::addBatchDeclaration($batch_declaration) : "";
 
                     //update register encode
                     $update_encode['id']           = $result['id'];
@@ -334,5 +341,54 @@ class GcashController
         }
 
         echo json_encode($result);
+    }
+
+    public function declaration()
+    {
+        includeModel(['Account']);
+
+        $data          = array();
+        $CONFIGURATION = Configuration::general();
+
+        $account_id           = urldecode(getVar('account_id'));
+        $account_ids          = ACCOUNT_ID;
+
+        $account_id           = $account_id == "all" ? '' : $account_id;
+
+        $keyword              = urldecode(getVar('keyword'));
+        $data['records']      = Gcash::getClaimDeclarationSummary($keyword, $account_id, pagination('start'), pagination('limit'));
+
+        $data['total_record'] = Gcash::countClaimDeclarationSummary($keyword, $account_id, '');
+        $data['total_page']   = pagination('total', $data['total_record']);
+
+        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+
+        if (isset($_POST['update-declaration'])) {
+            $data = checkRequiredPost(array('declaration_id', 'batch_number', 'workflow_number', 'endorsement_number'));
+            file_put_contents(getDocumentRoot() . '/logs/gcash-declaration-update.log', dateTimeStamp() . ' - ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+            if (!array_key_exists('error', $data)) {
+                $field['id']                 = postVar('declaration_id');
+                $field['batch_number']       = postVar('batch_number');
+                $field['workflow_number']    = postVar('workflow_number');
+                $field['endorsement_number'] = postVar('endorsement_number');
+
+                $update = Gcash::updateClaimDeclarationSummary($field);
+
+
+                $data['alert'] = 'Declaration updated successfully';
+            }
+        }
+
+        views('gcash.declaration', $data);
+    }
+
+    public function importUpdateDeclaration()
+    {
+        $data = array();
+
+        $id                     = idDecrypt(getVar('id'));
+        $data['declaration']    = recastArray(Gcash::getClaimDeclarationSummaryById($id));
+
+        views('gcash.import-update-declaration', $data);
     }
 }
