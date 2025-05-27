@@ -14,6 +14,16 @@ class Gcash
         return $result;
     }
 
+    public static function getClaimEncodeByPolicyId($policy_id)
+    {
+        $result = mysql::select(
+            'gcash_claim gcl',
+            'gcl.*',
+            "gcl.policy_id = '{$policy_id}'"
+        );
+        return $result;
+    }
+
     public static function getClaimEncodeByName($name)
     {
         $result = mysql::select(
@@ -96,14 +106,14 @@ class Gcash
         $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
 
         $result = mysql::select(
-                                'gcash_claim gcl
+            'gcash_claim gcl
                                  LEFT JOIN account_personal ape
                                  ON ape.account_id = gcl.created_by',
-                                'gcl.*,
+            'gcl.*,
                                  CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
-                                "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
-                                "gcl.id DESC",
-                                $startLimit
+            "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
+            "gcl.id DESC",
+            $startLimit
         );
 
         return $result;
@@ -121,23 +131,28 @@ class Gcash
 
     public static function addClaimEncode($post)
     {
-        // $name   = $post['first_name'] . ' ' . $post['last_name'] . ' ' . $post['middle_name'];
-        // $record = self::getClaimEncodeByName($name);
-
-        // if (!is_array($record)) {
-        $fields = mysql::buildFields($post, ", ");
-        if (mysql::insert('gcash_claim', $fields)) {
-            $result['status']  = 'success';
-            $result['message'] = 'New Record Saved';
-            $result['id']      = mysql::insertedId();
+        $record = self::getClaimEncodeByPolicyId($post['policy_id']);
+        if (is_array($record) && $post['policy_id'] != '') {
+            $post['batch_id'] = $record[0]['batch_id'];
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('gcash_claim', $fields, "policy_id = '{$post['policy_id']}'")) {
+                $result['status']  = 'success';
+                $result['message'] = 'Record Successfully Updated';
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
         } else {
-            $result['status']  = 'failed';
-            $result['message'] = 'Encounter technical error. Pls try again';
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::insert('gcash_claim', $fields)) {
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
         }
-        // } else {
-        //     $result['status']  = 'failed';
-        //     $result['message'] = 'Record already exist';
-        // }
 
         return $result;
     }

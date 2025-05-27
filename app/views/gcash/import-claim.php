@@ -42,6 +42,7 @@
                     <th>PREMIUM TAXES</th>
                     <th>INSURANCE START</th>
                     <th>INSURANCE END</th>
+                    <th>BATCH NUMBER</th>
                     <th>SIMILAR POLICY NO</th>
                     <th>STATUS</th>
                 </thead>
@@ -139,6 +140,7 @@
                             '<td>' + (item['protect_premium_taxes'] == null ? '' : item['protect_premium_taxes']) + '</td>' +
                             '<td>' + (item['date_insurance_start'] == null ? '' : item['date_insurance_start']) + '</td>' +
                             '<td>' + (item['date_insurance_end'] == null ? '' : item['date_insurance_end']) + '</td>' +
+                            '<td>' + (item['batch_number'] == null ? '' : item['batch_number']) + '</td>' +
                             '<td>' + (item['similar_name'] == null ? '' : item['similar_name'].replace(/[,]+/g, '<br>')) + '</td>' +
                             '<td>' + item['status'] + '</td>' +
                             '</tr>';

@@ -27,6 +27,7 @@ class GcashController
             'N' => 'protect_premium_taxes',
             'O' => 'date_insurance_start',
             'P' => 'date_insurance_end',
+            'Q' => 'batch_number',
         ];
         return $column_name;
     }
@@ -106,17 +107,19 @@ class GcashController
             $file_new_name = 'Claim-' . dateTimeAsId() . '.' . $file_ext;
             $extensions    = $CONFIGURATION['ALLOWED_EXCEL'];
 
-            $checkIfExistingFile = Gcash::checkIfExistingFilename($file_name);
+            // $checkIfExistingFile = Gcash::checkIfExistingFilename($file_name);
 
             if (!in_array($file_ext, $extensions)) {
                 $result['status']  = 'Error';
                 $result['message'] = 'File format is not allow';
-            } else if ($checkIfExistingFile > 0) {
-                $result['status']  = 'Error';
-                $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
-                                        The file you are trying to upload has the same name as an existing file.</br>
-                                        Please rename your file and try uploading again.';
-            } else {
+            }
+            //  else if ($checkIfExistingFile > 0) {
+            //     $result['status']  = 'Error';
+            //     $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
+            //                             The file you are trying to upload has the same name as an existing file.</br>
+            //                             Please rename your file and try uploading again.';
+            // } 
+            else {
                 if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                     if (!array_key_exists('error', $result)) {
 
@@ -261,7 +264,6 @@ class GcashController
                     foreach ($list as $row) {
                         if (empty($duplicate)) {
 
-                            $encode['id']           = 0;
                             $encode['duplicate']    = 'No';
                             $encode['batch_id']     = $result['id'];
 
@@ -320,7 +322,6 @@ class GcashController
                     Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file);
                     moveFile($file, getDocumentRoot() . '/upload/gcash/' . $field['file_temporary'], 'delete');
                 } catch (Exception $e) {
-                    // die('Error loading file "'.pathinfo($file,PATHINFO_BASENAME).'": '.$e->getMessage());
                     $result['status']  = 'forbidden';
                     $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
                 }
