@@ -97,6 +97,8 @@ class Gcash
                                 gcl.date_insurance_start LIKE {$keyword}
                                 OR
                                 gcl.date_insurance_end LIKE {$keyword}
+                                OR
+                                gcl.batch_number LIKE {$keyword}
                             )
                           ";
         } else {
