@@ -329,16 +329,6 @@ class AccountController
             $personal['address_hometown']         = postvar('address_hometown', '');
             $personal['medical_history']          = postvar('medical_history', '');
 
-            $bank['name']                         = postvar('bank_name', '');
-            $bank['account_no']                   = postvar('bank_account_no', '');
-            $bank['payee_name']                   = postvar('bank_payee_name', '');
-            $bank['code']                         = postvar('bank_code', '');
-            $bank['branch_code']                  = postvar('bank_branch_code', '');
-
-            $emergency['name']                    = postvar('emergency_contact_name', '');
-            $emergency['contact_no']              = postvar('emergency_contact_no', '');
-            $emergency['relationship']            = postvar('emergency_contact_relationship', '');
-
             $employment['account_region_id']      = postvar('account_region_id', 0);
             $employment['employee_no']            = postvar('employee_no', 0);
             $employment['email']                  = strtolower(postVar('employee_email'));
@@ -354,10 +344,6 @@ class AccountController
             $employment['account_level_id']       = postVar('account_level_id', 0);
             $employment['report_to']              = postvar('report_to', 0);
             $employment['employment_type_id']     = postvar('employment_type_id', 0);
-            $equipment['computer_type']           = postvar('computer_type', '');
-            $equipment['computer_serial_no']      = postvar('computer_serial_no', '');
-            $equipment['locker_no']               = postvar('locker_no', '');
-            $equipment['accessories']             = postvar('accessories', '');
 
             $field['relogin']                     = isset($_POST['relogin']) && $_POST['relogin'] == 'on' ? 'Yes' : '';
 
@@ -400,10 +386,6 @@ class AccountController
                     $field['updated_by']          = ACCOUNT_ID;
                     $field['updated_when']        = dateTimeStamp();
 
-                    if (isset($_POST['transfer_to_house']) && $_POST['transfer_to_house'] == 'Yes') {
-                        $field['transfer_leads'] = postVar('transfer_to_house');
-                        $trasnferToHouse = Shortcode::transferToHouseSales($account_id);
-                    }
                     $result = Account::editRecord($field);
                 } else {
                     $field['email']               = $employment['email'];
@@ -420,23 +402,8 @@ class AccountController
                     $employment['account_id']     = $account_id;
                     $equipment['account_id']      = $account_id;
 
-                    if (isset($_POST['add_user_to_blacklist']) && $_POST['add_user_to_blacklist'] == 'Yes') {
-                        $blacklist['account_id']  = $account_id;
-                        $blacklist['first_name']  = $personal['first_name'];
-                        $blacklist['last_name']   = $personal['last_name'];
-                        $blacklist['alias']       = $personal['alias'];
-                        $blacklist['email']       = $personal['email'];
-                        $blacklist['contact_no']  = $personal['contact_no'];
-                        $blacklist['birthday']    = $personal['birthday'];
-                        $blacklist['remarks']     = postvar('add_user_to_blacklist_remarks', '');
-                        $blacklist                = Account::manageDynamic('account_blacklist', $blacklist);
-                    }
-
                     $personal   = Account::manageDynamic('account_personal', $personal);
-                    $bank       = Account::manageDynamic('account_bank', $bank);
-                    $emergency  = Account::manageDynamic('account_emergency_contact', $emergency);
                     $employment = Account::manageDynamic('account_employment', $employment);
-                    $equipment  = Account::manageDynamic('account_equipment', $equipment);
 
                     alertAndRedirect($result['message'], '/account/manage/' . idEncrypt($account_id));
                 }
@@ -446,20 +413,13 @@ class AccountController
         $data['account']                    = recastArray(Account::getRecordById($account_id));
         $data['account_all']                = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
         $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
-        $data['account_bank']               = recastArray(Account::getDynamicByAccountId('account_bank', $account_id));
-        $data['account_emergency_contact']  = recastArray(Account::getDynamicByAccountId('account_emergency_contact', $account_id));
         $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
-        $data['account_blacklist']          = recastArray(Account::getDynamicByAccountId('account_blacklist', $account_id));
-        $data['account_equipment']          = recastArray(Account::getDynamicByAccountId('account_equipment', $account_id));
         $data['account_department']         = Master::getDynamic('master_account_department');
         $data['account_level']              = Master::getDynamic('master_account_level');
         $data['account_type']               = Master::getDynamic('master_account_type');
         $data['account_status']             = Master::getDynamic('master_account_status');
         $data['account_role']               = Master::getDynamic('master_account_role');
         $data['account_team']               = Master::getDynamic('master_account_team');
-        $data['region']                     = Master::getDynamic('master_region');
-        $data['nationality']                = Master::getDynamic('master_country');
-        $data['employment_type']            = Master::getDynamic('master_employment_type');
 
         if (!empty($data['account_role'])) {
             $ctr_role          = 1;
@@ -893,11 +853,7 @@ class AccountController
         $CONFIGURATION = Configuration::general();
         $data['account']                    = recastArray(Account::getRecordById($account_id));
         $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
-        $data['account_bank']               = recastArray(Account::getDynamicByAccountId('account_bank', $account_id));
-        $data['account_emergency_contact']  = recastArray(Account::getDynamicByAccountId('account_emergency_contact', $account_id));
         $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
-        $data['account_blacklist']          = recastArray(Account::getDynamicByAccountId('account_blacklist', $account_id));
-        $data['account_equipment']          = recastArray(Account::getDynamicByAccountId('account_equipment', $account_id));
         
         if (is_array($data['account'])) {
 
@@ -925,14 +881,10 @@ class AccountController
                 $data['account_employment']['account_department_name']  = recastArray(Master::getDynamicById('master_account_department', $data['account_employment']['account_department_id']))['name'];
                 $data['account_employment']['account_designation_name'] = recastArray(Master::getDynamicById('master_account_designation', $data['account_employment']['account_designation_id']))['name'];
                 $data['account_employment']['account_team_name']        = (!empty($data['account_employment']['account_team_id']) ? recastArray(Master::getDynamicById('master_account_team', $data['account_employment']['account_team_id']))['name'] : '');
+                
                 $data['account_employment']['account_level_name']       = (!empty($data['account_employment']['account_level_id']) ? recastArray(Master::getDynamicById('master_account_level', $data['account_employment']['account_level_id']))['name'] : '');
-                $data['account_employment']['account_region_name']      = recastArray(Master::getDynamicById('master_country', $data['account_employment']['account_region_id']))['name'] ?? '';
+                
                 $data['account_employment']['report_name']              = (!empty($data['account_employment']['report_to']) ? recastArray(Account::getPersonalByAccountId($data['account_employment']['report_to']))['full_name'] : '');
-                $data['account_employment']['employment_type_name']     = (!empty($data['account_employment']['employment_type_id']) ? recastArray(Master::getDynamicById('master_employment_type', $data['account_employment']['employment_type_id']))['name'] : '');
-            }
-
-            if (is_array($data['account_personal'])) {
-                $data['account_personal']['nationality_name'] = recastArray(Master::getDynamicById('master_country', $data['account_personal']['nationality_id']))['name'];
             }
         }
 

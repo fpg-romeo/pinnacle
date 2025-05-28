@@ -87,22 +87,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mg-t-20" id="transfer-to-house-div" hidden>
-                                <label class="col-sm-3 form-control-label"></label>
-                                <div class="col-sm-9 mg-t-10 mg-sm-t-0">
-                                    <label class="ckbox mg-b-10"><input name="transfer_to_house" <?php echo !empty(multiArrayKeyExist($data, 'account', 'transfer_leads')) && multiArrayKeyExist($data, 'account', 'transfer_leads') == 'Yes' ? 'checked disabled' : ''; ?> type="checkbox" value="Yes"><span>Transfer all converted leads ownership to House Sales <b class="tx-danger">(Reminder this is not reversible)</b></span></label>
-                                </div>
-                            </div>
-                            <div id="add-to-blacklist-div" class="hidden">
-                                <div class="row mg-t-10">
-                                    <label class="col-sm-3 form-control-label"></label>
-                                    <div class="col-sm-9 mg-t-10 mg-sm-t-0">
-                                        <label class="ckbox mg-b-10"><input name="add_user_to_blacklist" <?php echo is_array($data['account_blacklist']) ? 'checked disabled' : ''; ?> type="checkbox" value="Yes"><span>Add this user to blacklist</span></label>
-                                        <textarea name="add_user_to_blacklist_remarks" class="form-control no-resize" <?php  echo is_array($data['account_blacklist']) ? 'disabled' : ''; ?> placeholder="Remarks/Reason"><?php echo multiArrayKeyExist($data, 'account_blacklist', 'remarks'); ?></textarea>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div><!-- card-block -->
                 </div>
@@ -116,14 +100,6 @@
                     </div><!-- card-header -->
                     <div class="card-body hidden">
                         <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Region/Branch<span class="tx-danger">*</span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_region_id" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_option($data['region'], multiArrayKeyExist($data, 'account_employment', 'account_region_id')); ?>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Employee No.<span class="tx-danger">*</span></label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
@@ -157,7 +133,7 @@
                             <div class="row mg-b-20 account_designation">
                                 <label class="col-sm-3 form-control-label">Designation<span class="tx-danger"></span></label>
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_designation_id" class="form-control select" data-width="100%" disabled>
+                                    <select name="account_designation_id" class="form-control select" data-width="100%">
                                         
                                     </select>
                                 </div>
@@ -175,14 +151,6 @@
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <select name="report_to" class="form-control select" data-width="100%">
                                         <?php echo tool_dropdown_option($data['account_all'], multiArrayKeyExist($data, 'account', 'report_to'), 'full_name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Employment Type</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="employment_type_id" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_option($data['employment_type'], multiArrayKeyExist($data, 'account', 'employment_type_id'), 'name'); ?>
                                     </select>
                                 </div>
                             </div>
@@ -258,14 +226,6 @@
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <select name="gender" class="form-control select" data-width="100%" required>
                                         <?php echo tool_dropdown_value(value_gender(), multiArrayKeyExist($data, 'account_personal', 'gender')); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Nationality<span class="tx-danger">*</span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="nationality_id" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_option($data['nationality'], multiArrayKeyExist($data, 'account_personal', 'nationality_id')); ?>
                                     </select>
                                 </div>
                             </div>
@@ -391,120 +351,6 @@
                         </div>
                     </div><!-- card-block -->
                 </div>
-
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">Bank Information</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body hidden">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Bank Name<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="bank_name" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_bank', 'name'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Bank Account Number<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="bank_account_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_bank', 'account_no'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Payee Name (as of bank account)<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="bank_payee_name" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_bank', 'payee_name'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Bank Code<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="bank_code" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_bank', 'code'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Branch Code<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="bank_branch_code" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_bank', 'branch_code'); ?>">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">Emergency Contact Person</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body hidden">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Name<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="emergency_contact_name" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_emergency_contact', 'name'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Contact Number<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="emergency_contact_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_emergency_contact', 'contact_no'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Relationship<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="emergency_contact_relationship" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_emergency_contact', 'relationship'); ?>">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">Equipment Assignment</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body hidden">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Computer Type<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="computer_type" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_value(value_computer_type(), multiArrayKeyExist($data, 'account_equipment', 'computer_type')); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Computer Serial Number<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-6 mg-t-10 mg-sm-t-0">
-                                    <input name="computer_serial_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_equipment', 'computer_serial_no'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Locker Number<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-2 mg-t-10 mg-sm-t-0">
-                                    <input name="locker_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_equipment', 'locker_no'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Accessories<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-9 mg-t-10 mg-sm-t-0">
-                                    <textarea name="accessories" rows="5" class="form-control no-resize"><?php echo multiArrayKeyExist($data, 'account_equipment', 'accessories'); ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="br-section-wrapper pd-15">
                     <div class="row mg-b-20">
                         <div class="col-lg-12">
@@ -512,9 +358,6 @@
                                 <input name="confirm_checkbox" type="checkbox">
                                 <span>By checking, you are confirming all information is correct and updated</span>
                                 
-                            </label>
-                            <label class="hidden" id="transfer-to-house-warning">
-                                <span  class="tx-danger mg-l-30"><b>You agree to transfer all converted lead ownership to House Sales</b></span>
                             </label>
                         </div>
                     </div>
@@ -617,28 +460,7 @@
             var role                = '<?php echo $data['role_list']; ?>';
             var user_role           = '<?php echo multiArrayKeyExist($data, 'account_employment', 'account_role_id'); ?>';
             var user_department     = '<?php echo multiArrayKeyExist($data, 'account_employment', 'account_department_id'); ?>';
-            var isUrlHasAccountId   = id != '' ? true : false;
-            if(isUrlHasAccountId == false){
-                if(value != ''){
-                    var selected_department = departments.find(x => x.id == value);
-                    if(selected_department != '' && selected_department.account_role_ids != ''){
-                        checkboxRole(role,selected_department.account_role_ids)
-                        console.log(selected_department.account_role_ids);
-                    }
-                }
-            }else{
-                if(value != ''){
-                    if(user_department != value){
-                        var selected_department = departments.find(x => x.id == value);
-                        if(selected_department != '' && selected_department.account_role_ids != ''){
-                            checkboxRole(role,selected_department.account_role_ids)
-                        }
-
-                    }else{
-                        checkboxRole(role,user_role);
-                    }
-                }
-            }
+            
             // console.log(departments);
             dropdownDesignation(value, designation);
         });
