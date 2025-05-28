@@ -7,8 +7,8 @@ class Gcash
     public static function getClaimEncodeById($id)
     {
         $result = mysql::select(
-            'gcash_claim gcl',
-            'gcl.*',
+            'gcash_claim gcl LEFT JOIN gcash_claim_batch_declaration gcb on gcb.batch_number = gcl.batch_number',
+            'gcl.*, gcb.workflow_number, gcb.endorsement_number',
             "gcl.id = '{$id}'"
         );
         return $result;
@@ -99,6 +99,10 @@ class Gcash
                                 gcl.date_insurance_end LIKE {$keyword}
                                 OR
                                 gcl.batch_number LIKE {$keyword}
+                                OR
+                                gcb.endorsement_number LIKE {$keyword}
+                                OR
+                                gcb.workflow_number LIKE {$keyword}
                             )
                           ";
         } else {
@@ -110,9 +114,10 @@ class Gcash
         $result = mysql::select(
             'gcash_claim gcl
                                  LEFT JOIN account_personal ape
-                                 ON ape.account_id = gcl.created_by',
+                                 ON ape.account_id = gcl.created_by
+                                 LEFT JOIN gcash_claim_batch_declaration gcb ON gcb.batch_number = gcl.batch_number',
             'gcl.*,
-                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
+                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name, gcb.workflow_number, gcb.endorsement_number',
             "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
             "gcl.id DESC",
             $startLimit

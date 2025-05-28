@@ -11,6 +11,14 @@
                                 <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'batch_number'); ?></td>
                             </tr>
                             <tr>
+                                <td class="wd-30p">Workflow Number</td>
+                                <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'workflow_number'); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="wd-30p">Endorsement Number</td>
+                                <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'endorsement_number'); ?></td>
+                            </tr>
+                            <tr>
                                 <td class="wd-30p">Name</td>
                                 <td class="wd-70p tx-bold"><?php echo fullName($data['claim']['first_name'], $data['claim']['last_name'], $data['claim']['middle_name']); ?></td>
                             </tr>

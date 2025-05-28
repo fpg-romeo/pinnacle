@@ -67,15 +67,18 @@
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
                                         <thead class="thead-colored thead-dark">
                                             <tr>
-                                                <th class="wd-10p">POLICY ID<br>(GCASH)</th>
-                                                <th class="wd-15p">FULL NAME</th>
-                                                <th class="wd-10p tx-center">CONTACT NO</th>
-                                                <th class="wd-10p tx-center">DATE OF BIRTH</th>
-                                                <th class="wd-10p">EMAIL ADDRESS</th>
-                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>START</th>
-                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>END</th>
-                                                <th class="wd-10p tx-center">UPLOADED<br>BY</th>
-                                                <th class="wd-10p tx-center">UPLOADED<br>WHEN</th>
+                                                <th class="wd-6p">BATCH NUMBER</th>
+                                                <th class="wd-6p">WORKFLOW NUMBER</th>
+                                                <th class="wd-6p">ENDORSEMENT NUMBER</th>
+                                                <th class="wd-7p">POLICY ID<br>(GCASH)</th>
+                                                <th class="wd-12p">FULL NAME</th>
+                                                <th class="wd-7p tx-center">CONTACT NO</th>
+                                                <th class="wd-7p tx-center">DATE OF BIRTH</th>
+                                                <th class="wd-7p">EMAIL ADDRESS</th>
+                                                <th class="wd-7p tx-center">DATE OF INSURANCE<br>START</th>
+                                                <th class="wd-7p tx-center">DATE OF INSURANCE<br>END</th>
+                                                <th class="wd-7p tx-center">UPLOADED<br>BY</th>
+                                                <th class="wd-7p tx-center">UPLOADED<br>WHEN</th>
                                                 <th class="wd-5p tx-center">ACTION</th>
                                             </tr>
                                         </thead>
@@ -102,6 +105,9 @@
 
                                                     echo '
                                                                 <tr id="' . $value['id'] . '">
+                                                                    <td>' . htmlDecode($value['batch_number']) . '</td>
+                                                                    <td>' . htmlDecode($value['workflow_number']) . '</td>
+                                                                    <td>' . htmlDecode($value['endorsement_number']) . '</td>
                                                                     <td>' . htmlDecode($value['policy_id']) . '</td>
                                                                     <td>' . htmlDecode($value['first_name']) . '</td> 
                                                                     <td class="tx-center">' . htmlDecode($value['mobile_number']) . '</td>
