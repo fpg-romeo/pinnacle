@@ -382,7 +382,7 @@ class GcashController
     public function submitDeclarationJson()
     {
         $data = array();
-        $field['id']                 = postVar('declaration_id');
+        
         $field['batch_number']       = postVar('batch_number');
         $field['workflow_number']    = postVar('workflow_number');
         $field['endorsement_number'] = postVar('endorsement_number');
@@ -393,6 +393,7 @@ class GcashController
             $field['created_when']       = dateTimeStamp();
             $data['alert'] = Gcash::addClaimDeclarationSummary($field)['message'];
         } else {
+            $field['id']                 = postVar('declaration_id');
             $field['updated_by']         = ACCOUNT_ID;
             $field['updated_when']       = dateTimeStamp();
             $data['alert'] = Gcash::updateClaimDeclarationSummary($field)['message'];
