@@ -11,8 +11,8 @@
                 <h4>GCash <b class="tx-primary">[ Symmary Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
-                    <a href="/account/manage/" class="btn btn-info">
-                        <i class="fa fa-plus-square fa-lg"></i> <small>ADD RECORD</small>
+                    <a href="" data-action="add" class="btn btn-info add">
+                        <i class="fa fa-plus-square fa-lg"></i> <small>ADD DECLARATION</small>
                     </a>
                 </div>
             </div>
@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <div id="modal-update-declaration" class="modal fade">
+    <div id="modal-declaration" class="modal fade">
         <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
@@ -146,16 +146,18 @@
     </script>
 
     <script type="text/javascript">
-        $(document).on('click', '.update', function(e) {
+        $(document).on('click', '.update, .view, .add', function(e) {
             e.preventDefault();
             var id = $(this).data('id');
+            var action = $(this).data('action');
 
-            var display = $('#modal-update-declaration .modal-body');
+            var display = $('#modal-declaration .modal-body');
             $.ajax({
-                url: '/gcash/import-update-declaration/',
+                url: '/gcash/import-declaration/',
                 type: 'GET',
                 data: {
-                    id: id
+                    id: id,
+                    action: action
                 },
                 beforeSend: function() {
                     display.html('');
@@ -164,7 +166,7 @@
                     // console.log('success');
                     $(data).appendTo(display);
 
-                    $('#modal-update-declaration').modal('show');
+                    $('#modal-declaration').modal('show');
                 },
                 error: function(xhr, desc, err) {
                     //console.log(xhr);
@@ -172,4 +174,5 @@
                 }
             });
         });
+
     </script>

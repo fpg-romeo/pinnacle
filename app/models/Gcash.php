@@ -389,4 +389,18 @@ class Gcash
 
         return $result;
     }
+
+    public static function addClaimDeclarationSummary($post)
+    {
+        $fields = mysql::buildFields($post, ", ");
+        if (mysql::insert('gcash_claim_batch_declaration', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'Record Successfully Added';
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+
+        return $result;
+    }
 }
