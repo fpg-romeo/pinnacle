@@ -3,7 +3,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <h6 class="br-section-label tx-info mg-t-0 float-left">DECLARATION DETAILS</h6>
-                    <h6 class="br-section-label tx-info mg-t-0 float-right"><?php echo multiArrayKeyExist($data, 'claim', 'batch_id'); ?></h6>
+                    <h6 class="br-section-label tx-info mg-t-0 float-right">RECORD ID: <?php echo multiArrayKeyExist($data, 'claim', 'batch_id'); ?></h6>
                     <table class="table table-bordered bd mg-b-0">
                         <tbody>
                             <tr>
@@ -19,8 +19,8 @@
                                 <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'endorsement_number'); ?></td>
                             </tr>
                             <tr>
-                                <td class="wd-30p">Name</td>
-                                <td class="wd-70p tx-bold"><?php echo fullName($data['claim']['first_name'], $data['claim']['last_name'], $data['claim']['middle_name']); ?></td>
+                                <td class="wd-30p">Full Name</td>
+                                <td class="wd-70p tx-bold"><?php echo multiArrayKeyExist($data, 'claim', 'first_name').' '.multiArrayKeyExist($data, 'claim', 'middle_name').' '.multiArrayKeyExist($data, 'claim', 'last_name'); ?></td>
                             </tr>
                             <tr>
                                 <td class="wd-30p">Date of Birth</td>
