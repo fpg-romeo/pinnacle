@@ -366,30 +366,34 @@ class GcashController
         views('gcash.declaration', $data);
     }
 
-    public function importUpdateDeclaration()
+    public function importDeclaration()
     {
         $data = array();
 
         $id                     = idDecrypt(getVar('id'));
         $data['declaration']    = recastArray(Gcash::getClaimDeclarationSummaryById($id));
+        $data['action']         = getVar('action');
 
-        views('gcash.import-update-declaration', $data);
+        views('gcash.import-declaration', $data);
     }
 
-    public function updateDeclarationJson()
+    public function submitDeclarationJson()
     {
-        $data = checkRequiredPost(array('declaration_id', 'batch_number', 'workflow_number', 'endorsement_number'));
-        file_put_contents(getDocumentRoot() . '/logs/gcash-declaration-update.log', dateTimeStamp() . ' - ' . json_encode($data) . PHP_EOL, FILE_APPEND);
-        if (!array_key_exists('error', $data)) {
-            $field['id']                 = postVar('declaration_id');
-            $field['batch_number']       = postVar('batch_number');
-            $field['workflow_number']    = postVar('workflow_number');
-            $field['endorsement_number'] = postVar('endorsement_number');
+        $data = array();
+        $field['id']                 = postVar('declaration_id');
+        $field['batch_number']       = postVar('batch_number');
+        $field['workflow_number']    = postVar('workflow_number');
+        $field['endorsement_number'] = postVar('endorsement_number');
+        
 
-            $update = Gcash::updateClaimDeclarationSummary($field);
-
-
-            $data['alert'] = 'Declaration updated successfully';
+        if(postVar('action') == 'add') {
+            $field['created_by']         = ACCOUNT_ID;
+            $field['created_when']       = dateTimeStamp();
+            $data['alert'] = Gcash::addClaimDeclarationSummary($field)['message'];
+        } else {
+            $field['updated_by']         = ACCOUNT_ID;
+            $field['updated_when']       = dateTimeStamp();
+            $data['alert'] = Gcash::updateClaimDeclarationSummary($field)['message'];
         }
 
         echo json_encode($data);

@@ -8,3 +8,5 @@
 2025-05-27 15:38:04 - {"post":{"declaration_id":"1","batch_number":"batch 100","workflow_number":"wf234324324","endorsement_number":"ensd324324234"}}
 2025-05-28 13:26:39 - {"post":{"declaration_id":"2","batch_number":"batch 300","workflow_number":"ajsd429384","endorsement_number":"asjdfk329489"}}
 2025-05-28 13:26:49 - {"post":{"declaration_id":"2","batch_number":"batch 300","workflow_number":"ajsd429384","endorsement_number":"asjdfk329489"}}
+2025-05-29 10:55:48 - {"post":{"declaration_id":"4","batch_number":"batch 100"},"error":{"workflow_number":"<p class=\"required-prompt\">*Required field<\/p>","endorsement_number":"<p class=\"required-prompt\">*Required field<\/p>"}}
+2025-05-29 10:55:56 - {"post":{"declaration_id":"4","batch_number":"batch 100"},"error":{"workflow_number":"<p class=\"required-prompt\">*Required field<\/p>","endorsement_number":"<p class=\"required-prompt\">*Required field<\/p>"}}
