@@ -306,10 +306,12 @@ class AccountController
         $account_id = idDecrypt(getVar('id'));
 
         if (isset($_POST['submit'])) {
+            
 
             if (isset($_POST['password']) && !empty($_POST['password'])) {
                 $field['password'] = passwordEncode(postVar('password'));
             }
+            $field['active_directory'] = postVar('active_directory');
 
             $personal['first_name']               = postVar('first_name');
             $personal['last_name']                = postVar('last_name');

@@ -20,6 +20,10 @@
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'email') ?></td>
                             </tr>
                             <tr>
+                                <td>Active Directory</td>
+                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account', 'active_directory') ?></td>
+                            </tr>
+                            <tr>
                                 <td>Region/Branch</td>
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'account_region_name') ?></td>
                             </tr>

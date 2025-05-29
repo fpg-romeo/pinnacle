@@ -137,6 +137,7 @@ class Account
                                      aem.account_id as id,
                                      aem.email,
                                      acc.relogin,
+                                     acc.active_directory,
                                      (CASE 
                                         WHEN ape.alias = "" OR ape.alias IS NULL
                                             THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
