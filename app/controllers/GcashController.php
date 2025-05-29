@@ -41,7 +41,7 @@ class GcashController
         $id              = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
-        views('gcash.import-view', $data);
+        views('gcash.import-claim-view', $data);
     }
 
     public function claim()
@@ -88,7 +88,7 @@ class GcashController
     {
         $data = array();
 
-        views('gcash.import-claim', $data);
+        views('gcash.import-claim-upload', $data);
     }
 
     public function importClaimJson()
