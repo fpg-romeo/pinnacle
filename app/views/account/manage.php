@@ -60,6 +60,12 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
+                                <label class="col-sm-3 form-control-label">Active Directory<span class="tx-danger">*</span></label>                          
+                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
+                                    <input name="active_directory" type="text" class="form-control active_directory" value="<?php echo multiArrayKeyExist($data, 'account', 'active_directory'); ?>" required>
+                                </div>
+                            </div>
+                            <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Password<?php echo !isset($data['account']['id']) ? '<span class="tx-danger">*</span>' : ''; ?></label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="password" type="password" class="form-control" <?php echo !isset($data['account']['id']) ? 'required' : ''; ?>>
