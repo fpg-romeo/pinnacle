@@ -73,9 +73,8 @@
                                     foreach($data['user'] as $key => $value){
                                         echo '
                                             <tr id="'.$value['id'].'">
-                                                <td class="tx-center cursor-pointer view-image" data-photo="' . $value['user_photo'] . '" data-name="' . htmlDecode($value['first_name']) . ' ' . htmlDecode($value['last_name']) . '">
-                                                    <img src="' . $value['user_photo'] . '" class="img-fluid" alt="User Photo">
-                                                    <!--<img src="/public/img/no-photo.jpg" class="img-fluid" alt="User Photo">-->
+                                                <td class="tx-center cursor-pointer view-image" data-photo="' . displayImage($value['user_photo'], 'account') . '" data-name="' . htmlDecode($value['first_name']) . ' ' . htmlDecode($value['last_name']) . '">
+                                                    <img src="' . displayImage($value['user_photo'], 'account'). '" class="img-fluid" alt="User Photo">
                                                 </td>
                                                 <td>
                                                     '.htmlDecode($value['first_name']).' '.htmlDecode($value['last_name']).'

@@ -32,7 +32,7 @@ class GcashController
         return $column_name;
     }
 
-    public function importView()
+    public function importClaimView()
     {
         $data = array();
 
@@ -84,7 +84,7 @@ class GcashController
         views('gcash.claim-summary', $data);
     }
 
-    public function importClaim()
+    public function importClaimUpload()
     {
         $data = array();
 
@@ -347,58 +347,68 @@ class GcashController
 
     public function declaration()
     {
-        includeModel(['Account']);
-
-        $data          = array();
-        $CONFIGURATION = Configuration::general();
-
-        $account_id           = urldecode(getVar('account_id'));
-        $account_ids          = ACCOUNT_ID;
-
-        $account_id           = $account_id == "all" ? '' : $account_id;
-
         $keyword              = urldecode(getVar('keyword'));
-        $data['records']      = Gcash::getClaimDeclarationSummary($keyword, $account_id, pagination('start'), pagination('limit'));
-
-        $data['total_record'] = Gcash::countClaimDeclarationSummary($keyword, $account_id, '');
+        $data['records']      = Gcash::getDeclaration($keyword, pagination('start'), pagination('limit'));
+        $data['total_record'] = Gcash::countDeclaration($keyword);
         $data['total_page']   = pagination('total', $data['total_record']);
-
-        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
         views('gcash.declaration', $data);
     }
 
-    public function importDeclaration()
+    public function importDeclarationView()
     {
-        $data = array();
+        $data                = array();
+        $id                  = idDecrypt(getVar('id'));
+        $data['declaration'] = recastArray(Gcash::getDeclarationById($id));
 
-        $id                     = idDecrypt(getVar('id'));
-        $data['declaration']    = recastArray(Gcash::getClaimDeclarationSummaryById($id));
-        $data['action']         = getVar('action');
-
-        views('gcash.import-declaration', $data);
+        views('gcash.import-declaration-view', $data);
     }
 
-    public function submitDeclarationJson()
+    public function importDeclarationManage()
     {
-        $data = array();
-        
-        $field['batch_number']       = postVar('batch_number');
-        $field['workflow_number']    = postVar('workflow_number');
-        $field['endorsement_number'] = postVar('endorsement_number');
-        
+        $data                = array();
+        $id                  = idDecrypt(getVar('id'));
+        $data['declaration'] = recastArray(Gcash::getDeclarationById($id));
 
-        if(postVar('action') == 'add') {
-            $field['created_by']         = ACCOUNT_ID;
-            $field['created_when']       = dateTimeStamp();
-            $data['alert'] = Gcash::addClaimDeclarationSummary($field)['message'];
-        } else {
-            $field['id']                 = postVar('declaration_id');
-            $field['updated_by']         = ACCOUNT_ID;
-            $field['updated_when']       = dateTimeStamp();
-            $data['alert'] = Gcash::updateClaimDeclarationSummary($field)['message'];
+        views('gcash.import-declaration-manage', $data);
+    }
+
+    public function declarationJson()
+    {
+
+        if(isset($_POST) && !empty($_POST)){
+
+            if(!empty($_POST['id']) && isset($_POST['action']) && $_POST['action'] == 'delete'){
+                $result = Gcash::deleteDeclaration(idDecrypt(postVar('id')));
+                
+            }else{
+                $id                           = idDecrypt(postVar('id'));
+                $field['batch_number']        = postVar('batch_number');
+                $field['workflow_number']     = postVar('workflow_number');
+                $field['endorsement_number']  = postVar('endorsement_number');
+
+                $data = checkRequiredPost(array('batch_number'));
+
+                if(!array_key_exists('error', $data)){  
+                    if(!empty($id)){
+                        $field['id']                = $id;
+                        $field['updated_by']        = ACCOUNT_ID;
+                        $field['updated_when']      = dateTimeStamp();
+
+                        $result = Gcash::editDeclaration($field);
+                    }else{
+                        $field['created_by']        = ACCOUNT_ID;
+                        $field['created_when']      = dateTimeStamp();
+
+                        $result = Gcash::addDeclaration($field);
+                    }
+                }
+            }
+        }else{
+            $result['status']  = 'forbidden';
+            $result['message'] = 'Access to this resource on the server is denied';
         }
-
-        echo json_encode($data);
+        
+        echo json_encode($result);
     }
 }

@@ -11,7 +11,7 @@
                 <h4>GCash <b class="tx-primary">[ Summary Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
-                    <a href="" data-action="add" class="btn btn-info add">
+                    <a href="" data-action="add" class="btn btn-info manage" data-action="add">
                         <i class="fa fa-plus-circle fa-lg"></i> <small>ADD RECORD</small>
                     </a>
                 </div>
@@ -68,7 +68,7 @@
                                                 <td>' . htmlDecode($value['batch_number']) . '</td>
                                                 <td>' . htmlDecode($value['workflow_number']) . '</td>
                                                 <td>' . htmlDecode($value['endorsement_number']) . '</td> 
-                                                <td class="tx-center">' . htmlDecode($value['uploader_name']) . '</td>
+                                                <td class="tx-center">' . htmlDecode($value['account_name']) . '</td>
                                                 <td class="tx-center">' . dateDisplaySystem($value['created_when']) . '</td>
                                                 <td class="tx-center"> 
                                                     <div class="dropdown d-inline-block">
@@ -81,7 +81,7 @@
                                                         <div class="dropdown-menu pd-5">
                                                             <nav class="nav nav-style-2 flex-column">
                                                                 <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
-                                                                <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link update" data-action="update" title="Update Details"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link manage" data-action="update" title="Update Details"><i class="fa fa-pencil-square-o"></i> Update</a>
                                                                 <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['batch_number']).'" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
                                                             </nav>
                                                         </div>
@@ -114,7 +114,17 @@
     </div>
 
     <div id="modal-declaration" class="modal fade">
-        <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+            <div class="modal-content bd-0">
+                <div class="modal-body pd-25">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-view" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
 
@@ -129,12 +139,10 @@
             $('.pagination').bind('blur change', function(e) {
                 e.preventDefault();
 
-                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
-                var limit = $('select[name=pagination_limit]').find(":selected").val();
-                var account_id = $('select[name=pagination_account_id]').find(":selected").val();
-                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
-
-                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&account_id=' + account_id;
+                var link      = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit     = $('select[name=pagination_limit]').find(":selected").val();
+                var keyword   = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
 
                 window.location.replace(link + parameter);
             });
@@ -142,26 +150,79 @@
     </script>
 
     <script type="text/javascript">
-        $(document).on('click', '.update, .view, .add', function(e) {
+        $(document).on('click', '.view', function(e) {
             e.preventDefault();
             var id = $(this).data('id');
-            var action = $(this).data('action');
 
-            var display = $('#modal-declaration .modal-body');
+            var display = $('#modal-view .modal-body');
             $.ajax({
-                url: '/gcash/import-declaration/',
+                url: '/gcash/import-declaration-view/',
                 type: 'GET',
                 data: {
-                    id: id,
-                    action: action
+                    id: id
                 },
                 beforeSend: function() {
                     display.html('');
                 },
                 success: function(data) {
-                    // console.log('success');
                     $(data).appendTo(display);
+                    $('#modal-view').modal('show');
+                },
+                error: function(xhr, desc, err) {
+                    //console.log(xhr);
+                    console.warn(xhr.responseText);
+                }
+            });
+        });
+    </script>
 
+    <script type="text/javascript">
+        //DELETE
+        $(document).on('click', '.delete', function(e){
+            e.preventDefault();
+            var id      = $(this).data('id');
+            var action  = $(this).data('action');
+            var title   = $(this).data('title');
+
+            var check = confirm("Are you sure you want to delete?\n\n"+title);
+            if(check == true){
+                $.ajax({
+                    url: '/gcash/declaration-json/',
+                    type: 'POST',
+                    data: {id:id, action:action},
+                    success: function(data){
+                        console.log(data);
+                        alert(data.message);
+                        //location.reload();
+                        window.location = document.URL;
+                    },
+                    error: function(xhr, desc, err){ 
+                        //console.log(xhr);
+                        console.warn(xhr.responseText);
+                    }
+               });
+            }
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).on('click', '.manage', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+
+            var display = $('#modal-declaration .modal-body');
+            $.ajax({
+                url: '/gcash/import-declaration-manage/',
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                beforeSend: function() {
+                    display.html('');
+                },
+                success: function(data) {
+                    $(data).appendTo(display);
                     $('#modal-declaration').modal('show');
                 },
                 error: function(xhr, desc, err) {
@@ -170,5 +231,4 @@
                 }
             });
         });
-
     </script>

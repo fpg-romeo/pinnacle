@@ -14,7 +14,8 @@
 
     $controllers = array(
                              'gcash'             => [
-                                                    'claim', 'claimSummary', 'importClaim', 'importClaimJson', 'importView', 'declaration', 'importDeclaration', 'submitDeclarationJson'
+                                                    'claim', 'claimSummary', 'importClaim', 'importClaimJson', 'importClaimView', 
+                                                    'declaration', 'declarationJson', 'importDeclarationView', 'importDeclarationManage'
                                                    ],
                             'cron'              => [
                                                     'testEmail'

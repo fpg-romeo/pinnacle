@@ -196,7 +196,7 @@
                 var redirect = "<?php echo getCurrentUrl(); ?>";
 
                 $.ajax({
-                    url: '/gcash/import-claim/',
+                    url: '/gcash/import-claim-upload/',
                     type: 'GET',
                     data: {
                         redirect: redirect
@@ -222,7 +222,7 @@
 
             var display = $('#modal-view .modal-body');
             $.ajax({
-                url: '/gcash/import-view/',
+                url: '/gcash/import-claim-view/',
                 type: 'GET',
                 data: {
                     account_id: id

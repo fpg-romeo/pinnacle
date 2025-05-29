@@ -267,40 +267,30 @@ class Gcash
     }
 
 
-    public static function countClaimDeclarationSummary($keyword = '', $account_id = '', $status_id = '')
-    {
-        $result = self::getClaimDeclarationSummary($keyword, $account_id, $status_id);
-        if (is_array($result)) {
-            return count($result);
-        } else {
-            return 0;
-        }
-    }
 
-    public static function getClaimDeclarationSummary($keyword = '', $account_id, $start = '', $limit = '')
-    {
 
-        if (is_array($account_id)) {
-            $account_ids        = implode(',', $account_id);
-            $filter_created_by     = " AND gcl.created_by IN ({$account_ids})";
-        } else {
-            if (!empty($account_id)) {
-                $filter_created_by      = " AND gcl.created_by = '{$account_id}'";
-            } else {
-                $filter_created_by      = "";
-            }
-        }
+
+
+
+
+
+
+
+    
+
+    public static function getDeclaration($keyword = '', $start = '', $limit = '')
+    {
 
         if (!empty(trim($keyword))) {
 
             $keyword = " '%{$keyword}%' ";
-            $filter  = " 
+            $filter  = " AND 
                             (
                                 gcb.batch_number LIKE {$keyword}
                                 OR
-                                gcb.endorsement_number LIKE {$keyword}
-                                OR
                                 gcb.workflow_number LIKE {$keyword}
+                                OR
+                                gcb.endorsement_number LIKE {$keyword}
                             )
                           ";
         } else {
@@ -309,98 +299,104 @@ class Gcash
 
         $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
 
-        $result = mysql::select(
-            'gcash_claim_batch_declaration gcb
+        $result = mysql::select('gcash_claim_batch_declaration gcb
                                  LEFT JOIN account_personal ape
-                                 ON ape.account_id = gcb.created_by',
-            'gcb.*,
-                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
-            " " . $filter_created_by . $filter,
-            "gcb.id DESC",
-            $startLimit
+                                 ON gcb.created_by = ape.account_id',
+                                'gcb.*,
+                                 (CASE 
+                                    WHEN ape.alias = "" OR ape.alias IS NULL
+                                        THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                    ELSE 
+                                        ape.alias
+                                    END
+                                 ) AS account_name',
+                                "gcb.id IS NOT NULL " . $filter,
+                                "gcb.batch_number ASC",
+                                $startLimit
         );
 
         return $result;
     }
 
-    public static function addBatchDeclaration($batch_declaration)
+    public static function countDeclaration($keyword = '')
     {
-        $result = array();
-        $checkIfDeclarationExists = self::checkIfDeclarationExists($batch_declaration['batch_number']);
-        $fields = mysql::buildFields($batch_declaration, ", ");
-        if ($checkIfDeclarationExists == 0) {
-            if (mysql::insert('gcash_claim_batch_declaration', $fields)) {
+        $result = self::getDeclaration($keyword);
+        if (is_array($result)) {
+            return count($result);
+        } else {
+            return 0;
+        }
+    }
+
+    public static function getDeclarationById($id){
+        $result = mysql::select("gcash_claim_batch_declaration", '*', "id = '{$id}'");       
+        return $result;
+    }
+
+    public static function getDeclarationByBatchNumber($batch_number){
+        $result = mysql::select("gcash_claim_batch_declaration", '*', "batch_number = '{$batch_number}'");
+        return $result;
+    }
+
+    public static function addDeclaration($post){
+        $batch_number = $post['batch_number'];
+        $record       = self::getDeclarationByBatchNumber($batch_number);
+
+        if(!is_array($record)){  
+            $fields = mysql::buildFields($post, ", ");
+            if(mysql::insert("gcash_claim_batch_declaration", $fields)){
                 $result['status']  = 'success';
-                $result['message'] = 'New Batch Declaration Saved';
+                $result['message'] = 'New Record Saved';
                 $result['id']      = mysql::insertedId();
-            } else {
+            }else{
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-        } else {
+        }else{
             $result['status']  = 'failed';
-            $result['message'] = 'Record already exists for this batch number' . $batch_declaration['batch_number'];
+            $result['message'] = 'Record already exist';
         }
         return $result;
     }
 
-    public static function checkIfDeclarationExists($batch_number)
-    {
-        $result = mysql::select(
-            'gcash_claim_batch_declaration gcb',
-            'count(gcb.id) as count',
-            "gcb.batch_number = '{$batch_number}'"
-        );
-
-        return $result[0]['count'];
-    }
-
-
-    public static function getClaimDeclarationSummaryById($id)
-    {
-        $result = mysql::select(
-            'gcash_claim_batch_declaration gcb',
-            'gcb.*',
-            "gcb.id = '{$id}'"
-        );
-        return $result;
-    }
-
-
-    public static function updateClaimDeclarationSummary($post)
-    {
+    public static function editDeclaration($post){
         $id     = $post['id'];
-        $record = self::getClaimDeclarationSummaryById($id);
+        $record = self::getDeclarationById($id);
 
-        if (is_array($record)) {
+        if(is_array($record)){   
             $fields = mysql::buildFields($post, ", ");
-            if (mysql::update('gcash_claim_batch_declaration', $fields, "id = '{$id}'")) {
+            if(mysql::update("gcash_claim_batch_declaration", $fields, "id = '{$id}'")){
                 $result['status']  = 'success';
                 $result['message'] = 'Record Successfully Updated';
                 $result['id']      = $id;
-            } else {
+            }else{
                 $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
+                $result['message'] = 'Encounter technical error. Pls try again';                
             }
-        } else {
+        }else{
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+        return $result;        
+    }
+
+    public static function deleteDeclaration($id){
+        $record = self::getDeclarationById($id);
+
+        if(is_array($record)){
+            if(mysql::delete("gcash_claim_batch_declaration", "id = '{$id}'")){
+                $result['status']   = 'success';
+                $result['message']  = 'Record Successfully Deleted';
+                $result['record']   = recastArray($record);
+            }else{
+                $result['status']   = 'failed';
+                $result['message']  = 'Encounter technical error. Pls try again';
+            }
+        }else{
             $result['status']  = 'failed';
             $result['message'] = 'No Record Found';
         }
 
         return $result;
-    }
-
-    public static function addClaimDeclarationSummary($post)
-    {
-        $fields = mysql::buildFields($post, ", ");
-        if (mysql::insert('gcash_claim_batch_declaration', $fields)) {
-            $result['status']  = 'success';
-            $result['message'] = 'Record Successfully Added';
-        } else {
-            $result['status']  = 'failed';
-            $result['message'] = 'Encounter technical error. Pls try again';
-        }
-
-        return $result;
-    }
+    }   
 }
