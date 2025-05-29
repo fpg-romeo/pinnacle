@@ -384,10 +384,15 @@ class GcashController
         $field['batch_number']       = postVar('batch_number');
         $field['workflow_number']    = postVar('workflow_number');
         $field['endorsement_number'] = postVar('endorsement_number');
+        
 
         if(postVar('action') == 'add') {
+            $field['created_by']         = ACCOUNT_ID;
+            $field['created_when']       = dateTimeStamp();
             $data['alert'] = Gcash::addClaimDeclarationSummary($field)['message'];
         } else {
+            $field['updated_by']         = ACCOUNT_ID;
+            $field['updated_when']       = dateTimeStamp();
             $data['alert'] = Gcash::updateClaimDeclarationSummary($field)['message'];
         }
 
