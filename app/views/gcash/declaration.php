@@ -1,17 +1,20 @@
     <div class="br-mainpanel">
         <div class="br-pageheader">
             <nav class="breadcrumb pd-0 mg-0 tx-12">
-                <a class="breadcrumb-item" href="/">Claims</a>
                 <a class="breadcrumb-item" href="/">GCash</a>
-                <span class="breadcrumb-item active">All Declarations</span>
+                <span class="breadcrumb-item active">Symmary Batch Declaration</span>
             </nav>
         </div>
         <div class="br-pagetitle pos-relative">
             <i class="icon fa fa-wpforms"></i>
             <div>
-                <h4>GCash <b class="tx-primary">[ Declarations ]</b></h4>
+                <h4>GCash <b class="tx-primary">[ Symmary Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
-
+                <div class="pagetitle-button">
+                    <a href="/account/manage/" class="btn btn-info">
+                        <i class="fa fa-plus-square fa-lg"></i> <small>ADD RECORD</small>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -50,35 +53,18 @@
                             <table class="table table-striped table-bordered table-hover mg-b-0">
                                 <thead class="thead-colored thead-dark">
                                     <tr>
-                                        <th class="wd-10p tx-center">BATCH NUMBER</th>
-                                        <th class="wd-10p tx-center">WORKFLOW NUMBER</th>
-                                        <th class="wd-10p tx-center">ENDORSEMENT NUMBER</th>
-                                        <th class="wd-10p tx-center">MANAGED BY</th>
-                                        <th class="wd-10p tx-center">DATE</th>
-                                        <th class="wd-5p tx-center"></th>
+                                        <th class="wd-10p">BATCH NUMBER</th>
+                                        <th class="wd-30p">WORKFLOW NUMBER</th>
+                                        <th class="wd-30p">ENDORSEMENT NUMBER</th>
+                                        <th class="wd-15p tx-center">MANAGED BY</th>
+                                        <th class="wd-10p tx-center">MANAGED DATE</th>
+                                        <th class="wd-5p tx-center">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     if (isset($data['records']) && !empty($data['records'])) {
                                         foreach ($data['records'] as $key => $value) {
-                                            $action = '
-                                                        <div class="dropdown d-inline-block">
-                                                            <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
-                                                                <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
-                                                                    <span><i class="fa fa-cog"></i></span>
-                                                                    <i class="fa fa-angle-down mg-l-10"></i>
-                                                                </div>
-                                                            </a>
-                                                            <div class="dropdown-menu pd-5">
-                                                                <nav class="nav nav-style-2 flex-column">
-                                                                    <a data-id="' . idEncrypt(htmlDecode($value['id'])) . '"   class="nav-link update" data-action="update" title="Update Details"><i class="fa fa-file-text-o"></i> Update Details</a>
-                                                                    
-                                                                </nav>
-                                                            </div>
-                                                        </div>
-                                                    ';
-
                                             echo '
                                                     <tr id="' . htmlDecode($value['batch_number']) . '">
                                                         <td>' . htmlDecode($value['batch_number']) . '</td>
@@ -87,7 +73,21 @@
                                                         <td class="tx-center">' . htmlDecode($value['uploader_name']) . '</td>
                                                         <td class="tx-center">' . dateDisplaySystem($value['created_when']) . '</td>
                                                         <td class="tx-center"> 
-                                                            ' . $action . '
+                                                            <div class="dropdown d-inline-block">
+                                                                <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
+                                                                    <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
+                                                                        <span><i class="fa fa-cog"></i></span>
+                                                                        <i class="fa fa-angle-down mg-l-10"></i>
+                                                                    </div>
+                                                                </a>
+                                                                <div class="dropdown-menu pd-5">
+                                                                    <nav class="nav nav-style-2 flex-column">
+                                                                        <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
+                                                                        <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link update" data-action="update" title="Update Details"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                        <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['batch_number']).'" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
+                                                                    </nav>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ';

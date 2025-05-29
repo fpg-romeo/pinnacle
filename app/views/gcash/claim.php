@@ -67,18 +67,16 @@
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
                                         <thead class="thead-colored thead-dark">
                                             <tr>
-                                                <th class="wd-6p">BATCH NUMBER</th>
-                                                <th class="wd-6p">WORKFLOW NUMBER</th>
-                                                <th class="wd-6p">ENDORSEMENT NUMBER</th>
-                                                <th class="wd-7p">POLICY ID<br>(GCASH)</th>
-                                                <th class="wd-12p">FULL NAME</th>
-                                                <th class="wd-7p tx-center">CONTACT NO</th>
-                                                <th class="wd-7p tx-center">DATE OF BIRTH</th>
-                                                <th class="wd-7p">EMAIL ADDRESS</th>
-                                                <th class="wd-7p tx-center">DATE OF INSURANCE<br>START</th>
-                                                <th class="wd-7p tx-center">DATE OF INSURANCE<br>END</th>
-                                                <th class="wd-7p tx-center">UPLOADED<br>BY</th>
-                                                <th class="wd-7p tx-center">UPLOADED<br>WHEN</th>
+                                                <th class="wd-5p">BATCH NUMBER</th>
+                                                <th class="wd-10p">WORKFLOW NUMBER</th>
+                                                <th class="wd-10p">ENDORSEMENT NUMBER</th>
+                                                <th class="wd-10p">POLICY ID<br>(GCASH)</th>
+                                                <th class="wd-15p">FULL NAME</th>
+                                                <th class="wd-5p tx-center">CONTACT NO</th>
+                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>START</th>
+                                                <th class="wd-10p tx-center">DATE OF INSURANCE<br>END</th>
+                                                <th class="wd-10p tx-center">MANAGED<br>BY</th>
+                                                <th class="wd-10p tx-center">MANAGED<br>DATE</th>
                                                 <th class="wd-5p tx-center">ACTION</th>
                                             </tr>
                                         </thead>
@@ -109,10 +107,8 @@
                                                                     <td>' . htmlDecode($value['workflow_number']) . '</td>
                                                                     <td>' . htmlDecode($value['endorsement_number']) . '</td>
                                                                     <td>' . htmlDecode($value['policy_id']) . '</td>
-                                                                    <td>' . htmlDecode($value['first_name']) . '</td> 
+                                                                    <td>' . htmlDecode($value['first_name']) . ' ' . htmlDecode($value['middle_name']) . ' ' . htmlDecode($value['last_name']) . '</td> 
                                                                     <td class="tx-center">' . htmlDecode($value['mobile_number']) . '</td>
-                                                                    <td class="tx-center">' . dateDisplaySystem($value['date_of_birth']) . '</td>
-                                                                    <td>' . htmlDecode($value['email_address']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['date_insurance_start']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['date_insurance_end']) . '</td>
                                                                     <td class="tx-center">' . htmlDecode($value['uploader_name']) . '</td>
@@ -124,7 +120,7 @@
                                                             ';
                                                 }
                                             } else {
-                                                echo '<tr><td colspan="10" class="tx-center">No record found</td></tr>';
+                                                echo '<tr><td colspan="11" class="tx-center">No record found</td></tr>';
                                             }
                                             ?>
                                         </tbody>
