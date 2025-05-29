@@ -369,7 +369,7 @@
                     </div>
                     <div class="row  tx-center">
                         <div class="col-sm-12 mg-t-10 mg-b-10 mg-sm-t-0">
-                            <button name="submit" type="submit" class="btn btn-primary w-200px confirm_button" disabled><small>SUBMIT</small></button>
+                            <button name="submit" type="submit" class="btn btn-info w-200px confirm_button" disabled><small>SUBMIT</small></button>
                         </div>
                     </div>  
                 </div>
