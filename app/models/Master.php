@@ -131,66 +131,48 @@
         }
 
         public static function getAccountDepartment(){
-            $result = mysql::select('master_account_department mad
-                                     LEFT JOIN master_account_application mc
-                                     ON mad.application_id = mc.id',
-                                    'mad.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_department mad',
+                                    'mad.*',
                                     "",
                                     'mad.name ASC');
             return $result;
         }
 
         public static function getAccountType(){
-            $result = mysql::select('master_account_type mat
-                                     LEFT JOIN master_account_application mc
-                                     ON mat.application_id = mc.id',
-                                    'mat.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_type mat',
+                                    'mat.*',
                                     "",
                                     'mat.name ASC');
             return $result;
         }
 
         public static function getAccountTeam(){
-            $result = mysql::select('master_account_team mat
-                                     LEFT JOIN master_account_application mc
-                                     ON mat.application_id = mc.id',
-                                    'mat.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_team mat',
+                                    'mat.*',
                                     "",
                                     'mat.name ASC');
             return $result;
         }
 
         public static function getAccountLevel(){
-            $result = mysql::select('master_account_level mal
-                                     LEFT JOIN master_account_application mc
-                                     ON mal.application_id = mc.id',
-                                    'mal.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_level mal',
+                                    'mal.*',
                                     "",
                                     'mal.name ASC');
             return $result;
         }
 
         public static function getAccountRoleMaster(){
-            $result = mysql::select('master_account_role mar
-                                     LEFT JOIN master_account_application mc
-                                     ON mar.application_id = mc.id',
-                                    'mar.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_role mar',
+                                    'mar.*',
                                     "",
                                     'mar.name ASC');
             return $result;
         }
 
         public static function getAccountStatus(){
-            $result = mysql::select('master_account_status mas
-                                     LEFT JOIN master_account_application mc
-                                     ON mas.application_id = mc.id',
-                                    'mas.*,
-                                     mc.name AS application_name',
+            $result = mysql::select('master_account_status mas',
+                                    'mas.*',
                                     "",
                                     'mas.name ASC');
             return $result;
@@ -199,12 +181,9 @@
         public static function getAccountDesignation(){
             $result = mysql::select('master_account_designation mad
                                      LEFT JOIN master_account_department mae
-                                     ON mad.department_id = mae.id
-                                     LEFT JOIN master_account_application mc
-                                     ON mad.application_id = mc.id',
+                                     ON mad.department_id = mae.id',
                                     'mad.*,
-                                     mae.name AS department_name,
-                                     mc.name AS application_name',
+                                     mae.name AS department_name',
                                     "",
                                     'mae.name ASC, mad.name ASC');
             return $result;

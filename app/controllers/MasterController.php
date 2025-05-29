@@ -14,7 +14,7 @@
             views('master.account-role', $data);  
         }
 
-        public function accountRole_json(){
+        public function accountRoleJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -77,7 +77,7 @@
             views('master.account-status', $data);  
         }
 
-        public function accountStatus_json(){
+        public function accountStatusJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -134,7 +134,7 @@
             views('master.account-type', $data);  
         }
 
-        public function accountType_json(){
+        public function accountTypeJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -191,7 +191,7 @@
             views('master.account-team', $data);  
         }
 
-        public function accountTeam_json(){
+        public function accountTeamJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -248,7 +248,7 @@
             views('master.account-level', $data);  
         }
 
-        public function accountLevel_json(){
+        public function accountLevelJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -306,7 +306,7 @@
             views('master.account-department', $data);  
         }
 
-        public function accountDepartment_json(){
+        public function accountDepartmentJson(){
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -384,7 +384,7 @@
             views('master.account-designation', $data);  
         }
 
-        public function accountDesignation_json(){
+        public function accountDesignationJson(){
 
             if(isset($_POST) && !empty($_POST)){
 

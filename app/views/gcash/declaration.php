@@ -93,7 +93,7 @@
                                                 ';
                                         }
                                     } else {
-                                        echo '<tr><td colspan="10" class="tx-center">No record found</td></tr>';
+                                        echo '<tr><td colspan="6" class="tx-center">No record found</td></tr>';
                                     }
                                     ?>
                                 </tbody>

@@ -311,48 +311,32 @@ class AccountController
             if (isset($_POST['password']) && !empty($_POST['password'])) {
                 $field['password'] = passwordEncode(postVar('password'));
             }
-            $field['active_directory'] = postVar('active_directory');
-
+            
             $personal['first_name']               = postVar('first_name');
             $personal['last_name']                = postVar('last_name');
             $personal['middle_name']              = postVar('middle_name', '');
             $personal['alias']                    = postVar('alias', '');
             $personal['gender']                   = postvar('gender', '');
-            $personal['nationality_id']           = postvar('nationality_id', '');
             $personal['birthday']                 = dateSaveDB(postvar('birthday'));
-            $personal['religion']                 = postvar('religion', '');
-            $personal['education']                = postvar('education', '');
-            $personal['marital_status']           = postvar('marital_status', '');
-            $personal['no_children']              = postvar('no_children', 0);
             $personal['contact_no']               = postvar('contact_no', '');
-            $personal['landline_no']              = postvar('landline_no', '');
-            $personal['email']                    = (isset($_POST['personal_email']) ? strtolower(postvar('personal_email', '')) : '');
-            $personal['address_current']          = postvar('address_current', '');
-            $personal['address_hometown']         = postvar('address_hometown', '');
-            $personal['medical_history']          = postvar('medical_history', '');
-
             $employment['account_region_id']      = postvar('account_region_id', 0);
-            $employment['employee_no']            = postvar('employee_no', 0);
             $employment['email']                  = strtolower(postVar('employee_email'));
             $employment['account_status_id']      = postVar('account_status_id', 0);
             $employment['account_type_id']        = postVar('account_type_id', 0);
             $employment['account_department_id']  = postVar('account_department_id', 0);
             $employment['account_designation_id'] = postVar('account_designation_id', 0);
             $employment['account_role_id']        = Shortcode::concatId($_POST['account_role_id']);
-            $employment['start_date']             = dateSaveDB(postVar('start_date'));
-            $employment['confirmation_date']      = dateSaveDB(postVar('confirmation_date'));
-            $employment['exit_date']              = dateSaveDB(postVar('exit_date'));
             $employment['account_team_id']        = postVar('account_team_id', 0);
             $employment['account_level_id']       = postVar('account_level_id', 0);
             $employment['report_to']              = postvar('report_to', 0);
-            $employment['employment_type_id']     = postvar('employment_type_id', 0);
 
+            $field['active_directory']            = postVar('active_directory');
             $field['relogin']                     = isset($_POST['relogin']) && $_POST['relogin'] == 'on' ? 'Yes' : '';
 
             if (!empty($account_id)) {
-                $data = checkRequiredPost(array('employee_email'));
+                $data = checkRequiredPost(array('active_directory','employee_email'));
             } else {
-                $data = checkRequiredPost(array('employee_email', 'password'));
+                $data = checkRequiredPost(array('active_directory','employee_email', 'password'));
             }
 
             if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
@@ -525,8 +509,8 @@ class AccountController
                 $employment['account_level_id']       = postVar('account_level_id', 0);
                 $employment['report_to']              = postvar('report_to', 0);
                 $employment['employment_type_id']     = postvar('employment_type_id', 0);
-                $employment['client_appointment']     = isset($_POST['client_appointment']) && $_POST['client_appointment'] == 'on' ? 'Yes' : '';
-                $employment['auto_allocate_leads']     = isset($_POST['auto_allocate_leads']) && $_POST['auto_allocate_leads'] == 'on' ? 'Yes' : '';
+                //$employment['client_appointment']     = isset($_POST['client_appointment']) && $_POST['client_appointment'] == 'on' ? 'Yes' : '';
+                //$employment['auto_allocate_leads']     = isset($_POST['auto_allocate_leads']) && $_POST['auto_allocate_leads'] == 'on' ? 'Yes' : '';
                 $employment['updated_by']             = ACCOUNT_ID;
                 $employment['updated_when']           = dateTimeStamp();
 

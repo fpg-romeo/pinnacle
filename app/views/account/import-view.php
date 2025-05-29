@@ -12,16 +12,12 @@
                     <div class="bd rounded">
                         <table class="table table-bordered mg-b-0 table-responsive d-md-table">
                             <tr>
-                                <td class="wd-20p">Employee Number</td>
-                                <td class="wd-80p tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'employee_no') ?></td>
+                                <td class="wd-20p">Active Directory</td>
+                                <td class="wd-80p tx-bold"><?php echo multiArrayKeyExist($data, 'account', 'active_directory') ?></td>
                             </tr>
                             <tr>
                                 <td>Email Address</td>
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'email') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Active Directory</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account', 'active_directory') ?></td>
                             </tr>
                             <tr>
                                 <td>Region/Branch</td>
@@ -46,22 +42,6 @@
                             <tr>
                                 <td>Report To</td>
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'report_name') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Employment Type</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_employment', 'employment_type_name') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Joined Date</td>
-                                <td class="tx-bold"><?php echo  multiArrayKeyExist($data, 'account_employment', 'start_date') != null && multiArrayKeyExist($data, 'account_employment', 'start_date') !='1970-01-01' ? dateDisplaySystem(multiArrayKeyExist($data, 'account_employment', 'start_date')): '' ?></td>
-                            </tr>
-                            <tr>
-                                <td>Confirmation Date</td>
-                                <td class="tx-bold"><?php echo  multiArrayKeyExist($data, 'account_employment', 'confirmation_date') != null && multiArrayKeyExist($data, 'account_employment', 'confirmation_date') !='1970-01-01' ? dateDisplaySystem(multiArrayKeyExist($data, 'account_employment', 'confirmation_date')): '' ?></td>
-                            </tr>
-                            <tr>
-                                <td>Exit Date</td>
-                                <td class="tx-bold"><?php echo  multiArrayKeyExist($data, 'account_employment', 'exit_date') != null && multiArrayKeyExist($data, 'account_employment', 'exit_date') !='1970-01-01' ? dateDisplaySystem(multiArrayKeyExist($data, 'account_employment', 'exit_date')): '' ?></td>
                             </tr>
                         </table>
                     </div>
@@ -100,10 +80,6 @@
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'gender') ?></td>
                             </tr>
                             <tr>
-                                <td>Nationality</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'nationality_name') ?></td>
-                            </tr>
-                            <tr>
                                 <td>Date of Birth</td>
                                 <td class="tx-bold"><?php echo dateDisplaySystem(multiArrayKeyExist($data, 'account_personal', 'birthday')) ?></td>
                             </tr>
@@ -112,44 +88,8 @@
                                 <td class="tx-bold"><?php echo birthday(multiArrayKeyExist($data, 'account_personal', 'birthday')) ?></td>
                             </tr>
                             <tr>
-                                <td>Religion</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'religion') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Highest Educational Attainment</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'education') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Marital Status</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'marital_status') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Number Of Children</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'no_children') ?></td>
-                            </tr>
-                            <tr>
                                 <td>Contact Number</td>
                                 <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'contact_no') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Landline Number</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'landline_no') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Personal Email Address</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'email') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Current Address</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'address_current') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Hometown Address</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'address_hometown') ?></td>
-                            </tr>
-                            <tr>
-                                <td>Medical History</td>
-                                <td class="tx-bold"><?php echo multiArrayKeyExist($data, 'account_personal', 'medical_history') ?></td>
                             </tr>
                             <tr>
                                 <td>Photo</td>

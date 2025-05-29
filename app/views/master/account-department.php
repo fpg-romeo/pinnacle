@@ -28,8 +28,8 @@
                         <thead class="thead-colored thead-dark">
                             <tr>
                                 <th class="wd-80p">NAME</th>
-                                <th class="wd-10p tx-center">TOTAL ROLES</th>
-                                <th class="wd-10p"><center>ACTION</center></th>
+                                <th class="wd-15p tx-center">TOTAL ROLES</th>
+                                <th class="wd-5p tx-center">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,11 +39,21 @@
                                         echo '<tr id="'.$value['id'].'">
                                                 <td>'.htmlDecode($value['name']).'</td>
                                                 <td class="tx-center">'.count(explode('-', $value['account_role_ids'])).'</td>
-                                                <td>
-                                                    <center>
-                                                        <a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-warning edit" data-action="edit" title="Update Record"><i class="fa fa-pencil-square-o"></i></a>
-                                                        <a id="'.htmlDecode($value['id']).'" class="btn btn-sm btn-list btn-danger delete" data-action="delete" data-title="'.htmlDecode($value['name']).'" title="Delete Record"><i class="fa fa-trash"></i></a>
-                                                    </center>
+                                                <td class="tx-center">
+                                                    <div class="dropdown d-inline-block">
+                                                        <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
+                                                            <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
+                                                                <span><i class="fa fa-cog"></i></span>
+                                                                <i class="fa fa-angle-down mg-l-10"></i>
+                                                            </div>
+                                                        </a>
+                                                        <div class="dropdown-menu pd-5">
+                                                            <nav class="nav nav-style-2 flex-column">
+                                                                <a id="'.htmlDecode($value['id']).'" class="nav-link edit" data-action="edit" title="Update Record"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                <a id="'.htmlDecode($value['id']).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['name']).'" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
+                                                            </nav>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>';
                                     }
@@ -160,7 +170,7 @@
                     account_role_ids[i] = $(this).val();
                 });
                 $.ajax({
-                    url: '/master/accountDepartment_json/',
+                    url: '/master/account-department-json/',
                     type: 'POST',
                     // data: $('#form').serialize(),
                     data:{
@@ -205,7 +215,7 @@
                 $('input:checkbox').prop('checked', false);
 
                 $.ajax({
-                    url: '/master/accountDepartment_json/',
+                    url: '/master/account-department-json/',
                     type: 'POST',
                     data: {id:id, action:action},
                     success: function(data){
@@ -240,7 +250,7 @@
             var check = confirm("Are you sure you want to delete?\n\n"+title);
             if(check == true){
                 $.ajax({
-                    url: '/master/accountDepartment_json/',
+                    url: '/master/account-department-json/',
                     type: 'POST',
                     data: {id:id, action:action},
                     success: function(data){

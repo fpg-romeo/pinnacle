@@ -54,15 +54,15 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Email Address<span class="tx-danger">*</span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="employee_email" type="text" class="form-control employee_email" value="<?php echo multiArrayKeyExist($data, 'account_employment', 'email'); ?>" required>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Active Directory<span class="tx-danger">*</span></label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="active_directory" type="text" class="form-control active_directory" value="<?php echo multiArrayKeyExist($data, 'account', 'active_directory'); ?>" required>
+                                </div>
+                            </div>
+                            <div class="row mg-b-20">
+                                <label class="col-sm-3 form-control-label">Email Address<span class="tx-danger">*</span></label>                          
+                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
+                                    <input name="employee_email" type="text" class="form-control employee_email" value="<?php echo multiArrayKeyExist($data, 'account_employment', 'email'); ?>" required>
                                 </div>
                             </div>
                             <div class="row mg-b-20">
@@ -80,12 +80,6 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Role<span class="tx-danger">*</span></label>
-                                <div class="col-sm-9 mg-t-10 mg-sm-t-0 checkbox_role">
-
-                                </div>
-                            </div>  
-                            <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Status<span class="tx-danger">*</span></label>
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <select name="account_status_id" class="form-control select" data-width="100%" required>
@@ -93,6 +87,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <label class="col-sm-3 form-control-label">Role<span class="tx-danger">*</span></label>
+                                <div class="col-sm-9 mg-t-10 mg-sm-t-0 checkbox_role">
+
+                                </div>
+                            </div>  
                         </div>
                     </div><!-- card-block -->
                 </div>
@@ -106,14 +106,6 @@
                     </div><!-- card-header -->
                     <div class="card-body hidden">
                         <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Employee No.<span class="tx-danger">*</span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="employee_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_employment', 'employee_no'); ?>" >
-                                    <small class="text-muted"></small>
-                                </div>
-                                <label class="col-sm-5 form-control-label text-muted tx-11">*Please set the value as 0 "zero" if employee number is not yet available</label>  
-                            </div>
                             <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Email Address</label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
@@ -158,42 +150,6 @@
                                     <select name="report_to" class="form-control select" data-width="100%">
                                         <?php echo tool_dropdown_option($data['account_all'], multiArrayKeyExist($data, 'account', 'report_to'), 'full_name'); ?>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-15">
-                                <label class="col-sm-3 form-control-label lh-0-force">Client Appointment</label> 
-                                <div class="col-sm-9">
-                                    <label class="ckbox mg-t-5">
-                                        <input name="client_appointment" <?php echo !empty(multiArrayKeyExist($data, 'account_employment', 'client_appointment')) && multiArrayKeyExist($data, 'account_employment', 'client_appointment') == 'Yes' ? 'checked' : ''; ?> type="checkbox">
-                                        <span>Include in Round Robin Scheduling</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mg-b-15 hidden">
-                                <label class="col-sm-3 form-control-label">Auto Allocate Lead</label> 
-                                <div class="col-sm-9">
-                                    <label class="ckbox mg-t-10">
-                                        <input name="auto_allocate_leads" <?php echo !empty(multiArrayKeyExist($data, 'account_employment', 'auto_allocate_leads')) && multiArrayKeyExist($data, 'account_employment', 'auto_allocate_leads') == 'Yes' ? 'checked' : ''; ?> type="checkbox">
-                                        <span>Include in Auto Allocate Lead</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Joined Date<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="start_date" type="text" class="form-control calendar" placeholder="MM/DD/YYYY" autocomplete="off" value="<?php echo isset($data['account_employment']['start_date']) && $data['account_employment']['start_date']!='1970-01-01' ? dateDisplaySystem($data['account_employment']['start_date']) : ''; ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Confirmation Date<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="confirmation_date" type="text" class="form-control calendar" placeholder="MM/DD/YYYY" autocomplete="off" value="<?php echo isset($data['account_employment']['confirmation_date']) && $data['account_employment']['confirmation_date']!='1970-01-01' ? dateDisplaySystem($data['account_employment']['confirmation_date']) : ''; ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Exit Date<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="exit_date" type="text" class="form-control calendar" placeholder="MM/DD/YYYY" autocomplete="off" value="<?php echo isset($data['account_employment']['exit_date']) && $data['account_employment']['exit_date']!='1970-01-01' ? dateDisplaySystem($data['account_employment']['exit_date']) : ''; ?>">
                                 </div>
                             </div>
                         </div>
@@ -242,68 +198,11 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Religion<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="religion" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'religion'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Highest Educational Attainment<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="education" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'education'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Marital Status<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="marital_status" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_value(value_marital_status(), multiArrayKeyExist($data, 'account_personal', 'marital_status')); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Number of Children<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="no_children" type="text" class="form-control numeric" maxlength="2" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'no_children'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
                                 <label class="col-sm-3 form-control-label">Contact Number<span class="tx-danger"></span></label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="contact_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'contact_no'); ?>">
                                 </div>
                             </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Landline Number<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="landline_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'landline_no'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Personal Email Address<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="personal_email" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'email'); ?>">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Current Address<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <textarea name="address_current" class="form-control no-resize"><?php echo multiArrayKeyExist($data, 'account_personal', 'address_current'); ?></textarea>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Hometown Address<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <textarea name="address_hometown" class="form-control no-resize"><?php echo multiArrayKeyExist($data, 'account_personal', 'address_hometown'); ?></textarea>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Medical History (if any)<span class="tx-danger"></span></label>                          
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <textarea name="medical_history" class="form-control no-resize"><?php echo multiArrayKeyExist($data, 'account_personal', 'medical_history'); ?></textarea>
-                                </div>
-                            </div>
-
                             <div class="row mg-t-20">
                                 <label class="col-sm-3 mg-t-12">Photo</label>
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
@@ -445,7 +344,7 @@
                               '</button>';
                 }
 
-                $('.checkbox_role').append('<label class="ckbox mg-b-10 ckbox-inline">'+
+                $('.checkbox_role').append('<label class="ckbox mg-t-10 ckbox-inline">'+
                                                 '<input name="account_role_id[]" type="checkbox" value="'+data[0]+'" '+check+'>'+
                                                 '<span>'+data[1]+' </span>'+
                                                 popover+

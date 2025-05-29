@@ -53,8 +53,8 @@
                             <tr>
                                 <th class="wd-5p tx-center">PHOTO</th>
                                 <th class="wd-20p">NAME</th>
+                                <th class="wd-15p">ACTIVE DIRECTORY</th>
                                 <th class="wd-20p">EMAIL / CONTACT NO.</th>
-                                <th class="wd-15p">DESIGNATION</th>
                                 <th class="wd-20p">DEPARTMENT</th>
                                 <th class="wd-10p">TYPE</th>
                                 <th class="wd-5p tx-center">STATUS</th>
@@ -75,13 +75,10 @@
                                                     '.htmlDecode($value['first_name']).' '.htmlDecode($value['last_name']).'
                                                     '.(!empty(htmlDecode($value['alias'])) ? '<br><i class="text-muted">'.htmlDecode($value['alias']).'</i>' : '').'
                                                 </td>
+                                                <td>'.htmlDecode($value['active_directory']).'</td>
                                                 <td>
                                                     '.htmlDecode($value['email']).'
                                                     <br><small class="text-muted">'.htmlDecode($value['contact_no']).'</small>
-                                                </td>
-                                                <td>
-                                                    '.htmlDecode($value['account_designation_name']).'
-                                                    '.(!empty($value['account_level_name']) ? '<br><small class="text-muted">'.htmlDecode($value['account_level_name']).'</small>' : '').'
                                                 </td>
                                                 <td>
                                                     '.htmlDecode($value['account_department_name']).'

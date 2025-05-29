@@ -1298,7 +1298,7 @@ class Account
                         OR
                         aem.account_id LIKE {$keyword}
                         OR
-                        aem.employee_no LIKE {$keyword}
+                        acc.active_directory LIKE {$keyword}
                     )
                 ";
         } else {
@@ -1308,7 +1308,7 @@ class Account
         $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
 
         $result = mysql::select(
-            'account_employment aem
+                                    'account_employment aem
                                      LEFT JOIN account_personal ape
                                      ON ape.account_id = aem.account_id
                                      LEFT JOIN master_account_type mat
@@ -1323,10 +1323,13 @@ class Account
                                      ON aem.account_level_id = mal.id 
                                      LEFT JOIN master_account_designation mai
                                      ON aem.account_designation_id = mai.id 
+                                     LEFT JOIN account acc 
+                                     ON aem.account_id = acc.id
                                      ',
-            'ape.*, 
+                                    'ape.*, 
                                      aem.*, 
                                      aem.account_id as id,
+                                     acc.active_directory,
                                      ape.photo AS user_photo,
                                      aem.email,
                                      (CASE 
