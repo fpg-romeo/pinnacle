@@ -13,7 +13,7 @@
                 <p class="mg-b-0">System configuration</p>
                 <div class="pagetitle-button">
                     <button type="button" class="btn btn-info add" data-toggle="modal" data-target="#modal">
-                        <i class="fa fa-plus-square fa-lg"></i> <small>ADD RECORD</small>
+                        <i class="fa fa-plus-circle fa-lg"></i> <small>ADD RECORD</small>
                     </button>
                 </div>
             </div>

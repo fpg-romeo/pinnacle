@@ -52,7 +52,8 @@ RewriteRule ^account/user/([0-9]+)/?$ index.php?controller=account&view=user&pag
 
 ### GCASH
 RewriteRule ^gcash/claim/([0-9]+)/?$ index.php?controller=gcash&view=claim&page=$1 [NC,L]
-RewriteRule ^gcash/policy/([0-9]+)/?$ index.php?controller=gcash&view=policy&page=$1 [NC,L]
+RewriteRule ^gcash/claim-summary/([0-9]+)/?$ index.php?controller=gcash&view=claim-summary&page=$1 [NC,L]
+RewriteRule ^gcash/declaration/([0-9]+)/?$ index.php?controller=gcash&view=declaration&page=$1 [NC,L]
 
 ### PAGE
 RewriteRule ^dashboard/$ index.php?controller=page&view=dashboard [NC,L]
