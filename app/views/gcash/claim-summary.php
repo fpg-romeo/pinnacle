@@ -22,91 +22,93 @@
             <?php flash(promptMessage('message')); ?>
         </div>
         <div class="br-pagebody">
-            <div class="card bd">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs tx-bold">
-                        <li class="nav-item">
-                            <a href="/gcash/claim-summary/1/" class="nav-link tab-link active">SUMMARY</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/gcash/claim/1/" class="nav-link tab-link">ALL RECORDS</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body color-gray-lighter">
-                    <div class="tab-content">
+            <div class="br-section-wrapper pd-0">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs tx-bold">
+                            <li class="nav-item">
+                                <a href="/gcash/claim-summary/1/" class="nav-link tab-link active">SUMMARY</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/gcash/claim/1/" class="nav-link tab-link">ALL RECORDS</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body color-gray-lighter">
+                        <div class="tab-content">
 
-                        <div class="tab-pane active" id="summary">
-                            <div class="row mg-b-20">
-                                <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
-                                    <select name="pagination_limit" class="form-control select pagination" data-parameter="limit" data-placeholder="Limit">
-                                        <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
-                                    </select>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                    <select name="pagination_account_id" class="form-control select pagination" data-placeholder="Filter By Account">
-                                        <?php
-                                        if (isset($data['accounts']) && count($data['accounts']) > 1) {
-                                            echo '<option value="all" ' . (getVar('account_id') == 'all' ? 'selected' : "") . '>All</option>';
-                                        }
-                                        ?>
-                                        <?php echo tool_dropdown_option($data['accounts'], (getVar('account_id') ? getVar('account_id') : ''), 'full_name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-responsive bd rounded">
-                                <table class="table table-striped table-bordered table-hover mg-b-0">
-                                    <thead class="thead-colored thead-dark">
-                                        <tr>
-                                            <th class="wd-10p tx-center">DATE</th>
-                                            <th class="wd-10p tx-center">BATCH UPLOAD</th>
-                                            <th class="wd-10p tx-center">NO. OF <br>UPLOAD</th>
-                                            <th class="wd-10p tx-center">NO. OF <br>DUPLICATE</th>
-                                            <th class="wd-10p tx-center">NO. OF <br>FAILED</th>
-                                            <th class="wd-10p tx-center">NO. OF <br>DELETED</th>
-                                            <th class="wd-5p tx-center">TOTAL</th>
-                                            <th class="wd-10p">MANAGED BY</th>
-                                            <th class="wd-25p">UPLOADED FILE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        if (isset($data['summary']) && !empty($data['summary'])) {
-                                            foreach ($data['summary'] as $key_summary => $value_summary) {
-                                                echo '
-                                                        <tr >
-                                                            <td class="tx-center">' . dateDisplaySystem($value_summary['created_when']) . '</td>
-                                                            <td class="tx-center">' . $value_summary['id'] . '</td>
-                                                            <td class="tx-center">' . htmlDecode($value_summary['success']) . '</td>
-                                                            <td class="tx-center">' . htmlDecode($value_summary['duplicate']) . '</td>
-                                                            <td class="tx-center">' . htmlDecode($value_summary['failed']) . '</td>
-                                                            <td class="tx-center">' . htmlDecode($value_summary['deleted']) . '</td>
-                                                            <td class="tx-center">' . ($value_summary['success'] + $value_summary['duplicate'] + $value_summary['failed'] + $value_summary['deleted'] + $value_summary['manual_entry']) . '</td>
-                                                            <td>' . htmlDecode($value_summary['uploader_name']) . '</td>
-                                                            <td>' . (!empty($value_summary['file']) ? '<span class="tx-14 valign-top"><i class="icon ion-android-attach"></i><small> <a href="/file/gcash/' . htmlDecode($value_summary['file']) . '" target="_blank">' . htmlDecode($value_summary['file_name']) . '</a></small></span>' : '') . '</td>
-                                                        </tr>
-                                                    ';
+                            <div class="tab-pane active" id="summary">
+                                <div class="row mg-b-20">
+                                    <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+                                        <select name="pagination_limit" class="form-control select pagination" data-parameter="limit" data-placeholder="Limit">
+                                            <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <select name="pagination_account_id" class="form-control select pagination" data-placeholder="Filter By Account">
+                                            <?php
+                                            if (isset($data['accounts']) && count($data['accounts']) > 1) {
+                                                echo '<option value="all" ' . (getVar('account_id') == 'all' ? 'selected' : "") . '>All</option>';
                                             }
-                                        } else {
-                                            echo '<tr><td colspan="9" class="tx-center">No record found</td></tr>';
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <?php if (isset($data['summary']) && is_array($data['summary'])) { ?>
-
-                                <div class="row mg-t-40">
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
-                                        <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                        <ul class="pagination mg-0 float-right">
-                                            <?php echo tool_pagination(getVar('page'), $data['total_page'], '/gcash/claim-summary/', 'page', true); ?>
-                                        </ul>
+                                            ?>
+                                            <?php echo tool_dropdown_option($data['accounts'], (getVar('account_id') ? getVar('account_id') : ''), 'full_name'); ?>
+                                        </select>
                                     </div>
                                 </div>
-                            <?php } ?>
+                                <div class="table-responsive bd rounded">
+                                    <table class="table table-striped table-bordered table-hover mg-b-0">
+                                        <thead class="thead-colored thead-dark">
+                                            <tr>
+                                                <th class="wd-10p tx-center">DATE</th>
+                                                <th class="wd-10p tx-center">BATCH UPLOAD</th>
+                                                <th class="wd-10p tx-center">NO. OF <br>UPLOAD</th>
+                                                <th class="wd-10p tx-center">NO. OF <br>DUPLICATE</th>
+                                                <th class="wd-10p tx-center">NO. OF <br>FAILED</th>
+                                                <th class="wd-10p tx-center">NO. OF <br>DELETED</th>
+                                                <th class="wd-5p tx-center">TOTAL</th>
+                                                <th class="wd-10p">MANAGED BY</th>
+                                                <th class="wd-25p">UPLOADED FILE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (isset($data['summary']) && !empty($data['summary'])) {
+                                                foreach ($data['summary'] as $key_summary => $value_summary) {
+                                                    echo '
+                                                            <tr >
+                                                                <td class="tx-center">' . dateDisplaySystem($value_summary['created_when']) . '</td>
+                                                                <td class="tx-center">' . $value_summary['id'] . '</td>
+                                                                <td class="tx-center">' . htmlDecode($value_summary['success']) . '</td>
+                                                                <td class="tx-center">' . htmlDecode($value_summary['duplicate']) . '</td>
+                                                                <td class="tx-center">' . htmlDecode($value_summary['failed']) . '</td>
+                                                                <td class="tx-center">' . htmlDecode($value_summary['deleted']) . '</td>
+                                                                <td class="tx-center">' . ($value_summary['success'] + $value_summary['duplicate'] + $value_summary['failed'] + $value_summary['deleted'] + $value_summary['manual_entry']) . '</td>
+                                                                <td>' . htmlDecode($value_summary['uploader_name']) . '</td>
+                                                                <td>' . (!empty($value_summary['file']) ? '<span class="tx-14 valign-top"><i class="icon ion-android-attach"></i><small> <a href="/file/gcash/' . htmlDecode($value_summary['file']) . '" target="_blank">' . htmlDecode($value_summary['file_name']) . '</a></small></span>' : '') . '</td>
+                                                            </tr>
+                                                        ';
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="9" class="tx-center">No record found</td></tr>';
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <?php if (isset($data['summary']) && is_array($data['summary'])) { ?>
+
+                                    <div class="row mg-t-40">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
+                                            <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <ul class="pagination mg-0 float-right">
+                                                <?php echo tool_pagination(getVar('page'), $data['total_page'], '/gcash/claim-summary/', 'page', true); ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>

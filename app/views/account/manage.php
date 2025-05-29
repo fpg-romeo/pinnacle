@@ -256,7 +256,7 @@
                         </div>
                     </div><!-- card-block -->
                 </div>
-                <div class="br-section-wrapper pd-15">
+                <div class="br-section-wrapper pd-15 mg-b-40">
                     <div class="row mg-b-20">
                         <div class="col-lg-12">
                             <label class="ckbox">

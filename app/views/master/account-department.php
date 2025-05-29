@@ -72,9 +72,6 @@
                 <div class="modal-content bd-0">
                     <div class="modal-header pd-y-20 pd-x-25">
                         <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title"><span></span> Record</h6>
-                        <button type="button" class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
                     <div class="modal-body pd-25 modal-form">
                         <div class="row mg-b-20">

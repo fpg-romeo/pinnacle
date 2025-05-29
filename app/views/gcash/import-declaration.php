@@ -26,9 +26,13 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <input type="hidden" name="declaration_id" value="<?php echo multiArrayKeyExist($data, 'declaration', 'id'); ?>">
-                        <input type="hidden" name="action" value="<?php echo arrayKeyExist($data, 'action'); ?>">
-                        <input type="submit" name="submit-declaration" class="btn btn-info float-right mg-t-10" value="SUBMIT">
+                        <br>
+                        <br>
+                        <center>
+                            <input type="hidden" name="declaration_id" value="<?php echo multiArrayKeyExist($data, 'declaration', 'id'); ?>">
+                            <input type="hidden" name="action" value="<?php echo arrayKeyExist($data, 'action'); ?>">
+                            <button name="submit-declaration" type="submit" class="btn btn-primary w-150px submit"><small>SUBMIT</small></button>
+                        </center
                     </form>
                 </div>
             </div>

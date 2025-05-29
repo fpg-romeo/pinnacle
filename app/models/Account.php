@@ -1252,13 +1252,12 @@ class Account
 
     public static function getAccount($account_department_ids, $account_status_id, $keyword = '', $start = '', $limit = '', $appointment = '', $auto_allocate = '')
     {
-
-        if (!empty($account_department_ids)) {
+        if(!empty($account_department_ids) && $account_department_ids != 'all') {
             if (is_array($account_department_ids)) {
                 $account_department_ids = implode("','", $account_department_ids);
             }
-            $filter_department = " AND aem.account_department_id IN ('$account_department_ids')";
-        } else {
+            $filter_department = " AND aem.account_department_id IN ('$account_department_ids')"; 
+        }else{
             $filter_department = "";
         }
 

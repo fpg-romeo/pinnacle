@@ -37,13 +37,19 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-2 col-lg-3">
                         <select name="pagination_department" class="form-control select pagination" data-placeholder="Department">
-                        <?php echo tool_dropdown_option($data['account_department'], getVar('department'), 'name'); ?>
+                            <option value="all">All</option>
+                            <?php echo tool_dropdown_option($data['account_department'], getVar('department'), 'name'); ?>
                         </select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                         <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
                         <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
                         </select>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <a href="/account/all/1" type="button" class="btn btn-info mg-l-2 reset">
+                            <i class="fa fa-refresh fa-lg"></i> <small>RESET</small>
+                        </a>
                     </div>
                 </div>             
                 <div class="table-wrapper">

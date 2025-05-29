@@ -8,7 +8,7 @@
         <div class="br-pagetitle pos-relative">
             <i class="icon fa fa-wpforms"></i>
             <div>
-                <h4>GCash <b class="tx-primary">[ Symmary Batch Declaration ]</b></h4>
+                <h4>GCash <b class="tx-primary">[ Summary Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
                     <a href="" data-action="add" class="btn btn-info add">
