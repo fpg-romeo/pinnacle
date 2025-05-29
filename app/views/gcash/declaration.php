@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <ul class="pagination mg-0 float-right">
-                                <?php echo tool_pagination(getVar('page'), $data['total_page'], '/gcash/claim/', 'page', true); ?>
+                                <?php echo tool_pagination(getVar('page'), $data['total_page'], '/gcash/declaration/', 'page', true); ?>
                             </ul>
                         </div>
                     </div>
