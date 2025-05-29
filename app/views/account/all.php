@@ -16,7 +16,7 @@
                         <i class="fa fa-sign-out fa-lg"></i> <small>RELOGIN</small>
                     </a>
                     <a href="/account/manage/" class="btn btn-info">
-                        <i class="fa fa-plus-square fa-lg"></i> <small>ADD RECORD</small>
+                        <i class="fa fa-plus-circle fa-lg"></i> <small>ADD RECORD</small>
                     </a>
                 </div>
             </div>
