@@ -7,7 +7,7 @@
         <div class="row mg-b-20">
             <label class="col-sm-4 form-control-label">Batch Number <span class="tx-danger">*</span></label>
             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                <input name="batch_number" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'declaration', 'batch_number'); ?>">
+                <input name="batch_number" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'declaration', 'batch_number'); ?>" required>
             </div>
         </div>
         <div class="row mg-b-20">

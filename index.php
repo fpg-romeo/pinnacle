@@ -80,7 +80,7 @@ if (isset($_SESSION['login_id'])) {
 			define('IS_BIRTHDAY', false);
 		}
 
-		//Shortcode::accessGranted(ACCOUNT_ID, $controller, $view);
+		Shortcode::accessGranted(ACCOUNT_ID, $controller, $view);
 		Shortcode::onlineMember(ACCOUNT_ID);
 	} else {
 		sessionDestroy();

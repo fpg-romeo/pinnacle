@@ -142,6 +142,7 @@
     <script type="text/javascript">
         $(document).on('click', '.view', function(e) {
             e.preventDefault();
+            
             var id = $(this).data('id');
 
             var display = $('#modal-view .modal-body');
@@ -199,6 +200,8 @@
     <script type="text/javascript">
         $(document).on('click', '.manage', function(e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
+            
             var id = $(this).data('id');
 
             var display = $('#modal-declaration .modal-body');

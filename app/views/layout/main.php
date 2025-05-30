@@ -65,18 +65,24 @@
         </ul>
 
         <label class="sidebar-label pd-x-10 mg-t-20 op-3">MODULES</label>
-        <ul class="br-sideleft-menu">
-            <li class="br-menu-item">
-                <a href="#" class="br-menu-link with-sub <?php activeView(['gcash'], ['claim', 'claim-summary', 'declaration'], 'active'); ?>">
-                    <i class="fa fa-ioxhost tx-20"></i>
-                    <span class="menu-item-label">GCash</span>
-                </a>
-                <ul class="br-menu-sub">
-                    <li class="sub-item"><a href="/gcash/claim-summary/1/" class="sub-link <?php activeView(['gcash'], ['claim', 'claim-summary'], 'active'); ?>">Claims</a></li>
-                    <li class="sub-item"><a href="/gcash/declaration/1/" class="sub-link <?php activeView(['gcash'], ['declaration'], 'active'); ?>">Batch Declaration</a></li>
-                </ul>
-            </li>
-        </ul>
+        <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1','106','107'])) { ?>
+            <ul class="br-sideleft-menu">
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub <?php activeView(['gcash'], ['claim', 'claim-summary', 'declaration'], 'active'); ?>">
+                        <i class="fa fa-ioxhost tx-20"></i>
+                        <span class="menu-item-label">GCash</span>
+                    </a>
+                    <ul class="br-menu-sub">
+                        <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1','106'])) { ?>
+                            <li class="sub-item"><a href="/gcash/claim-summary/1/" class="sub-link <?php activeView(['gcash'], ['claim', 'claim-summary'], 'active'); ?>">Claims</a></li>
+                        <?php } ?>
+                        <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1','107'])) { ?>
+                            <li class="sub-item"><a href="/gcash/declaration/1/" class="sub-link <?php activeView(['gcash'], ['declaration'], 'active'); ?>">Batch Declaration</a></li>
+                        <?php } ?>
+                    </ul>
+                </li>
+            </ul>
+        <?php } ?>
 
         <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1'])) { ?>
             <label class="sidebar-label pd-x-10 mg-t-20 op-3">MAINTENANCE</label>

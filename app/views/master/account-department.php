@@ -81,12 +81,12 @@
                             </div>
                         </div>
                         <div class="row ">
-                            <label class="col-sm-4 form-control-label">Roles<span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">Roles</label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <?php 
                                     if(is_array($data['account_roles'])){
                                         foreach($data['account_roles'] as $row){
-                                            echo  '<label class="ckbox mg-b-10 ckbox-inline"><input id="role_'.$row['id'].'" name="account_role_ids"  type="checkbox" value="'.$row['id'].'" required><span>'.$row['name'].'</span></label>';
+                                            echo  '<label class="ckbox mg-b-10 ckbox-inline"><input id="role_'.$row['id'].'" name="account_role_ids"  type="checkbox" value="'.$row['id'].'"><span>'.$row['name'].'</span></label>';
                                         }
                                     }
                                  ?>
