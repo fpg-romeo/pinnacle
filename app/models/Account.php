@@ -1050,6 +1050,7 @@ class Account
         return $result;
     }
 
+    /*
     public static function deleteAccountBankById($id)
     {
         $record     = self::getDynamicByAccountId('account_bank', $id);
@@ -1068,7 +1069,9 @@ class Account
         }
         return $result;
     }
+    */
 
+    /*
     public static function deleteAccountEmergencyContactById($id)
     {
         $record     = self::getDynamicByAccountId('account_emergency_contact', $id);
@@ -1087,6 +1090,7 @@ class Account
         }
         return $result;
     }
+    */
 
     public static function deleteAccountEmploymentById($id)
     {
@@ -1107,6 +1111,7 @@ class Account
         return $result;
     }
 
+    /*
     public static function deleteAccountEquipmentById($id)
     {
         $record     = self::getDynamicByAccountId('account_equipment', $id);
@@ -1125,6 +1130,7 @@ class Account
         }
         return $result;
     }
+    */
 
     public static function getBusinessUnit()
     {

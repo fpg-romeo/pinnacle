@@ -440,10 +440,10 @@ class AccountController
         if (!empty($_POST['id']) && isset($_POST['action']) && $_POST['action'] == 'delete') {
             $result = Account::deleteRecord($_POST['id']);
             Account::deleteAccountPersonalById($_POST['id']);
-            Account::deleteAccountBankById($_POST['id']);
-            Account::deleteAccountEmergencyContactById($_POST['id']);
+            //Account::deleteAccountBankById($_POST['id']);
+            //Account::deleteAccountEmergencyContactById($_POST['id']);
             Account::deleteAccountEmploymentById($_POST['id']);
-            Account::deleteAccountEquipmentById($_POST['id']);
+            //Account::deleteAccountEquipmentById($_POST['id']);
         } else {
             $result['status']  = 'forbidden';
             $result['message'] = 'Access to this resource on the server is denied';
