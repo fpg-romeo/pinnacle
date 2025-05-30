@@ -338,6 +338,11 @@ class Gcash
         return $result;
     }
 
+    public static function validateDeclarationByBatchNumber($id, $batch_number){
+        $result = mysql::select("gcash_claim_batch_declaration", '*', "id != '{$id}' AND batch_number = '{$batch_number}'");
+        return $result;
+    }
+
     public static function addDeclaration($post){
         $batch_number = $post['batch_number'];
         $record       = self::getDeclarationByBatchNumber($batch_number);
@@ -360,18 +365,25 @@ class Gcash
     }
 
     public static function editDeclaration($post){
-        $id     = $post['id'];
-        $record = self::getDeclarationById($id);
+        $id           = $post['id'];
+        $batch_number = $post['batch_number'];
+        $record       = self::getDeclarationById($id);
+        $validate     = self::validateDeclarationByBatchNumber($id, $batch_number);
 
         if(is_array($record)){   
-            $fields = mysql::buildFields($post, ", ");
-            if(mysql::update("gcash_claim_batch_declaration", $fields, "id = '{$id}'")){
-                $result['status']  = 'success';
-                $result['message'] = 'Record Successfully Updated';
-                $result['id']      = $id;
+            if(empty($validate)){
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update("gcash_claim_batch_declaration", $fields, "id = '{$id}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                    $result['id']      = $id;
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';                
+                }
             }else{
                 $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';                
+                $result['message'] = 'Duplicate Record Found';
             }
         }else{
             $result['status']  = 'failed';

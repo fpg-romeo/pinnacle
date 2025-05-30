@@ -240,14 +240,14 @@ class GcashController
                         }
                     }
 
-                    $objPHPExcel = $objReader->load($file);
-                    $sheet = $objPHPExcel->getActiveSheet();
-                    $highestRow    = $sheet->getHighestRow();
-                    $highestColumn = $sheet->getHighestColumn();
+                    $objPHPExcel    = $objReader->load($file);
+                    $sheet          = $objPHPExcel->getActiveSheet();
+                    $highestRow     = $sheet->getHighestRow();
+                    $highestColumn  = $sheet->getHighestColumn();
 
-                    $ctr_success   = 0;
-                    $ctr_failed    = 0;
-                    $ctr_duplicate = postVar('duplicate', 0);
+                    $ctr_success    = 0;
+                    $ctr_failed     = 0;
+                    $ctr_duplicate  = postVar('duplicate', 0);
 
                     //save dataentry summary
                     $encode_summary['success']          = $ctr_success;
@@ -307,7 +307,7 @@ class GcashController
                     $batch_declaration['created_by'] = ACCOUNT_ID;
                     $batch_declaration['created_when'] = dateTimeStamp();
 
-                    ($batch_declaration['batch_number'] != "") ? Gcash::addBatchDeclaration($batch_declaration) : "";
+                    //($batch_declaration['batch_number'] != "") ? Gcash::addBatchDeclaration($batch_declaration) : "";
 
                     //update register encode
                     $update_encode['id']           = $result['id'];

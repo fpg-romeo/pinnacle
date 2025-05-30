@@ -78,24 +78,21 @@
                 <div class="modal-content bd-0">
                     <div class="modal-header pd-y-20 pd-x-25">
                         <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title"><span></span> Record</h6>
-                        <button type="button" class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
                     <div class="modal-body pd-25">
                         <div class="alert alert-danger mg-b-25" role="alert">
                             <strong class="d-block d-sm-inline-block-force">REMINDER:</strong> Leave the <b>Controller</b> and <b>View</b> fields empty if the role you are adding is for a specific function level only and not for restricting the page
                         </div>
                         <div class="row mg-b-20">
-                            <label class="col-sm-3 form-control-label">Name <span class="tx-danger">*</span></label>
+                            <label class="col-sm-3 form-control-label">Name<span class="tx-danger">*</span></label>
                             <div class="col-sm-9 mg-t-10 mg-sm-t-0">
-                                <input name="name" type="text" class="form-control" placeholder="">
+                                <input name="name" type="text" class="form-control" required>
                             </div>
                         </div>
                         <div class="row mg-b-20">
                             <label class="col-sm-3 form-control-label">Controller</label>
                             <div class="col-sm-9 mg-t-10 mg-sm-t-0">
-                                <input name="controller" type="text" class="form-control" placeholder="">
+                                <input name="controller" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row mg-b-20">
@@ -160,7 +157,7 @@
             
             $('.required').remove();
 
-            $('#form input, #form select').each(
+            $('#form input, #form select, #form textarea').each(
                 function(index){  
                     var input   = $(this);
                     var prop    = input.prop("required");
@@ -170,7 +167,7 @@
                     var parent  = input.parent();
 
                     if (typeof prop !== typeof undefined && prop !== false) {
-                        if(value == ''){
+                        if(value == '' || value == 0){
                             parent.append('<i class="required">required field</i>');
                         }
                     }

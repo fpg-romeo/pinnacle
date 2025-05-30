@@ -72,13 +72,10 @@
                 <div class="modal-content bd-0">
                     <div class="modal-header pd-y-20 pd-x-25">
                         <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title"><span></span> Record</h6>
-                        <button type="button" class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
                     <div class="modal-body pd-25">
                         <div class="row mg-b-15">
-                            <label class="col-sm-4 form-control-label">Department: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">Department<span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <select name="department_id" class="form-control select" required>
                                     <?php echo tool_dropdown_option($data['department'], '', 'name'); ?>
@@ -86,9 +83,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-4 form-control-label">Name: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">Name<span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input name="name" type="text" class="form-control" placeholder="">
+                                <input name="name" type="text" class="form-control" required>
                             </div>
                         </div>
                     </div>
@@ -140,7 +137,7 @@
             
             $('.required').remove();
 
-            $('#form input, #form select').each(
+            $('#form input, #form select, #form textarea').each(
                 function(index){  
                     var input   = $(this);
                     var prop    = input.prop("required");
@@ -150,7 +147,7 @@
                     var parent  = input.parent();
 
                     if (typeof prop !== typeof undefined && prop !== false) {
-                        if(value == ''){
+                        if(value == '' || value == 0){
                             parent.append('<i class="required">required field</i>');
                         }
                     }

@@ -164,7 +164,7 @@
                 var redirect = "<?php echo getCurrentUrl(); ?>";
 
                 $.ajax({
-                    url: '/gcash/import-claim/',
+                    url: '/gcash/import-claim-upload/',
                     type: 'GET',
                     data: {
                         redirect: redirect

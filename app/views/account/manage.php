@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-sm-3 form-control-label">Role<span class="tx-danger">*</span></label>
+                                <label class="col-sm-3 form-control-label">Role</label>
                                 <div class="col-sm-9 mg-t-10 mg-sm-t-0 checkbox_role">
 
                                 </div>
@@ -107,7 +107,7 @@
                     <div class="card-body hidden">
                         <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Email Address</label>                          
+                                <label class="col-sm-3 form-control-label">Email Address<span class="tx-danger">*</span></label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="employee_email" type="text" class="form-control employee_email" value="<?php echo multiArrayKeyExist($data, 'account_employment', 'email'); ?>" required>
                                 </div>
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20 account_designation">
-                                <label class="col-sm-3 form-control-label">Designation<span class="tx-danger"></span></label>
+                                <label class="col-sm-3 form-control-label">Designation</label>
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <select name="account_designation_id" class="form-control select" data-width="100%">
                                         
@@ -178,7 +178,7 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Nickname<span class="tx-danger"></span></label>                          
+                                <label class="col-sm-3 form-control-label">Nickname</label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="alias" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'alias'); ?>">
                                 </div>
@@ -192,13 +192,13 @@
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Date of Birth<span class="tx-danger"></span></label>                          
+                                <label class="col-sm-3 form-control-label">Date of Birth</label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="birthday" type="text" class="form-control calendar" placeholder="MM/DD/YYYY" autocomplete="off" value="<?php echo isset($data['account_personal']['birthday']) && $data['account_personal']['birthday']!='1970-01-01' ? dateDisplaySystem($data['account_personal']['birthday']) : ''; ?>">
                                 </div>
                             </div>
                             <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Contact Number<span class="tx-danger"></span></label>                          
+                                <label class="col-sm-3 form-control-label">Contact Number</label>                          
                                 <div class="col-sm-4 mg-t-10 mg-sm-t-0">
                                     <input name="contact_no" type="text" class="form-control" value="<?php echo multiArrayKeyExist($data, 'account_personal', 'contact_no'); ?>">
                                 </div>
@@ -213,13 +213,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <!-- C jae - New Photo -->
                                             <?php
                                                 if(!empty(multiArrayKeyExist($data, 'account_personal', 'photo'))){
                                                     echo '
                                                             <div class="row">
                                                                 <div class="col-sm-12 mg-y-5">
-                                                                    <div class="account-photo"><img src="'.multiArrayKeyExist($data, 'account_personal', 'photo').'" class="img-fluid"></div>
+                                                                    <div class="account-photo"><img src="'.displayImage(thumbnailName(multiArrayKeyExist($data, 'account', 'photo')), 'account').'" class="img-fluid"></div>
                                                                 </div>
                                                                 <div class="col-sm-12">
                                                                     <label class="ckbox">
@@ -231,24 +230,6 @@
                                                         ';
                                                 }
                                             ?>
-                                            <!-- C jae - Old Photo -->
-                                            <!-- <?php
-                                                    if(!empty(multiArrayKeyExist($data, 'account', 'photo'))){
-                                                        echo '
-                                                                <div class="row">
-                                                                    <div class="col-sm-12 mg-y-5">
-                                                                        <div class="account-photo"><img src="'.displayImage(thumbnailName(multiArrayKeyExist($data, 'account', 'photo')), 'account').'" class="img-fluid"></div>
-                                                                    </div>
-                                                                    <div class="col-sm-12">
-                                                                        <label class="ckbox">
-                                                                            <input name="file_delete" type="checkbox">
-                                                                            <span>DELETE</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            ';
-                                                    }
-                                            ?> -->
                                         </div>
                                     </div>
                                 </div>

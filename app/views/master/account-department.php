@@ -75,18 +75,18 @@
                     </div>
                     <div class="modal-body pd-25 modal-form">
                         <div class="row mg-b-20">
-                            <label class="col-sm-4 form-control-label">Name: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">Name<span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input name="name" type="text" class="form-control" placeholder="">
+                                <input name="name" type="text" class="form-control" required>
                             </div>
                         </div>
                         <div class="row ">
-                            <label class="col-sm-4 form-control-label">Roles: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">Roles<span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <?php 
                                     if(is_array($data['account_roles'])){
                                         foreach($data['account_roles'] as $row){
-                                            echo  '<label class="ckbox mg-b-10 ckbox-inline"><input id="role_'.$row['id'].'" name="account_role_ids"  type="checkbox" value="'.$row['id'].'"><span>'.$row['name'].'</span></label>';
+                                            echo  '<label class="ckbox mg-b-10 ckbox-inline"><input id="role_'.$row['id'].'" name="account_role_ids"  type="checkbox" value="'.$row['id'].'" required><span>'.$row['name'].'</span></label>';
                                         }
                                     }
                                  ?>
@@ -141,7 +141,7 @@
             
             $('.required').remove();
 
-            $('#form input, #form select').each(
+            $('#form input, #form select, #form textarea').each(
                 function(index){  
                     var input   = $(this);
                     var prop    = input.prop("required");
@@ -151,7 +151,7 @@
                     var parent  = input.parent();
 
                     if (typeof prop !== typeof undefined && prop !== false) {
-                        if(value == ''){
+                        if(value == '' || value == 0){
                             parent.append('<i class="required">required field</i>');
                         }
                     }

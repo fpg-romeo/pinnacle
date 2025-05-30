@@ -103,7 +103,7 @@
 
                                                     echo '
                                                                 <tr id="' . $value['id'] . '">
-                                                                    <td>' . htmlDecode($value['batch_number']) . '</td>
+                                                                    <td>' . ucwords(htmlDecode($value['batch_number'])) . '</td>
                                                                     <td>' . htmlDecode($value['workflow_number']) . '</td>
                                                                     <td>' . htmlDecode($value['endorsement_number']) . '</td>
                                                                     <td>' . htmlDecode($value['policy_id']) . '</td>

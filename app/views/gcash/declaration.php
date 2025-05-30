@@ -28,16 +28,6 @@
                             <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                         </select>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 hidden">
-                        <select name="pagination_account_id" class="form-control select pagination" data-placeholder="Filter By Account">
-                            <?php
-                            if (isset($data['accounts']) && count($data['accounts']) > 1) {
-                                echo '<option value="all" ' . (getVar('account_id') == 'all' ? 'selected' : "") . '>All</option>';
-                            }
-                            ?>
-                            <?php echo tool_dropdown_option($data['accounts'], (getVar('account_id') ? getVar('account_id') : ''), 'full_name'); ?>
-                        </select>
-                    </div>
                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                         <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                     </div>

@@ -1,5 +1,4 @@
-
-    <form id="form-declaration">
+    <form id="form-declaration" method="post"> 
         <div class="row mg-b-20">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <h6 class="br-section-label tx-info mg-t-0 float-left">MANAGE RECORD</h6>
@@ -47,7 +46,7 @@
                     var parent  = input.parent();
 
                     if (typeof prop !== typeof undefined && prop !== false) {
-                        if(value == '' || value == NULL){
+                        if(value == '' || value == 0){
                             parent.append('<i class="required">required field</i>');
                         }
                     }
@@ -60,7 +59,7 @@
                     type: 'POST',
                     data: $('#form-declaration').serialize(),
                     beforeSend: function(){
-                        promptAjaxLoading('form-declaration');
+                        promptAjaxLoading('modal-declaration');
                     },
                     success: function(data){
                         promptAjaxSuccess('modal-declaration', data.message, 'reload');
