@@ -116,8 +116,16 @@ class Gcash
                                  LEFT JOIN account_personal ape
                                  ON ape.account_id = gcl.created_by
                                  LEFT JOIN gcash_claim_batch_declaration gcb ON gcb.batch_number = gcl.batch_number',
-            'gcl.*,
-                                 CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name, gcb.workflow_number, gcb.endorsement_number',
+                                'gcl.*,
+                                 (CASE 
+                                    WHEN ape.alias = "" OR ape.alias IS NULL
+                                        THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                    ELSE 
+                                        ape.alias
+                                    END
+                                 ) AS account_name, 
+                                 gcb.workflow_number, 
+                                 gcb.endorsement_number',
             "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
             "gcl.id DESC",
             $startLimit
@@ -195,8 +203,15 @@ class Gcash
             'gcash_claim_summary gcs
                                      LEFT JOIN account_personal ape
                                      ON ape.account_id = gcs.created_by',
-            'gcs.*,
-                                     CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, "")) AS uploader_name',
+                                    'gcs.*,
+                                     (CASE 
+                                     WHEN ape.alias = "" OR ape.alias IS NULL
+                                        THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                     ELSE 
+                                        ape.alias
+                                     END
+                                     ) AS account_name
+                                     ',
             $filter_created_by,
             "gcs.id DESC",
             $startLimit

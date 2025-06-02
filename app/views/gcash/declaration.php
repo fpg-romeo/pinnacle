@@ -2,13 +2,13 @@
         <div class="br-pageheader">
             <nav class="breadcrumb pd-0 mg-0 tx-12">
                 <a class="breadcrumb-item" href="/">GCash</a>
-                <span class="breadcrumb-item active">Summary Batch Declaration</span>
+                <span class="breadcrumb-item active">List of Batch Declaration</span>
             </nav>
         </div>
         <div class="br-pagetitle pos-relative">
             <i class="icon fa fa-wpforms"></i>
             <div>
-                <h4>GCash <b class="tx-primary">[ Summary Batch Declaration ]</b></h4>
+                <h4>GCash <b class="tx-primary">[ List of Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
                     <a href="" data-action="add" class="btn btn-info manage" data-action="add">

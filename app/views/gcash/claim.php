@@ -1,9 +1,8 @@
     <div class="br-mainpanel">
         <div class="br-pageheader">
             <nav class="breadcrumb pd-0 mg-0 tx-12">
-                <a class="breadcrumb-item" href="/">Claims</a>
                 <a class="breadcrumb-item" href="/">GCash</a>
-                <span class="breadcrumb-item active">All Records</span>
+                <span class="breadcrumb-item active">Records</span>
             </nav>
         </div>
         <div class="br-pagetitle pos-relative">
@@ -111,7 +110,7 @@
                                                                     <td class="tx-center">' . htmlDecode($value['mobile_number']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['date_insurance_start']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['date_insurance_end']) . '</td>
-                                                                    <td class="tx-center">' . htmlDecode($value['uploader_name']) . '</td>
+                                                                    <td class="tx-center">' . htmlDecode($value['account_name']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['created_when']) . '</td>
                                                                     <td class="tx-center"> 
                                                                         ' . $action . '

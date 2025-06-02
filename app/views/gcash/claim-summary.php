@@ -1,15 +1,14 @@
     <div class="br-mainpanel">
         <div class="br-pageheader">
             <nav class="breadcrumb pd-0 mg-0 tx-12">
-                <a class="breadcrumb-item" href="/">Claims</a>
                 <a class="breadcrumb-item" href="/">GCash</a>
-                <span class="breadcrumb-item active">Summary</span>
+                <span class="breadcrumb-item active">Summary of Batch Declaration</span>
             </nav>
         </div>
         <div class="br-pagetitle pos-relative">
             <i class="icon fa fa-wpforms"></i>
             <div>
-                <h4>GCash <b class="tx-primary">[ Summary ]</b></h4>
+                <h4>GCash <b class="tx-primary">[ Summary of Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
                     <button type="button" class="btn btn-info mg-l-15 import">
@@ -59,14 +58,14 @@
                                     <table class="table table-striped table-bordered table-hover mg-b-0">
                                         <thead class="thead-colored thead-dark">
                                             <tr>
-                                                <th class="wd-10p tx-center">DATE</th>
+                                                <th class="wd-10p tx-center">MANAGED DATE</th>
                                                 <th class="wd-10p tx-center">BATCH UPLOAD</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>UPLOAD</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>DUPLICATE</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>FAILED</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>DELETED</th>
                                                 <th class="wd-5p tx-center">TOTAL</th>
-                                                <th class="wd-10p">MANAGED BY</th>
+                                                <th class="wd-10p tx-center">MANAGED BY</th>
                                                 <th class="wd-25p">UPLOADED FILE</th>
                                             </tr>
                                         </thead>
@@ -83,7 +82,7 @@
                                                                 <td class="tx-center">' . htmlDecode($value_summary['failed']) . '</td>
                                                                 <td class="tx-center">' . htmlDecode($value_summary['deleted']) . '</td>
                                                                 <td class="tx-center">' . ($value_summary['success'] + $value_summary['duplicate'] + $value_summary['failed'] + $value_summary['deleted'] + $value_summary['manual_entry']) . '</td>
-                                                                <td>' . htmlDecode($value_summary['uploader_name']) . '</td>
+                                                                <td class="tx-center">' . htmlDecode($value_summary['account_name']) . '</td>
                                                                 <td>' . (!empty($value_summary['file']) ? '<span class="tx-14 valign-top"><i class="icon ion-android-attach"></i><small> <a href="/file/gcash/' . htmlDecode($value_summary['file']) . '" target="_blank">' . htmlDecode($value_summary['file_name']) . '</a></small></span>' : '') . '</td>
                                                             </tr>
                                                         ';

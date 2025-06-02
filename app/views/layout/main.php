@@ -74,7 +74,7 @@
                     </a>
                     <ul class="br-menu-sub">
                         <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1','106'])) { ?>
-                            <li class="sub-item"><a href="/gcash/claim-summary/1/" class="sub-link <?php activeView(['gcash'], ['claim', 'claim-summary'], 'active'); ?>">Claims</a></li>
+                            <li class="sub-item"><a href="/gcash/claim-summary/1/" class="sub-link <?php activeView(['gcash'], ['claim', 'claim-summary'], 'active'); ?>">Summary Declaration</a></li>
                         <?php } ?>
                         <?php if (ACCOUNT_TYPE_ID == 1 || accessGranted(['1','107'])) { ?>
                             <li class="sub-item"><a href="/gcash/declaration/1/" class="sub-link <?php activeView(['gcash'], ['declaration'], 'active'); ?>">Batch Declaration</a></li>
