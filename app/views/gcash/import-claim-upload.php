@@ -94,6 +94,9 @@
                 promptAjaxLoading('modal-import');
             },
             success: function(data) {
+                if (typeof data.alert !== typeof undefined && data.alert !== false) {
+                    alert(data.alert);
+                }
                 promptAjaxSuccess('modal-import', data.message, data.redirect);
             },
             error: function(xhr, desc, err) {
