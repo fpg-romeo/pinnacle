@@ -97,6 +97,7 @@ class GcashController
         $result = array();
 
         $CONFIGURATION = Configuration::general();
+        
 
         if (isset($_FILES['file']) && !empty($_FILES)) {
             $file_name     = $_FILES['file']['name'];
@@ -109,127 +110,128 @@ class GcashController
 
             // $checkIfExistingFile = Gcash::checkIfExistingFilename($file_name);
 
-            if (!in_array($file_ext, $extensions)) {
-                $result['status']  = 'Error';
-                $result['message'] = 'File format is not allow';
-            }
-            //  else if ($checkIfExistingFile > 0) {
+            // if (!in_array($file_ext, $extensions)) {
             //     $result['status']  = 'Error';
-            //     $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
-            //                             The file you are trying to upload has the same name as an existing file.</br>
-            //                             Please rename your file and try uploading again.';
-            // } 
-            else {
-                if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
-                    if (!array_key_exists('error', $result)) {
+            //     $result['message'] = 'File format is not allow';
+            // }
+            // //  else if ($checkIfExistingFile > 0) {
+            // //     $result['status']  = 'Error';
+            // //     $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
+            // //                             The file you are trying to upload has the same name as an existing file.</br>
+            // //                             Please rename your file and try uploading again.';
+            // // } 
+            // else {
+            //     if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
+            //         if (!array_key_exists('error', $result)) {
 
-                        $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
-                        //$file = $_FILES['file']['tmp_name'];
-                        try {
-                            includeLibrary(['excel/PHPExcel.php']);
+            //             $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
+            //             //$file = $_FILES['file']['tmp_name'];
+            //             try {
+            //                 includeLibrary(['excel/PHPExcel.php']);
 
-                            $inputFileType = PHPExcel_IOFactory::identify($file);
+            //                 $inputFileType = PHPExcel_IOFactory::identify($file);
 
-                            // Use CSV reader explicitly if it's a CSV file
-                            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
-                                $objReader = new PHPExcel_Reader_CSV();
-                                $objReader->setDelimiter(','); // Optional: set delimiter if needed
-                                $objReader->setEnclosure('"');
-                                $objReader->setLineEnding("\r\n");
-                                $objReader->setSheetIndex(0);
-                            } else {
-                                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-                                if (method_exists($objReader, 'setReadDataOnly')) {
-                                    $objReader->setReadDataOnly(true);
-                                }
-                            }
+            //                 // Use CSV reader explicitly if it's a CSV file
+            //                 if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
+            //                     $objReader = new PHPExcel_Reader_CSV();
+            //                     $objReader->setDelimiter(','); // Optional: set delimiter if needed
+            //                     $objReader->setEnclosure('"');
+            //                     $objReader->setLineEnding("\r\n");
+            //                     $objReader->setSheetIndex(0);
+            //                 } else {
+            //                     $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+            //                     if (method_exists($objReader, 'setReadDataOnly')) {
+            //                         $objReader->setReadDataOnly(true);
+            //                     }
+            //                 }
 
-                            $objPHPExcel = $objReader->load($file);
-                            $sheet = $objPHPExcel->getActiveSheet();
+            //                 $objPHPExcel = $objReader->load($file);
+            //                 $sheet = $objPHPExcel->getActiveSheet();
 
-                            $highestRow    = $sheet->getHighestRow();
-                            $highestColumn = $sheet->getHighestColumn();
+            //                 $highestRow    = $sheet->getHighestRow();
+            //                 $highestColumn = $sheet->getHighestColumn();
 
-                            $duplicate_contact_no   = [];
-                            $duplicate_company_name = [];
-                            $duplicate_rows         = [];
-                            $duplicate              = 0;
+            //                 $duplicate_contact_no   = [];
+            //                 $duplicate_company_name = [];
+            //                 $duplicate_rows         = [];
+            //                 $duplicate              = 0;
 
-                            $column_name = $this->getColumns();
+            //                 $column_name = $this->getColumns();
 
-                            for ($row = 1; $row <= $highestRow; $row++) {
-                                $columnarray = [];
-                                $column = 'A';
-                                foreach ($column_name as $key => $value) {
+            //                 for ($row = 1; $row <= $highestRow; $row++) {
+            //                     $columnarray = [];
+            //                     $column = 'A';
+            //                     foreach ($column_name as $key => $value) {
 
-                                    $cell = $sheet->getCell($column . $row);
-                                    $cellValue = $cell->getValue();
+            //                         $cell = $sheet->getCell($column . $row);
+            //                         $cellValue = $cell->getValue();
 
-                                    // Check if it's a date AND numeric (i.e., Excel serial format)
-                                    $date = array('date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end');
-                                    if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)) {
-                                        $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
-                                        ${$value}  = date('Y-m-d', $timestamp);
-                                    } elseif ($cellValue instanceof PHPExcel_RichText) {
-                                        ${$value} = $cellValue->getPlainText();
-                                    } else {
-                                        ${$value} = $cellValue;
-                                    }
+            //                         // Check if it's a date AND numeric (i.e., Excel serial format)
+            //                         $date = array('date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end');
+            //                         if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)) {
+            //                             $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
+            //                             ${$value}  = date('Y-m-d', $timestamp);
+            //                         } elseif ($cellValue instanceof PHPExcel_RichText) {
+            //                             ${$value} = $cellValue->getPlainText();
+            //                         } else {
+            //                             ${$value} = $cellValue;
+            //                         }
 
-                                    $columnarray['row'][$value] = ${$value};
-                                    $column++;
-                                }
+            //                         $columnarray['row'][$value] = ${$value};
+            //                         $column++;
+            //                     }
 
-                                if ('A' . $row != 'A1' && !empty($first_name)) {
-                                    $result['row'][] = array(
-                                        'row'                   => $row,
-                                        'similar_company_name'  => '',
-                                        'is_similar_only'       => '',
-                                        'status'                => 'New'
-                                    );
-                                    $lastIndex = count($result['row']) - 1;
+            //                     if ('A' . $row != 'A1' && !empty($first_name)) {
+            //                         $result['row'][] = array(
+            //                             'row'                   => $row,
+            //                             'similar_company_name'  => '',
+            //                             'is_similar_only'       => '',
+            //                             'status'                => 'New'
+            //                         );
+            //                         $lastIndex = count($result['row']) - 1;
 
-                                    $result['row'][$lastIndex] = array_merge(
-                                        $result['row'][$lastIndex],
-                                        $columnarray['row']
-                                    );
-                                }
-                            }
+            //                         $result['row'][$lastIndex] = array_merge(
+            //                             $result['row'][$lastIndex],
+            //                             $columnarray['row']
+            //                         );
+            //                     }
+            //                 }
 
-                            $result['file_temporary'] = $file_new_name;
-                            $result['file_name']      = $file_name;
-                            $result['duplicate']      = count($duplicate_rows);
-                        } catch (Exception $e) {
-                            $result['status']  = 'Error';
-                            $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
-                        }
-                    }
-                } else {
-                    $result['status']  = 'Error';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }
-        } elseif (isset($_POST['submit-import'])) {
-            $field['file_temporary'] = postVar('file_temporary');
-            $field['row']            = postVar('row');
+            //                 $result['file_temporary'] = $file_new_name;
+            //                 $result['file_name']      = $file_name;
+            //                 $result['duplicate']      = count($duplicate_rows);
+            //             } catch (Exception $e) {
+            //                 $result['status']  = 'Error';
+            //                 $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
+            //             }
+            //         }
+            //     } else {
+            //         $result['status']  = 'Error';
+            //         $result['message'] = 'Encounter technical error. Pls try again';
+            //     }
+            // }
+        // } elseif (isset($_POST['submit-import'])) {
+            // $field['file_temporary'] = postVar('file_temporary');
+            // $field['row']            = postVar('row');
 
-            $data = checkRequiredPost(array('file_temporary', 'row'));
+            // $data = checkRequiredPost(array('file_temporary', 'row'));
 
-            if (!array_key_exists('error', $data)) {
-
-                $list = explode(',', $field['row']);
-                $file = getDocumentRoot() . '/upload/temp/' . $field['file_temporary'];
+            if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
+                // $list = explode(',', $field['row']);
+                $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
+                
                 try {
 
                     includeLibrary(['excel/PHPExcel.php']);
 
                     $objPHPExcel   = new PHPExcel();
+                    
                     $inputFileType = PHPExcel_IOFactory::identify($file);
 
-                    // Use CSV reader explicitly if it's a CSV file
+                    // Use CSV reader if CSV file (faster)
                     if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
                         $objReader = new PHPExcel_Reader_CSV();
-                        $objReader->setDelimiter(','); // Optional: set delimiter if needed
+                        $objReader->setDelimiter(',');
                         $objReader->setEnclosure('"');
                         $objReader->setLineEnding("\r\n");
                         $objReader->setSheetIndex(0);
@@ -240,43 +242,46 @@ class GcashController
                         }
                     }
 
-                    $objPHPExcel    = $objReader->load($file);
-                    $sheet          = $objPHPExcel->getActiveSheet();
-                    $highestRow     = $sheet->getHighestRow();
-                    $highestColumn  = $sheet->getHighestColumn();
+                    // Load with only necessary data
+                    $objPHPExcel = $objReader->load($file);
+                    $sheet = $objPHPExcel->getActiveSheet();
+                    $highestRow = $sheet->getHighestRow();
+                    $highestColumn = $sheet->getHighestColumn();
 
-                    $ctr_success    = 0;
-                    $ctr_failed     = 0;
-                    $ctr_duplicate  = postVar('duplicate', 0);
+                    $ctr_success = 0;
+                    $ctr_failed = 0;
+                    $ctr_duplicate = postVar('duplicate', 0);
 
-                    //save dataentry summary
-                    $encode_summary['success']          = $ctr_success;
-                    $encode_summary['duplicate']        = $ctr_duplicate;
-                    $encode_summary['failed']           = $ctr_failed;
-                    $encode_summary['file']             = postVar('file_temporary');
-                    $encode_summary['file_name']        = postVar('file_name');
-                    $encode_summary['created_by']       = ACCOUNT_ID;
-                    $encode_summary['created_when']     = dateTimeStamp();
-                    $result                             = Gcash::addClaimEncodeSummary($encode_summary);
-                    $batch_declaration                  = array();
+                    // Summary insert
+                    $encode_summary = [
+                        'success'       => $ctr_success,
+                        'duplicate'     => $ctr_duplicate,
+                        'failed'        => $ctr_failed,
+                        'file'          => $file_new_name,
+                        'file_name'     => $file_tmp,
+                        'created_by'    => ACCOUNT_ID,
+                        'created_when'  => dateTimeStamp(),
+                    ];
+                    $result = Gcash::addClaimEncodeSummary($encode_summary);
 
                     $column_name = $this->getColumns();
+                    $batch_declaration = [];
 
-                    foreach ($list as $row) {
+                    for ($row = 1; $row <= $highestRow; $row++) {
                         if (empty($duplicate)) {
+                            $encode = [
+                                'duplicate'     => 'No',
+                                'batch_id'      => $result['id'],
+                                'created_by'    => ACCOUNT_ID,
+                                'created_when'  => dateTimeStamp(),
+                            ];
 
-                            $encode['duplicate']    = 'No';
-                            $encode['batch_id']     = $result['id'];
-
-                            $column = 'A';
+                            $columnIndex = 'A';
                             foreach ($column_name as $key => $value) {
+                                $cellValue = $sheet->getCell($columnIndex . $row)->getValue();
 
-                                $cell = $sheet->getCell($column . $row);
-                                $cellValue = $cell->getValue();
-
-                                // Check if it's a date AND numeric (i.e., Excel serial format)
-                                if (($value == 'date_of_birth' || $value == 'date_of_transaction' || $value == 'date_insurance_start' || $value == 'date_insurance_end') && is_numeric($cellValue)) {
-                                    $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
+                                if (in_array($value, ['date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end']) && is_numeric($cellValue)) {
+                                    $timestamp = PHPExcel_Shared_Date::ExcelToPHP($cellValue);
                                     $encode[$value] = date('Y-m-d', $timestamp);
                                 } elseif ($cellValue instanceof PHPExcel_RichText) {
                                     $encode[$value] = $cellValue->getPlainText();
@@ -284,25 +289,28 @@ class GcashController
                                     $encode[$value] = $cellValue;
                                 }
 
-                                $column++;
+                                $columnIndex++;
                             }
-
-                            $encode['created_by']   = ACCOUNT_ID;
-                            $encode['created_when'] = dateTimeStamp();
 
                             $batch_declaration['batch_number'] = $encode['batch_number'];
 
                             $encode_result = Gcash::addClaimEncode($encode);
 
-                            if ($encode_result['status'] == 'success') {
+                            // file_put_contents('encode.json', json_encode($encode_result) . "\n", FILE_APPEND);
+
+                            if ($encode_result['status'] === 'success') {
                                 $ctr_success++;
                             } else {
                                 $ctr_failed++;
                             }
+                            
                         } else {
                             $ctr_duplicate++;
                         }
+
+                       
                     }
+
 
                     $batch_declaration['created_by'] = ACCOUNT_ID;
                     $batch_declaration['created_when'] = dateTimeStamp();
@@ -311,7 +319,7 @@ class GcashController
 
                     //update register encode
                     $update_encode['id']           = $result['id'];
-                    $total_uploaded_rows           = postVar('total_rows');
+                    $total_uploaded_rows           = $highestRow;
                     $total_processed_rows          = $ctr_duplicate + $ctr_success + $ctr_failed;
                     // calculate the first validation count for duplicates
                     $first_stage_duplicate_count   = $total_uploaded_rows - $total_processed_rows;
@@ -329,7 +337,7 @@ class GcashController
                     $email_body = Email::templateDefault($email_body);
 
                     Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file);
-                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $field['file_temporary'], 'delete');
+                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $file_new_name, 'delete');
                 } catch (Exception $e) {
                     $result['status']  = 'forbidden';
                     $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
