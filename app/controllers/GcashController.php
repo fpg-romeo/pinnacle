@@ -108,114 +108,6 @@ class GcashController
             $file_new_name = 'Claim-' . dateTimeAsId() . '.' . $file_ext;
             $extensions    = $CONFIGURATION['ALLOWED_EXCEL'];
 
-            // $checkIfExistingFile = Gcash::checkIfExistingFilename($file_name);
-
-            // if (!in_array($file_ext, $extensions)) {
-            //     $result['status']  = 'Error';
-            //     $result['message'] = 'File format is not allow';
-            // }
-            // //  else if ($checkIfExistingFile > 0) {
-            // //     $result['status']  = 'Error';
-            // //     $result['message'] = '<b>Error: Duplicate File Name Detected</b></br>
-            // //                             The file you are trying to upload has the same name as an existing file.</br>
-            // //                             Please rename your file and try uploading again.';
-            // // } 
-            // else {
-            //     if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
-            //         if (!array_key_exists('error', $result)) {
-
-            //             $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
-            //             //$file = $_FILES['file']['tmp_name'];
-            //             try {
-            //                 includeLibrary(['excel/PHPExcel.php']);
-
-            //                 $inputFileType = PHPExcel_IOFactory::identify($file);
-
-            //                 // Use CSV reader explicitly if it's a CSV file
-            //                 if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
-            //                     $objReader = new PHPExcel_Reader_CSV();
-            //                     $objReader->setDelimiter(','); // Optional: set delimiter if needed
-            //                     $objReader->setEnclosure('"');
-            //                     $objReader->setLineEnding("\r\n");
-            //                     $objReader->setSheetIndex(0);
-            //                 } else {
-            //                     $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-            //                     if (method_exists($objReader, 'setReadDataOnly')) {
-            //                         $objReader->setReadDataOnly(true);
-            //                     }
-            //                 }
-
-            //                 $objPHPExcel = $objReader->load($file);
-            //                 $sheet = $objPHPExcel->getActiveSheet();
-
-            //                 $highestRow    = $sheet->getHighestRow();
-            //                 $highestColumn = $sheet->getHighestColumn();
-
-            //                 $duplicate_contact_no   = [];
-            //                 $duplicate_company_name = [];
-            //                 $duplicate_rows         = [];
-            //                 $duplicate              = 0;
-
-            //                 $column_name = $this->getColumns();
-
-            //                 for ($row = 1; $row <= $highestRow; $row++) {
-            //                     $columnarray = [];
-            //                     $column = 'A';
-            //                     foreach ($column_name as $key => $value) {
-
-            //                         $cell = $sheet->getCell($column . $row);
-            //                         $cellValue = $cell->getValue();
-
-            //                         // Check if it's a date AND numeric (i.e., Excel serial format)
-            //                         $date = array('date_of_birth', 'date_of_transaction', 'date_insurance_start', 'date_insurance_end');
-            //                         if (in_array($value, $date) && !empty($value) && is_numeric($cellValue)) {
-            //                             $timestamp = '' . PHPExcel_Shared_Date::ExcelToPHP($cellValue) . '';
-            //                             ${$value}  = date('Y-m-d', $timestamp);
-            //                         } elseif ($cellValue instanceof PHPExcel_RichText) {
-            //                             ${$value} = $cellValue->getPlainText();
-            //                         } else {
-            //                             ${$value} = $cellValue;
-            //                         }
-
-            //                         $columnarray['row'][$value] = ${$value};
-            //                         $column++;
-            //                     }
-
-            //                     if ('A' . $row != 'A1' && !empty($first_name)) {
-            //                         $result['row'][] = array(
-            //                             'row'                   => $row,
-            //                             'similar_company_name'  => '',
-            //                             'is_similar_only'       => '',
-            //                             'status'                => 'New'
-            //                         );
-            //                         $lastIndex = count($result['row']) - 1;
-
-            //                         $result['row'][$lastIndex] = array_merge(
-            //                             $result['row'][$lastIndex],
-            //                             $columnarray['row']
-            //                         );
-            //                     }
-            //                 }
-
-            //                 $result['file_temporary'] = $file_new_name;
-            //                 $result['file_name']      = $file_name;
-            //                 $result['duplicate']      = count($duplicate_rows);
-            //             } catch (Exception $e) {
-            //                 $result['status']  = 'Error';
-            //                 $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
-            //             }
-            //         }
-            //     } else {
-            //         $result['status']  = 'Error';
-            //         $result['message'] = 'Encounter technical error. Pls try again';
-            //     }
-            // }
-        // } elseif (isset($_POST['submit-import'])) {
-            // $field['file_temporary'] = postVar('file_temporary');
-            // $field['row']            = postVar('row');
-
-            // $data = checkRequiredPost(array('file_temporary', 'row'));
-
             if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                 // $list = explode(',', $field['row']);
                 $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
@@ -258,7 +150,7 @@ class GcashController
                         'duplicate'     => $ctr_duplicate,
                         'failed'        => $ctr_failed,
                         'file'          => $file_new_name,
-                        'file_name'     => $file_tmp,
+                        'file_name'     => $file_name,
                         'created_by'    => ACCOUNT_ID,
                         'created_when'  => dateTimeStamp(),
                     ];
@@ -344,7 +236,7 @@ class GcashController
                 }
             }
 
-            $result['redirect'] = htmlDecode(postVar('redirect'));
+            $result['redirect'] = '/gcash/claim-summary/1';
         } else {
             $result['status']  = 'forbidden';
             $result['message'] = 'Access to this resource on the server is denied';
