@@ -34,7 +34,7 @@ class Gcash
         return $result;
     }
 
-    public static function getClaimEncode($keyword = '', $account_id, $status_id, $start = '', $limit = '')
+    public static function getClaimEncode($keyword = '', $account_id, $status_id, $start = '', $limit = '', $query_type = 'main')
     {
 
         if (is_array($account_id)) {
@@ -61,6 +61,7 @@ class Gcash
                 $filter_status = '';
             }
         }
+
         if (!empty(trim($keyword))) {
 
             $keyword = " '%{$keyword}%' ";
@@ -109,25 +110,32 @@ class Gcash
             $filter = '';
         }
 
-        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
-
-        $result = mysql::select(
-            'gcash_claim gcl
-                                 LEFT JOIN account_personal ape
-                                 ON ape.account_id = gcl.created_by
-                                 LEFT JOIN gcash_claim_batch_declaration gcb ON gcb.batch_number = gcl.batch_number',
-                                'gcl.*,
+        if($query_type == 'main'){
+            $select         = 'gcl.*,
                                  (CASE 
                                     WHEN ape.alias = "" OR ape.alias IS NULL
                                         THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
                                     ELSE 
                                         ape.alias
                                     END
-                                 ) AS account_name, 
-                                 gcb.workflow_number, 
-                                 gcb.endorsement_number',
-            "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
-            "gcl.id DESC",
+                               ) AS account_name, 
+                               gcb.workflow_number, 
+                               gcb.endorsement_number
+                              ';
+            $startLimit     = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        }else{
+            $select         = 'COUNT(gcl.id) AS count';
+            $startLimit     = '';
+        }
+
+        $result = mysql::select(
+                                'gcash_claim gcl
+                                 LEFT JOIN account_personal ape
+                                 ON ape.account_id = gcl.created_by
+                                 LEFT JOIN gcash_claim_batch_declaration gcb ON gcb.batch_number = gcl.batch_number',
+                                 $select,
+                                "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
+                                "gcl.id DESC",
             $startLimit
         );
 
