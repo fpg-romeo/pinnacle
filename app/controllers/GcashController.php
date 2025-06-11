@@ -51,11 +51,9 @@ class GcashController
         $data          = array();
         $CONFIGURATION = Configuration::general();
 
-        $account_id           = urldecode(getVar('account_id'));
-        $account_ids          = ACCOUNT_ID;
         $keyword              = urldecode(getVar('keyword'));
-        $data['records']      = Gcash::getClaimEncode($keyword, $account_id, '', pagination('start'), pagination('limit'));
-        $data['total_record'] = recastArray(Gcash::getClaimEncode($keyword, $account_id, '', '', '', 'count'))['count'] ?? 0;
+        $data['records']      = Gcash::getClaimEncode($keyword, pagination('start'), pagination('limit'));
+        $data['total_record'] = recastArray(Gcash::getClaimEncode($keyword, '', '', 'count'))['count'] ?? 0;
         //$data['total_record'] = Gcash::countClaimEncode($keyword, $account_id, '');
         $data['total_page']   = pagination('total', $data['total_record']);
 
@@ -111,7 +109,7 @@ class GcashController
 
             if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
                 // $list = explode(',', $field['row']);
-                $file = getDocumentRoot() . '/upload/temp/' . $file_new_name;
+                $file_upload = getDocumentRoot() . '/upload/temp/' . $file_new_name;
                 
                 try {
 
@@ -119,10 +117,10 @@ class GcashController
 
                     $objPHPExcel   = new PHPExcel();
                     
-                    $inputFileType = PHPExcel_IOFactory::identify($file);
+                    $inputFileType = PHPExcel_IOFactory::identify($file_upload);
 
                     // Use CSV reader if CSV file (faster)
-                    if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'csv') {
+                    if (strtolower(pathinfo($file_upload, PATHINFO_EXTENSION)) === 'csv') {
                         $objReader = new PHPExcel_Reader_CSV();
                         $objReader->setDelimiter(',');
                         $objReader->setEnclosure('"');
@@ -136,14 +134,16 @@ class GcashController
                     }
 
                     // Load with only necessary data
-                    $objPHPExcel = $objReader->load($file);
-                    $sheet = $objPHPExcel->getActiveSheet();
-                    $highestRow = $sheet->getHighestRow();
-                    $highestColumn = $sheet->getHighestColumn();
+                    $objPHPExcel    = $objReader->load($file_upload);
+                    $sheet          = $objPHPExcel->getActiveSheet();
+                    $highestRow     = $sheet->getHighestRow();
+                    $highestColumn  = $sheet->getHighestColumn();
+                    $worksheet      = $sheet->toArray();
 
-                    $ctr_success = 0;
-                    $ctr_failed = 0;
-                    $ctr_duplicate = postVar('duplicate', 0);
+                    
+                    $ctr_success    = 0;
+                    $ctr_failed     = 0;
+                    $ctr_duplicate  = postVar('duplicate', 0);
 
                     // Summary insert
                     $encode_summary = [
@@ -159,6 +159,100 @@ class GcashController
 
                     $column_name = $this->getColumns();
                     $batch_declaration = [];
+
+                    $required_column = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+                    /*
+                    foreach($worksheet as $worksheet_key => $worksheet_value){
+                        $valid = true;
+
+                        $file['first_name']             = htmlEncode($worksheet_value[0]);
+                        $file['last_name']              = htmlEncode($worksheet_value[1]);
+                        $file['middle_name']            = htmlEncode($worksheet_value[2]);
+                        $file['date_of_birth']          = htmlEncode($worksheet_value[3]);
+                        $file['mobile_number']          = htmlEncode($worksheet_value[4]);
+                        $file['email_address']          = htmlEncode($worksheet_value[5]);
+                        $file['date_of_transaction']    = htmlEncode($worksheet_value[6]);
+                        $file['reference_number']       = htmlEncode($worksheet_value[7]);
+                        $file['load_amount']            = htmlEncode($worksheet_value[8]);
+                        $file['load_status']            = htmlEncode($worksheet_value[9]);
+                        $file['consent_status']         = htmlEncode($worksheet_value[10]);
+                        $file['policy_id']              = htmlEncode($worksheet_value[11]);
+                        $file['policy_status']          = htmlEncode($worksheet_value[12]);
+                        $file['protect_premium_taxes']  = htmlEncode($worksheet_value[13]);
+                        $file['date_insurance_start']   = htmlEncode($worksheet_value[14]);
+                        $file['date_insurance_end']     = htmlEncode($worksheet_value[15]);
+                        $file['batch_number']           = htmlEncode($worksheet_value[16]);
+
+                        foreach($required_column as $column){
+                            if(empty(trim($worksheet_value[$column]))){
+                                $valid = false;
+                                break;
+                            } 
+                        }
+
+                        if($valid){
+                            $encode_result = Gcash::addClaimEncode($file);
+                        }
+                    }
+                    */
+                    unset($worksheet[0]);
+                    foreach($worksheet as $worksheet_key => $worksheet_value){
+                        $valid = true;
+                        foreach($required_column as $column){
+                            if(empty(trim($worksheet_value[$column] ?? ''))){
+                                $valid = false;
+                                break;
+                            }
+                        }
+
+                        if(!$valid){
+                            continue;
+                        }
+
+                        $file['first_name']             = htmlEncode($worksheet_value[0]);
+                        $file['last_name']              = htmlEncode($worksheet_value[1]);
+                        $file['middle_name']            = htmlEncode($worksheet_value[2]);
+                        $file['date_of_birth']          = dateSaveDB($worksheet_value[3]);
+                        $file['mobile_number']          = htmlEncode($worksheet_value[4]);
+                        $file['email_address']          = htmlEncode($worksheet_value[5]);
+                        $file['date_of_transaction']    = dateSaveDB($worksheet_value[6]);
+                        $file['reference_number']       = htmlEncode($worksheet_value[7]);
+                        $file['load_amount']            = htmlEncode($worksheet_value[8]);
+                        $file['load_status']            = htmlEncode($worksheet_value[9]);
+                        $file['consent_status']         = htmlEncode($worksheet_value[10]);
+                        $file['policy_id']              = htmlEncode($worksheet_value[11]);
+                        $file['policy_status']          = htmlEncode($worksheet_value[12]);
+                        $file['protect_premium_taxes']  = htmlEncode($worksheet_value[13]);
+                        $file['date_insurance_start']   = dateSaveDB($worksheet_value[14]);
+                        $file['date_insurance_end']     = dateSaveDB($worksheet_value[15]);
+                        $file['batch_number']           = htmlEncode($worksheet_value[16]);
+
+
+                        //$multiple_data[] = '('.$file['first_name'].','.$file['last_name'].','.$file['middle_name'].','.$file['date_of_birth'].','.$file['mobile_number'].','.$file['email_address'].','.$file['date_of_transaction'].','.$file['reference_number'].','.$file['load_amount'].','.$file['load_status'].','.$file['consent_status'].','.$file['policy_id'].','.$file['policy_status'].','.$file['protect_premium_taxes'].','.$file['date_insurance_start'].','.$file['date_insurance_end'].','.$file['batch_number'].')';
+                        
+                        $ctr_file = 1;
+                        $insert_column = '(';
+                        foreach($file as $column){
+                            $insert_column .= "'".$column."'";
+
+                            if($ctr_file < count(array_keys($file))){
+                                $insert_column .= ',';
+                            }
+                            $ctr_file++;
+                        }
+
+                        $insert_column .= ')';
+
+                        $multiple_data[] = $insert_column;
+
+                        //$encode_result = Gcash::addClaimEncode($file);
+                    }
+
+                    $encode_result = Gcash::addClaimEncodeBulk($multiple_data);
+                    logs($multiple_data, 'multiple_data');
+
+                    /*
 
                     for ($row = 1; $row <= $highestRow; $row++) {
                         if (empty($duplicate)) {
@@ -204,10 +298,8 @@ class GcashController
                        
                     }
 
-
-                    $batch_declaration['created_by'] = ACCOUNT_ID;
-                    $batch_declaration['created_when'] = dateTimeStamp();
-
+                    //$batch_declaration['created_by'] = ACCOUNT_ID;
+                    //$batch_declaration['created_when'] = dateTimeStamp();
                     //($batch_declaration['batch_number'] != "") ? Gcash::addBatchDeclaration($batch_declaration) : "";
 
                     //update register encode
@@ -230,14 +322,17 @@ class GcashController
                     $email_body = Email::templateDefault($email_body);
 
                     Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file);
-                    moveFile($file, getDocumentRoot() . '/upload/gcash/' . $file_new_name, 'delete');
+
+                    */
+
+                    //moveFile($file, getDocumentRoot() . '/upload/gcash/' . $file_new_name, 'delete');
                 } catch (Exception $e) {
                     $result['status']  = 'forbidden';
                     $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
                 }
             }
 
-            $result['redirect'] = '/gcash/claim-summary/1';
+            //$result['redirect'] = '/gcash/claim-summary/1';
         } else {
             $result['status']  = 'forbidden';
             $result['message'] = 'Access to this resource on the server is denied';

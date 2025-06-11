@@ -34,38 +34,13 @@ class Gcash
         return $result;
     }
 
-    public static function getClaimEncode($keyword = '', $account_id, $status_id, $start = '', $limit = '', $query_type = 'main')
+    public static function getClaimEncode($keyword = '', $start = '', $limit = '', $query_type = 'main')
     {
-
-        if (is_array($account_id)) {
-            $account_ids        = implode(',', $account_id);
-            $filter_created_by     = " AND gcl.created_by IN ({$account_ids})";
-        } else {
-            if (!empty($account_id)) {
-                $filter_created_by      = " AND gcl.created_by = '{$account_id}'";
-            } else {
-                $filter_created_by      = "";
-            }
-        }
-
-        if (!empty($status_id)) {
-            if ($status_id == 0) {
-                $filter_status = " AND gcl.status_id = '0'";
-            } else {
-                $filter_status = " AND gcl.status_id = '{$status_id}'";
-            }
-        } else {
-            if ($status_id == 0) {
-                $filter_status = " AND gcl.status_id = '0'";
-            } else {
-                $filter_status = '';
-            }
-        }
 
         if (!empty(trim($keyword))) {
 
             $keyword = " '%{$keyword}%' ";
-            $filter  = " AND 
+            $filter_keyword  = " AND 
                             (
                                 gcl.first_name LIKE {$keyword}
                                 OR
@@ -107,7 +82,7 @@ class Gcash
                             )
                           ";
         } else {
-            $filter = '';
+            $filter_keyword = '';
         }
 
         if($query_type == 'main'){
@@ -134,7 +109,7 @@ class Gcash
                                  ON ape.account_id = gcl.created_by
                                  LEFT JOIN gcash_claim_batch_declaration gcb ON gcb.batch_number = gcl.batch_number',
                                  $select,
-                                "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_created_by . $filter_status . $filter,
+                                "gcl.id IS NOT NULL AND (gcl.duplicate IS NULL OR gcl.duplicate = 'No') " . $filter_keyword,
                                 "gcl.id DESC",
             $startLimit
         );
@@ -175,6 +150,32 @@ class Gcash
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
+        }
+
+        return $result;
+    }
+
+    public static function addClaimEncodeBulk($post)
+    {
+
+        logs("INSERT INTO gcash_claim (
+                                            first_name, last_name, middle_name, date_of_birth, mobile_number,
+                                            email_address, date_of_transaction, reference_number, load_amount,
+                                            load_status, consent_status, policy_id, policy_status,
+                                            protect_premium_taxes, date_insurance_start, date_insurance_end, batch_number
+                                            ) VALUES " . implode(",\n", $post), "insert");
+        if (mysql::query(
+                    "INSERT INTO gcash_claim (
+                                            first_name, last_name, middle_name, date_of_birth, mobile_number,
+                                            email_address, date_of_transaction, reference_number, load_amount,
+                                            load_status, consent_status, policy_id, policy_status,
+                                            protect_premium_taxes, date_insurance_start, date_insurance_end, batch_number
+                                            ) VALUES " . implode(",\n", $post), "insert")) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
         }
 
         return $result;

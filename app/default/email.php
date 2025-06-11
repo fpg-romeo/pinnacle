@@ -339,7 +339,7 @@ class Email
                                             ' . $ctr_duplicate . '<br>
                                             ' . $ctr_failed . '<br>
                                             ' . $batch . '<br>
-                                            ' . date('F d, Y') . '<br>
+                                            ' . date('d-M-Y') . '<br>
                                             ' . ACCOUNT_NAME . '
                                         </td>
                                     </tr>
