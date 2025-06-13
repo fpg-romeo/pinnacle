@@ -159,7 +159,7 @@ class Gcash
                                             first_name, last_name, middle_name, date_of_birth, mobile_number,
                                             email_address, date_of_transaction, reference_number, load_amount,
                                             load_status, consent_status, policy_id, policy_status,
-                                            protect_premium_taxes, date_insurance_start, date_insurance_end, batch_number
+                                            protect_premium_taxes, date_insurance_start, date_insurance_end, batch_number,created_by, created_when
                                             ) VALUES " . implode(",\n", $post), "insert")) {
             $result['status']  = 'success';
             $result['message'] = 'New Record Saved';

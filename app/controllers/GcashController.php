@@ -178,10 +178,10 @@ class GcashController
                                 $file['first_name']             = htmlEncode($worksheet_value[0]);
                                 $file['last_name']              = htmlEncode($worksheet_value[1]);
                                 $file['middle_name']            = htmlEncode($worksheet_value[2]);
-                                $file['date_of_birth']          = dateSaveDB($worksheet_value[3]);
+                                $file['date_of_birth']          = dateSaveDB(self::parseExcelDate($worksheet_value[3]));
                                 $file['mobile_number']          = htmlEncode($worksheet_value[4]);
                                 $file['email_address']          = htmlEncode($worksheet_value[5]);
-                                $file['date_of_transaction']    = dateSaveDB($worksheet_value[6]);
+                                $file['date_of_transaction']    = dateSaveDB(self::parseExcelDate($worksheet_value[6]));
                                 $file['reference_number']       = htmlEncode($worksheet_value[7]);
                                 $file['load_amount']            = htmlEncode($worksheet_value[8]);
                                 $file['load_status']            = htmlEncode($worksheet_value[9]);
@@ -189,9 +189,11 @@ class GcashController
                                 $file['policy_id']              = htmlEncode($worksheet_value[11]);
                                 $file['policy_status']          = htmlEncode($worksheet_value[12]);
                                 $file['protect_premium_taxes']  = htmlEncode($worksheet_value[13]);
-                                $file['date_insurance_start']   = dateSaveDB($worksheet_value[14]);
-                                $file['date_insurance_end']     = dateSaveDB($worksheet_value[15]);
+                                $file['date_insurance_start']   = dateSaveDB(self::parseExcelDate($worksheet_value[14]));
+                                $file['date_insurance_end']     = dateSaveDB(self::parseExcelDate($worksheet_value[15]));
                                 $file['batch_number']           = htmlEncode($worksheet_value[16]);
+                                $file['updated_by']             = ACCOUNT_ID;
+                                $file['updated_when']           = date("Y-m-d");
 
                                 Gcash::addClaimEncode($file);
 
@@ -215,10 +217,10 @@ class GcashController
                                 $file['first_name']             = htmlEncode($worksheet_value[0]);
                                 $file['last_name']              = htmlEncode($worksheet_value[1]);
                                 $file['middle_name']            = htmlEncode($worksheet_value[2]);
-                                $file['date_of_birth']          = dateSaveDB($worksheet_value[3]);
+                                $file['date_of_birth']          = dateSaveDB(self::parseExcelDate($worksheet_value[3]));
                                 $file['mobile_number']          = htmlEncode($worksheet_value[4]);
                                 $file['email_address']          = htmlEncode($worksheet_value[5]);
-                                $file['date_of_transaction']    = dateSaveDB($worksheet_value[6]);
+                                $file['date_of_transaction']    = dateSaveDB(self::parseExcelDate($worksheet_value[6]));
                                 $file['reference_number']       = htmlEncode($worksheet_value[7]);
                                 $file['load_amount']            = htmlEncode($worksheet_value[8]);
                                 $file['load_status']            = htmlEncode($worksheet_value[9]);
@@ -226,9 +228,11 @@ class GcashController
                                 $file['policy_id']              = htmlEncode($worksheet_value[11]);
                                 $file['policy_status']          = htmlEncode($worksheet_value[12]);
                                 $file['protect_premium_taxes']  = htmlEncode($worksheet_value[13]);
-                                $file['date_insurance_start']   = dateSaveDB($worksheet_value[14]);
-                                $file['date_insurance_end']     = dateSaveDB($worksheet_value[15]);
+                                $file['date_insurance_start']   = dateSaveDB(self::parseExcelDate($worksheet_value[14]));
+                                $file['date_insurance_end']     = dateSaveDB(self::parseExcelDate($worksheet_value[15]));
                                 $file['batch_number']           = htmlEncode($worksheet_value[16]);
+                                $file['created_by']             = ACCOUNT_ID;
+                                $file['created_when']           = date("Y-m-d");
 
 
                                 $ctr_file = 1;
@@ -295,6 +299,15 @@ class GcashController
         }
 
         echo json_encode($result);
+    }
+
+    public function parseExcelDate($value) {
+        if (is_numeric($value) && $value > 25569 && $value < 60000) {
+            // Convert Excel date serial to PHP timestamp
+            $timestamp = \PHPExcel_Shared_Date::ExcelToPHP($value);
+            return date('Y-m-d', $timestamp); // Or pass to dateSaveDB() if needed
+        }
+        return $value;
     }
 
     public function declaration()
