@@ -116,7 +116,7 @@
     </div>
 
     <div id="modal-import" class="modal fade">
-        <div class="modal-dialog modal-dialog-vertical-center modal-xx">
+        <div class="modal-dialog modal-dialog-vertical-center modal-lg">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
 

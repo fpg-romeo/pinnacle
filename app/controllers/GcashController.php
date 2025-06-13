@@ -250,7 +250,6 @@ class GcashController
                     }
 
                     $encode_result = Gcash::addClaimEncodeBulk($multiple_data);
-                    logs($multiple_data, 'multiple_data');
 
                     /*
 

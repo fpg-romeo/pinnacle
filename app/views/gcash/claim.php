@@ -73,23 +73,6 @@
                                             <?php
                                             if (isset($data['records']) && !empty($data['records'])) {
                                                 foreach ($data['records'] as $key => $value) {
-                                                    $action = '
-                                                                    <div class="dropdown d-inline-block">
-                                                                        <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
-                                                                            <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
-                                                                                <span><i class="fa fa-cog"></i></span>
-                                                                                <i class="fa fa-angle-down mg-l-10"></i>
-                                                                            </div>
-                                                                        </a>
-                                                                        <div class="dropdown-menu pd-5">
-                                                                            <nav class="nav nav-style-2 flex-column">
-                                                                                <a data-id="' . idEncrypt(htmlDecode($value['id'])) . '"   class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
-                                                                                
-                                                                            </nav>
-                                                                        </div>
-                                                                    </div>
-                                                            ';
-
                                                     echo '
                                                                 <tr id="' . $value['id'] . '">
                                                                     <td>' . ucwords(htmlDecode($value['batch_number'])) . '</td>
@@ -103,7 +86,21 @@
                                                                     <td class="tx-center">' . htmlDecode($value['account_name']) . '</td>
                                                                     <td class="tx-center">' . dateDisplaySystem($value['created_when']) . '</td>
                                                                     <td class="tx-center"> 
-                                                                        ' . $action . '
+                                                                        <div class="dropdown d-inline-block">
+                                                                            <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
+                                                                                <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
+                                                                                    <span><i class="fa fa-cog"></i></span>
+                                                                                    <i class="fa fa-angle-down mg-l-10"></i>
+                                                                                </div>
+                                                                            </a>
+                                                                            <div class="dropdown-menu pd-5">
+                                                                                <nav class="nav nav-style-2 flex-column">
+                                                                                    <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
+                                                                                    <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link manage" data-action="update" title="Update Details"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                                    <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['batch_number']).'" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
+                                                                                </nav>
+                                                                            </div>
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                             ';
@@ -137,7 +134,7 @@
     </div>
 
     <div id="modal-import" class="modal fade">
-        <div class="modal-dialog modal-dialog-vertical-center modal-xx" role="document">
+        <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
 
