@@ -53,9 +53,11 @@
     $(document).on('click', '.upload', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
+        
         var tbody = $('#modal-import tbody');
         var fd = new FormData();
         fd.append('file', document.getElementById('file').files[0]);
+        fd.append('transaction_type', $("input[name='transaction_type']:checked").val());
 
         $.ajax({
             url: '/gcash/import-claim-json/',
