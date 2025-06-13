@@ -45,53 +45,6 @@
         <hr>
         <a href="/public/guide/Gcash-Claim-Template.xlsx" class="tx-bold tx-orange float-right" target="_blank" title="Download Gcash Claim Template" download="Import-Gcash-Claim-Template.xlsx"><i class="fa fa-file-excel-o"></i> DOWNLOAD TEMPLATE</a>
         <p class="msg mg-t-30 tx-danger hidden"></p>
-        <div class="list hidden" style="overflow-x: auto;">
-            <table class="table table-bordered bd mg-t-30">
-                <thead class="bg-gray-100">
-                    <th>
-                        <center><input name="check_all_import" id="check_all_import" type="checkbox" checked></center>
-                    </th>
-                    <th>FIRST NAME</th>
-                    <th>LAST NAME</th>
-                    <th>MIDDLE NAME</th>
-                    <th>BIRTHDAY</th>
-                    <th>MOBILE</th>
-                    <th>EMAIL</th>
-                    <th>TRANSACTION DATE</th>
-                    <th>REFERENCE NO</th>
-                    <th>LOAD AMOUNT</th>
-                    <th>LOAD STATUS</th>
-                    <th>CONSENT STATUS</th>
-                    <th>POLICY ID</th>
-                    <th>POLICY STATUS</th>
-                    <th>PREMIUM TAXES</th>
-                    <th>INSURANCE START</th>
-                    <th>INSURANCE END</th>
-                    <th>BATCH NUMBER</th>
-                    <th>SIMILAR POLICY NO</th>
-                    <th>STATUS</th>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="row submit-upload-field hidden">
-            <div class="col-md-12">
-                <form id="form-import" method="post">
-                    <center>
-                        <input name="total_rows" type="hidden" class="form-control">
-                        <input name="row" type="hidden" class="form-control">
-                        <input name="duplicate" type="hidden" class="form-control">
-                        <input name="file_temporary" type="hidden" class="form-control">
-                        <input name="file_name" type="hidden" class="form-control">
-                        <input name="redirect" type="hidden" class="form-control" value="<?php echo getVar('redirect'); ?>">
-                        <button name="submit-import" type="submit" class="btn btn-primary btn-form"><small>SAVE</small></button>
-                        <button class="btn btn-secondary btn-form modal-cancel" data-dismiss="modal"><small>CANCEL</small></button>
-                    </center>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -171,57 +124,4 @@
         console.log(checkbox);
         $('#modal-import input[name=row]').val(checkbox);
     }
-</script>
-
-<script type="text/javascript">
-    //SUBMIT IMPORT
-    $(document).ready(function() {
-        $(document).on('click', 'button[name="submit-import"]', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var checked_rows = $('#modal-import input[name=row]').val();
-
-            if (checked_rows != '') {
-                $.ajax({
-                    url: '/gcash/import-claim-json/',
-                    type: 'POST',
-                    data: $('#form-import').serialize() + '&submit-import=',
-                    beforeSend: function() {
-                        promptAjaxLoading('modal-import');
-                    },
-                    success: function(data) {
-
-                        if (typeof data.alert !== typeof undefined && data.alert !== false) {
-                            alert(data.alert);
-                        }
-                        promptAjaxSuccess('modal-import', data.message, data.redirect);
-                    },
-                    complete: function() {
-
-                    },
-                    error: function(xhr, desc, err) {
-                        //console.log(xhr);
-                        console.warn(xhr.responseText);
-                    }
-                });
-            } else {
-                alert('Please select records to save')
-            }
-        });
-    });
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('input[name=confirm]').prop('checked', false);
-        $('input[name=confirm]').click(function() {
-            if ($(this).is(":checked")) {
-                $(this).addClass("selected");
-                $('button[name=submit]').removeAttr("disabled");
-            } else {
-                $(this).removeClass("selected");
-                $('button[name=submit]').attr('disabled', true);
-            }
-        });
-    });
 </script>
