@@ -11,9 +11,9 @@
                 <h4>GCash <b class="tx-primary">[ List of Batch Declaration ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
-                    <a href="" data-action="add" class="btn btn-info manage" data-action="add">
+                    <button type="button" class="btn btn-info w-150px manage" data-action="add">
                         <i class="fa fa-plus-circle fa-lg"></i> <small>ADD RECORD</small>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -168,7 +168,6 @@
     </script>
 
     <script type="text/javascript">
-        //DELETE
         $(document).on('click', '.delete', function(e){
             e.preventDefault();
             var id      = $(this).data('id');

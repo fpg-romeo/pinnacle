@@ -32,32 +32,28 @@ class GcashController
         return $column_name;
     }
 
-    public function importClaimView()
+    public function importPolicyView()
     {
-        $data = array();
-
-        includeDefault(['email']);
-
-        $id              = idDecrypt(getVar('account_id'));
+        $data          = array();
+        $id            = idDecrypt(getVar('account_id'));
         $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
 
-        views('gcash.import-claim-view', $data);
+        views('gcash.import-policy-view', $data);
     }
 
     public function claim()
     {
         includeModel(['Account']);
 
-        $data          = array();
-        $CONFIGURATION = Configuration::general();
-
-        $keyword              = urldecode(getVar('keyword'));
-        $data['records']      = Gcash::getClaimEncode($keyword, pagination('start'), pagination('limit'));
-        $data['total_record'] = recastArray(Gcash::getClaimEncode($keyword, '', '', 'count'))['count'] ?? 0;
+        $data                   = array();
+        $CONFIGURATION          = Configuration::general();
+        $keyword                = urldecode(getVar('keyword'));
+        
+        $data['records']        = Gcash::getClaimEncode($keyword, pagination('start'), pagination('limit'));
+        $data['total_record']   = recastArray(Gcash::getClaimEncode($keyword, '', '', 'count'))['count'] ?? 0;
         //$data['total_record'] = Gcash::countClaimEncode($keyword, $account_id, '');
-        $data['total_page']   = pagination('total', $data['total_record']);
-
-        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+        $data['total_page']     = pagination('total', $data['total_record']);
+        $data['accounts']       = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
         views('gcash.claim', $data);
     }
@@ -66,19 +62,16 @@ class GcashController
     {
         includeModel(['Account']);
 
-        $data                 = array();
-        $CONFIGURATION        = Configuration::general();
+        $data                   = array();
+        $CONFIGURATION          = Configuration::general();
+        $account_id             = urldecode(getVar('account_id'));
+        $account_id             = $account_id == "all" ? '' : $account_id;
 
-        $account_id           = urldecode(getVar('account_id'));
-        $account_ids          = ACCOUNT_ID;
-
-        $account_id           = $account_id == "all" ? '' : $account_id;
-
-        $data['summary']      = Gcash::getClaimEncodeSummary($account_id, pagination('start'), pagination('limit'));
-        $data['total_record'] = Gcash::countClaimEncodeSummary($account_id);
-        $data['total_page']   = pagination('total', $data['total_record']);
-
-        $data['accounts']     = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+        $data['summary']        = Gcash::getClaimEncodeSummary($account_id, pagination('start'), pagination('limit'));
+        $data['total_record']   = recastArray(Gcash::getClaimEncodeSummary($account_id, '', '', 'count'))['count'] ?? 0;
+        //$data['total_record'] = Gcash::countClaimEncodeSummary($account_id);
+        $data['total_page']     = pagination('total', $data['total_record']);
+        $data['accounts']       = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
         views('gcash.claim-summary', $data);
     }
@@ -396,6 +389,71 @@ class GcashController
                         $field['created_when']      = dateTimeStamp();
 
                         $result = Gcash::addDeclaration($field);
+                    }
+                }
+            }
+        }else{
+            $result['status']  = 'forbidden';
+            $result['message'] = 'Access to this resource on the server is denied';
+        }
+        
+        echo json_encode($result);
+    }
+
+    public function importPolicyManage()
+    {
+        $data           = array();
+        $id             = idDecrypt(getVar('id'));
+        $data['policy'] = recastArray(Gcash::getClaimEncodeById($id));
+
+        views('gcash.import-policy-manage', $data);
+    }
+
+    public function policyJson()
+    {
+
+        if(isset($_POST) && !empty($_POST)){
+
+            if(!empty($_POST['id']) && isset($_POST['action']) && $_POST['action'] == 'delete'){
+                $result = Gcash::deletePolicy(idDecrypt(postVar('id')));
+                
+            }else{
+                $id                             = idDecrypt(postVar('id'));
+                $field['first_name']            = postVar('first_name');
+                $field['last_name']             = postVar('last_name');
+                $field['middle_name']           = postVar('middle_name');
+                $field['date_of_birth']         = dateSaveDB(postVar('date_of_birth'));
+                $field['mobile_number']         = postVar('mobile_number');
+                $field['email_address']         = postVar('email_address');
+                $field['date_of_transaction']   = dateSaveDB(postVar('date_of_transaction'));
+                $field['reference_number']      = postVar('reference_number');
+                $field['load_amount']           = postVar('load_amount');
+                $field['load_status']           = postVar('load_status');
+                $field['consent_status']        = postVar('consent_status');
+                $field['policy_id']             = postVar('policy_id');
+                $field['policy_status']         = postVar('policy_status');
+                $field['protect_premium_taxes'] = postVar('protect_premium_taxes');
+                $field['date_insurance_start']  = dateSaveDB(postVar('date_insurance_start'));
+                $field['date_insurance_end']    = dateSaveDB(postVar('date_insurance_end'));
+                $field['batch_number']          = postVar('batch_number');
+
+                $data = checkRequiredPost(array('first_name','last_name','middle_name','date_of_birth','mobile_number','email_address',
+                                                'date_of_transaction','reference_number','load_amount','load_status','consent_status',
+                                                'policy_id','policy_status','protect_premium_taxes','date_insurance_start','date_insurance_end',
+                                                'batch_number'));
+
+                if(!array_key_exists('error', $data)){  
+                    if(!empty($id)){
+                        $field['id']                = $id;
+                        $field['updated_by']        = ACCOUNT_ID;
+                        $field['updated_when']      = dateTimeStamp();
+
+                        $result = Gcash::editPolicy($field);
+                    }else{
+                        $field['created_by']        = ACCOUNT_ID;
+                        $field['created_when']      = dateTimeStamp();
+
+                        $result = Gcash::addPolicy($field);
                     }
                 }
             }

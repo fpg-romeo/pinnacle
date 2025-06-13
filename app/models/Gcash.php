@@ -6,20 +6,17 @@ class Gcash
 
     public static function getClaimEncodeById($id)
     {
-        $result = mysql::select(
-            'gcash_claim gcl LEFT JOIN gcash_claim_batch_declaration gcb on gcb.batch_number = gcl.batch_number',
-            'gcl.*, gcb.workflow_number, gcb.endorsement_number',
-            "gcl.id = '{$id}'"
-        );
+        $result = mysql::select('gcash_claim gcl LEFT JOIN gcash_claim_batch_declaration gcb on gcb.batch_number = gcl.batch_number',
+                                'gcl.*, gcb.workflow_number, gcb.endorsement_number',
+                                "gcl.id = '{$id}'");
         return $result;
     }
 
     public static function getClaimEncodeByPolicyId($policy_id)
     {
-        $result = mysql::select(
-            'gcash_claim gcl',
-            'gcl.*',
-            "gcl.policy_id = '{$policy_id}'"
+        $result = mysql::select('gcash_claim gcl',
+                                'gcl.*',
+                                "gcl.policy_id = '{$policy_id}'"
         );
         return $result;
     }
@@ -186,40 +183,55 @@ class Gcash
         return $result;
     }
 
-    public static function getClaimEncodeSummary($account_id = '', $start = '', $limit = '')
+    public static function getClaimEncodeSummary($account_id = '', $start = '', $limit = '', $query_type = 'main')
     {
-        if (is_array($account_id)) {
-            $account_ids        = implode(',', $account_id);
+        if(is_array($account_id)){
+            $account_ids           = implode(',', $account_id);
             $filter_created_by     = " gcs.created_by IN ({$account_ids})";
-        } else {
-            if (!empty($account_id)) {
-                $filter_created_by      = " gcs.created_by = '{$account_id}'";
-            } else {
-                $filter_created_by      = "";
+        }else{
+            if(!empty($account_id)){
+                $filter_created_by = " gcs.created_by = '{$account_id}'";
+            }else{
+                $filter_created_by = "";
             }
         }
 
-        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
-
-        $result = mysql::select(
-            'gcash_claim_summary gcs
-                                     LEFT JOIN account_personal ape
-                                     ON ape.account_id = gcs.created_by',
-                                    'gcs.*,
-                                     (CASE 
-                                     WHEN ape.alias = "" OR ape.alias IS NULL
+        if($query_type == 'main'){
+            $select         = 'gcs.*,
+                                (CASE 
+                                    WHEN ape.alias = "" OR ape.alias IS NULL
                                         THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
-                                     ELSE 
+                                    ELSE 
                                         ape.alias
-                                     END
-                                     ) AS account_name
-                                     ',
-            $filter_created_by,
-            "gcs.id DESC",
-            $startLimit
+                                  END
+                                ) AS account_name
+                              ';
+            $startLimit     = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        }else{
+            $select         = 'COUNT(gcs.id) AS count';
+            $startLimit     = '';
+        }
+        
+        $result = mysql::select('gcash_claim_summary gcs
+                                 LEFT JOIN account_personal ape
+                                 ON ape.account_id = gcs.created_by',
+                                 $select,
+                                 $filter_created_by,
+                                "gcs.id DESC",
+                                 $startLimit
         );
 
         return $result;
+    }
+
+    public static function countClaimEncodeSummary($account_id = '')
+    {
+        $result = self::getClaimEncodeSummary($account_id);
+        if (is_array($result)) {
+            return count($result);
+        } else {
+            return 0;
+        }
     }
 
     public static function checkIfExistingFilename($file_name)
@@ -233,16 +245,6 @@ class Gcash
 
 
         return $result[0]['file_name_count'];
-    }
-
-    public static function countClaimEncodeSummary($account_id = '')
-    {
-        $result = self::getClaimEncodeSummary($account_id);
-        if (is_array($result)) {
-            return count($result);
-        } else {
-            return 0;
-        }
     }
 
     public static function addClaimEncodeSummary($post)
@@ -282,18 +284,6 @@ class Gcash
 
         return $result;
     }
-
-
-
-
-
-
-
-
-
-
-
-    
 
     public static function getDeclaration($keyword = '', $start = '', $limit = '')
     {
@@ -428,4 +418,95 @@ class Gcash
 
         return $result;
     }   
+
+    public static function validatePolicy($post){
+        $result = mysql::select("gcash_claim", 
+                                '*', 
+                                "id                    != '{$post['id']}' AND 
+                                 first_name             = '{$post['first_name']}' AND
+                                 last_name              = '{$post['last_name']}' AND
+                                 middle_name            = '{$post['middle_name']}' AND
+                                 date_of_birth          = '{$post['date_of_birth']}' AND
+                                 mobile_number          = '{$post['mobile_number']}' AND
+                                 email_address          = '{$post['email_address']}' AND
+                                 date_of_transaction    = '{$post['date_of_transaction']}' AND
+                                 reference_number       = '{$post['reference_number']}' AND
+                                 load_amount            = '{$post['load_amount']}' AND
+                                 load_status            = '{$post['load_status']}' AND
+                                 consent_status         = '{$post['consent_status']}' AND
+                                 policy_id              = '{$post['policy_id']}' AND
+                                 policy_status          = '{$post['policy_status']}' AND
+                                 protect_premium_taxes  = '{$post['protect_premium_taxes']}' AND
+                                 date_insurance_start   = '{$post['date_insurance_start']}' AND
+                                 date_insurance_end     = '{$post['date_insurance_end']}' AND
+                                 batch_number           = '{$post['batch_number']}'");
+        return $result;
+    }
+
+    public static function addPolicy($post){
+        $record = self::getClaimEncodeByPolicyId($post['policy_id']);
+
+        if(!is_array($record)){  
+            $fields = mysql::buildFields($post, ", ");
+            if(mysql::insert("gcash_claim", $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        }else{
+            $result['status']  = 'failed';
+            $result['message'] = 'Record already exist';
+        }
+        return $result;
+    }
+
+    public static function editPolicy($post){
+        $id           = $post['id'];
+        $record       = self::getClaimEncodeById($id);
+        $validate     = self::validatePolicy($post);
+
+        if(is_array($record)){   
+            if(empty($validate)){
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update("gcash_claim", $fields, "id = '{$id}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                    $result['id']      = $id;
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';                
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Duplicate Record Found';
+            }
+        }else{
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+        return $result;        
+    }
+
+    public static function deletePolicy($id){
+        $record = self::getClaimEncodeById($id);
+
+        if(is_array($record)){
+            if(mysql::delete("gcash_claim", "id = '{$id}'")){
+                $result['status']   = 'success';
+                $result['message']  = 'Record Successfully Deleted';
+                $result['record']   = recastArray($record);
+            }else{
+                $result['status']   = 'failed';
+                $result['message']  = 'Encounter technical error. Pls try again';
+            }
+        }else{
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+
+        return $result;
+    }  
 }

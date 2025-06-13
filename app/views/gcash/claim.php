@@ -11,8 +11,11 @@
                 <h4>GCash <b class="tx-primary">[ Records ]</b></h4>
                 <p class="mg-b-0"></p>
                 <div class="pagetitle-button">
-                    <button type="button" class="btn btn-info mg-l-15 import">
+                    <button type="button" class="btn btn-info w-150px import">
                         <i class="fa fa-cloud-upload fa-lg"></i> <small>IMPORT</small>
+                    </button>
+                    <button type="button" class="btn btn-info w-150px manage mg-l-15" data-action="add">
+                        <i class="fa fa-plus-circle fa-lg"></i> <small>ADD RECORD</small>
                     </button>
                 </div>
             </div>
@@ -97,7 +100,7 @@
                                                                                 <nav class="nav nav-style-2 flex-column">
                                                                                     <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link view" data-action="view" title="View Record"><i class="fa fa-file-text-o"></i> Details</a>
                                                                                     <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link manage" data-action="update" title="Update Details"><i class="fa fa-pencil-square-o"></i> Update</a>
-                                                                                    <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['batch_number']).'" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
+                                                                                    <a data-id="'.idEncrypt(htmlDecode($value['id'])).'" class="nav-link delete" data-action="delete" data-title="'.htmlDecode($value['policy_id']).' - ' . htmlDecode($value['first_name']) . ' ' . htmlDecode($value['middle_name']) . ' ' . htmlDecode($value['last_name']) . '" title="Delete Record"><i class="fa fa-trash"></i> Delete</a>  
                                                                                 </nav>
                                                                             </div>
                                                                         </div>
@@ -145,6 +148,16 @@
 
     <div id="modal-view" class="modal fade">
         <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
+            <div class="modal-content bd-0">
+                <div class="modal-body pd-25">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-manage" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
             <div class="modal-content bd-0">
                 <div class="modal-body pd-25">
 
@@ -207,7 +220,7 @@
 
             var display = $('#modal-view .modal-body');
             $.ajax({
-                url: '/gcash/import-claim-view/',
+                url: '/gcash/import-policy-view/',
                 type: 'GET',
                 data: {
                     account_id: id
@@ -230,36 +243,63 @@
     </script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $(document).on('click', '.delete-encode', function(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
+        $(document).on('click', '.delete', function(e){
+            e.preventDefault();
+            var id      = $(this).data('id');
+            var action  = $(this).data('action');
+            var title   = $(this).data('title');
 
-                var id = $(this).data('company_encode');
-                var action = $(this).data('action');
-                var display = $('#modal-encode .modal-body');
+            var check = confirm("Are you sure you want to delete?\n\n"+title);
+            if(check == true){
+                $.ajax({
+                    url: '/gcash/policy-json/',
+                    type: 'POST',
+                    data: {id:id, action:action},
+                    success: function(data){
+                        console.log(data);
+                        alert(data.message);
+                        //location.reload();
+                        window.location = document.URL;
+                    },
+                    error: function(xhr, desc, err){ 
+                        //console.log(xhr);
+                        console.warn(xhr.responseText);
+                    }
+               });
+            }
+        });
 
-                if (confirm("Are you sure you want to delete this record?")) {
-                    $.ajax({
-                        url: '/company/manage-encode-json/',
-                        type: 'POST',
-                        data: {
-                            id: id,
-                            action: action
-                        },
-                        success: function(data) {
-                            alert(data.message);
-                            window.location = document.URL;
-                        },
-                        error: function(xhr, desc, err) {
-                            console.warn(xhr.responseText);
-                        }
-                    });
+    </script>
+
+    <script type="text/javascript">
+        $(document).on('click', '.manage', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            var id = $(this).data('id');
+
+            var display = $('#modal-manage .modal-body');
+            $.ajax({
+                url: '/gcash/import-policy-manage/',
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                beforeSend: function() {
+                    display.html('');
+                },
+                success: function(data) {
+                    $(data).appendTo(display);
+                    $('#modal-manage').modal('show');
+                },
+                error: function(xhr, desc, err) {
+                    //console.log(xhr);
+                    console.warn(xhr.responseText);
                 }
             });
         });
     </script>
-
+    
     <script type="text/javascript">
         $(document).ready(function() {
             $(document).on('click', '.tab-link', function(e) {
