@@ -102,7 +102,7 @@ class GcashController
 
             if (move_uploaded_file($file_tmp, uploadFile('gcash', $file_new_name))) {
                 // $list = explode(',', $field['row']);
-                $file_upload = getDocumentRoot() . '/upload/gcash/' . $file_new_name;
+                $file_upload = getSiteUrl() . '/file/gcash/' . $file_new_name;
                 
                 try {
 
