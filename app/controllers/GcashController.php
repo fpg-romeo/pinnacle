@@ -280,7 +280,7 @@ class GcashController
                     }
                 } catch (Exception $e) {
                     $result['status']  = 'forbidden';
-                    $result['message'] = 'Error loading file "' . pathinfo($file, PATHINFO_BASENAME) . '": ' . $e->getMessage();
+                    $result['message'] = 'Error loading file "' . pathinfo($file_upload, PATHINFO_BASENAME) . '": ' . $e->getMessage();
                 }
             }
 
