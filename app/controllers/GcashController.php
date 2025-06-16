@@ -94,7 +94,7 @@ class GcashController
             $file_tmp      = $_FILES['file']['tmp_name'];
             $file_type     = $_FILES['file']['type'];
             $file_ext      = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            $file_new_name = 'Claim-' . dateTimeAsId() . '.' . $file_ext;
+            $file_new_name = 'Policy-' . dateTimeAsId() . '.' . $file_ext;
             $extensions    = $CONFIGURATION['ALLOWED_EXCEL'];
             $file_upload   = '';
 
