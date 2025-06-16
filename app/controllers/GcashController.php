@@ -36,7 +36,7 @@ class GcashController
     {
         $data          = array();
         $id            = idDecrypt(getVar('account_id'));
-        $data['claim'] = recastArray(Gcash::getClaimEncodeById($id));
+        $data['claim'] = recastArray(Gcash::getPolicyById($id));
 
         views('gcash.import-policy-view', $data);
     }
@@ -49,9 +49,8 @@ class GcashController
         $CONFIGURATION          = Configuration::general();
         $keyword                = urldecode(getVar('keyword'));
         
-        $data['records']        = Gcash::getClaimEncode($keyword, pagination('start'), pagination('limit'));
-        $data['total_record']   = recastArray(Gcash::getClaimEncode($keyword, '', '', 'count'))['count'] ?? 0;
-        //$data['total_record'] = Gcash::countClaimEncode($keyword, $account_id, '');
+        $data['records']        = Gcash::getPolicy($keyword, pagination('start'), pagination('limit'));
+        $data['total_record']   = recastArray(Gcash::getPolicy($keyword, '', '', 'count'))['count'] ?? 0;
         $data['total_page']     = pagination('total', $data['total_record']);
         $data['accounts']       = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
@@ -67,9 +66,8 @@ class GcashController
         $account_id             = urldecode(getVar('account_id'));
         $account_id             = $account_id == "all" ? '' : $account_id;
 
-        $data['summary']        = Gcash::getClaimEncodeSummary($account_id, pagination('start'), pagination('limit'));
-        $data['total_record']   = recastArray(Gcash::getClaimEncodeSummary($account_id, '', '', 'count'))['count'] ?? 0;
-        //$data['total_record'] = Gcash::countClaimEncodeSummary($account_id);
+        $data['summary']        = Gcash::getPolicySummary($account_id, pagination('start'), pagination('limit'));
+        $data['total_record']   = recastArray(Gcash::getPolicySummary($account_id, '', '', 'count'))['count'] ?? 0;
         $data['total_page']     = pagination('total', $data['total_record']);
         $data['accounts']       = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
 
@@ -152,7 +150,7 @@ class GcashController
                             'created_by'           => ACCOUNT_ID,
                             'created_when'         => dateTimeStamp(),
                         ];
-                        $result = Gcash::addClaimEncodeSummary($encode_summary);
+                        $result = Gcash::addPolicySummary($encode_summary);
 
                         $column_name = $this->getColumns();
                         $batch_declaration = [];
@@ -160,7 +158,7 @@ class GcashController
                         $required_column = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
                         unset($worksheet[0]);
-
+                        $total_success = 0;
                         if($transaction_type == 'update'){
                             foreach($worksheet as $worksheet_key => $worksheet_value){
                                 $valid = true;
@@ -193,14 +191,13 @@ class GcashController
                                 $file['date_insurance_end']     = dateSaveDB(self::parseExcelDate($worksheet_value[15]));
                                 $file['batch_number']           = htmlEncode($worksheet_value[16]);
                                 $file['updated_by']             = ACCOUNT_ID;
-                                $file['updated_when']           = date("Y-m-d");
+                                $file['updated_when']           = dateTimeStamp();
 
-                                Gcash::addClaimEncode($file);
-
-                                $batch_declaration['batch_number'] = htmlEncode($worksheet_value[16]);
+                                Gcash::managePolicy($file);
+                                $total_success++;
+                                $batch_number = $file['batch_number'];
                             }
-                        }
-                        else{
+                        }else{
                             foreach($worksheet as $worksheet_key => $worksheet_value){
                                 $valid = true;
                                 foreach($required_column as $column){
@@ -232,8 +229,8 @@ class GcashController
                                 $file['date_insurance_end']     = dateSaveDB(self::parseExcelDate($worksheet_value[15]));
                                 $file['batch_number']           = htmlEncode($worksheet_value[16]);
                                 $file['created_by']             = ACCOUNT_ID;
-                                $file['created_when']           = date("Y-m-d");
-
+                                $file['created_when']           = dateTimeStamp();
+                                $file['batch_id']               = dateTimeAsId();
 
                                 $ctr_file = 1;
                                 $insert_column = '(';
@@ -247,22 +244,17 @@ class GcashController
                                 }
 
                                 $insert_column .= ')';
-
                                 $multiple_data[] = $insert_column;
-
-                                $batch_declaration['batch_number'] = htmlEncode($worksheet_value[16]);
                             }
 
-                            $encode_result = Gcash::addClaimEncodeBulk($multiple_data);
+                            $batch_number  = $file['batch_number'];
+                            $encode_result = Gcash::addPolicyBulk($multiple_data);
+                            $total_success = count($multiple_data);
                         }
-
-                        $batch_declaration['created_by'] = ACCOUNT_ID;
-                        $batch_declaration['created_when'] = dateTimeStamp();
-                        ($batch_declaration['batch_number'] != "") ? Gcash::addDeclaration($batch_declaration) : "";
 
                         // update register encode
                         $update_encode['id']           = $result['id'];
-                        $total_uploaded_rows           = $highestRow;
+                        $total_uploaded_rows           = $total_success;
                         $total_processed_rows          = $ctr_duplicate + $ctr_success + $ctr_failed;
                         // calculate the first validation count for duplicates
                         $first_stage_duplicate_count   = $total_uploaded_rows - $total_processed_rows;
@@ -270,14 +262,12 @@ class GcashController
                         $update_encode['duplicate']    = $ctr_duplicate;
                         $update_encode['success']      = $total_uploaded_rows;
                         $update_encode['failed']       = $ctr_failed;
-                        Gcash::editClaimEncodeSummary($update_encode);
+                        Gcash::editPolicySummary($update_encode);
                         
-
                         $result['alert'] = 'Total Saved = ' . $total_uploaded_rows . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $ctr_duplicate;
-
-                        $batch = ($batch_declaration['batch_number'] != "") ? $batch_declaration['batch_number'] : "N/A";
-                        $email_body = Email::emailBodyForClaimUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch);
-                        $email_body = Email::templateDefault($email_body);
+                        $batch           = (isset($batch_number) && !empty($batch_number)) ? $batch_number : "N/A";
+                        $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch);
+                        $email_body      = Email::templateDefault($email_body);
 
                         Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file_upload);
                     }
@@ -381,7 +371,7 @@ class GcashController
     {
         $data           = array();
         $id             = idDecrypt(getVar('id'));
-        $data['policy'] = recastArray(Gcash::getClaimEncodeById($id));
+        $data['policy'] = recastArray(Gcash::getPolicyById($id));
 
         views('gcash.import-policy-manage', $data);
     }

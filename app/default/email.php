@@ -314,7 +314,7 @@ class Email
         return self::templateDefault($message);
     }
 
-    public static function emailBodyForClaimUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch)
+    public static function gcashPolicyUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch)
     {
         $email_body = '
                         <div class="container">
