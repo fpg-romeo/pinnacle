@@ -100,9 +100,9 @@ class GcashController
 
             $transaction_type = postVar('transaction_type');
 
-            if (move_uploaded_file($file_tmp, uploadFile('temp', $file_new_name))) {
+            if (move_uploaded_file($file_tmp, uploadFile('gcash', $file_new_name))) {
                 // $list = explode(',', $field['row']);
-                $file_upload = getDocumentRoot() . '/upload/temp/' . $file_new_name;
+                $file_upload = getDocumentRoot() . '/upload/gcash/' . $file_new_name;
                 
                 try {
 
@@ -138,7 +138,7 @@ class GcashController
                     $ctr_failed     = 0;
                     $ctr_duplicate  = postVar('duplicate', 0);
 
-                    if($transaction_type == 'new' || ($transaction_type == 'update' && $highestRow <= 500)){
+                    if($transaction_type == 'new' || ($transaction_type == 'update' && $highestRow <= 501)){
                         // Summary insert
                         $encode_summary = [
                             'success'              => $ctr_success,
@@ -266,12 +266,12 @@ class GcashController
                         
                         $result['alert'] = 'Total Saved = ' . $total_uploaded_rows . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $ctr_duplicate;
                         $batch           = (isset($batch_number) && !empty($batch_number)) ? $batch_number : "N/A";
-                        $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch);
+                        $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch, $file_upload);
                         $email_body      = Email::templateDefault($email_body);
 
-                        Email::sendEmail('', 'Claims Upload', $email_body, '', '', $file_upload);
+                        Email::sendEmail('', 'Claims Upload', $email_body, '', '', '');
                     }
-                    else if($transaction_type == 'update' && $highestRow > 500){
+                    else if($transaction_type == 'update' && $highestRow > 501){
                         $result['status']   = 'failed';
                         $result['message']  = 'Maximum limit of 500 rows';
                         $result['alert']    = 'Maximum limit of 500 rows';

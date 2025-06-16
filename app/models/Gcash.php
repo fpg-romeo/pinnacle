@@ -179,7 +179,6 @@ class Gcash
             if(mysql::update("gcash_policy", $fields, "policy_id = '{$policy_id}'")){
                 $result['status']  = 'success';
                 $result['message'] = 'Record Successfully Updated';
-                $result['id']      = $id;
             }else{
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';                

@@ -194,7 +194,7 @@ class Email
 
                             p                   { margin: 0; padding: 0; }
                             small               { color: #a9a9a9; font-size: 11px; line-height:12px; }
-                            a                   { color: #222222 !important; text-decoration: none !important; }
+                            a                   { color:rgb(20, 7, 255) !important; text-decoration: none !important; }
                             .link_file          { color:#1155cc !important; text-decoration: underline !important; }
 
                             .block              { margin: 0 auto; width:100%; padding: 30px 0; font-family: arial; font-size: 12px; line-height: 16px; color: #222; box-sizing: border-box; }
@@ -314,7 +314,7 @@ class Email
         return self::templateDefault($message);
     }
 
-    public static function gcashPolicyUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch)
+    public static function gcashPolicyUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch, $link)
     {
         $email_body = '
                         <div class="container">
@@ -344,6 +344,7 @@ class Email
                                         </td>
                                     </tr>
                                 </table>
+                                <p>Download the file <strong><a href="'.$link.'" style="color: blue;">here</a></strong></p>
                             </div>
                         </div>';
         return $email_body;
