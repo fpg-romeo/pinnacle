@@ -155,7 +155,7 @@ class GcashController
                         $column_name = $this->getColumns();
                         $batch_declaration = [];
 
-                        $required_column = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+                        $required_column = [0, 4, 11];
 
                         unset($worksheet[0]);
                         $total_success = 0;
