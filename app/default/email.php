@@ -344,7 +344,7 @@ class Email
                                         </td>
                                     </tr>
                                 </table>
-                                <p>Download the file <strong><a href="'.$link.'" style="color: blue;">here</a></strong></p>
+                                <p>Download the file <strong><a href="'.getSiteUrl().'/file/gcash/'.$link.'" style="color: blue;">here</a></strong></p>
                             </div>
                         </div>';
         return $email_body;
