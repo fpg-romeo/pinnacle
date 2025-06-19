@@ -314,7 +314,7 @@ class Email
         return self::templateDefault($message);
     }
 
-    public static function gcashPolicyUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch, $link)
+    public static function gcashPolicyUpload($ctr_success, $ctr_duplicate, $ctr_failed, $batch, $upload_id)
     {
         $email_body = '
                         <div class="container">
@@ -327,14 +327,16 @@ class Email
                                 <table style="padding: 0 !important">
                                     <tr>
                                         <td>
+                                            <strong>Upload ID:</strong><br>
                                             <strong>Total Saved:</strong><br>
                                             <strong>Total Duplicate:</strong><br>
                                             <strong>Total Failed:</strong><br>
-                                            <strong>Batch:</strong><br>
+                                            <strong>Batch No:</strong><br>
                                             <strong>Date Uploaded:</strong><br>
                                             <strong>Uploaded By:</strong>
                                         </td>
                                         <td>
+                                            ' . $upload_id . '<br>
                                             ' . $ctr_success . '<br>
                                             ' . $ctr_duplicate . '<br>
                                             ' . $ctr_failed . '<br>
@@ -344,7 +346,6 @@ class Email
                                         </td>
                                     </tr>
                                 </table>
-                                <p>Download the file <strong><a href="'.$link.'" style="color: blue;">here</a></strong></p>
                             </div>
                         </div>';
         return $email_body;

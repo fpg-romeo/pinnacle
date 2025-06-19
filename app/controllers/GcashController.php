@@ -230,7 +230,7 @@ class GcashController
                                 $file['batch_number']           = htmlEncode($worksheet_value[16]);
                                 $file['created_by']             = ACCOUNT_ID;
                                 $file['created_when']           = dateTimeStamp();
-                                $file['batch_id']               = dateTimeAsId();
+                                $file['batch_id']               = $result['id'];
 
                                 $ctr_file = 1;
                                 $insert_column = '(';
@@ -267,8 +267,7 @@ class GcashController
                         $result['alert'] = 'Total Saved = ' . $total_uploaded_rows . ' / Total Failed = ' . $ctr_failed . ' / Total Duplicate = ' . $ctr_duplicate;
                         $batch           = (isset($batch_number) && !empty($batch_number)) ? $batch_number : "N/A";
                         
-                        $file_upload     = getSiteUrl() . '/file/gcash/' . $file_new_name;
-                        $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch, $file_upload);
+                        $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch, $result['id']);
                         $email_body      = Email::templateDefault($email_body);
 
                         Email::sendEmail('', 'Claims Upload', $email_body, '', '', '');

@@ -59,7 +59,7 @@
                                         <thead class="thead-colored thead-dark">
                                             <tr>
                                                 <th class="wd-10p tx-center">MANAGED DATE</th>
-                                                <th class="wd-10p tx-center">BATCH UPLOAD</th>
+                                                <th class="wd-10p tx-center">UPLOAD ID</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>UPLOAD</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>DUPLICATE</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>FAILED</th>
