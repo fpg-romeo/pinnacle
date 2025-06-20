@@ -14,8 +14,8 @@ class Email
         //TEST MODE : STAGING & DEVELOPMENT
         if (SYSTEM_ENVIRONMENT != PRODUCTION) {
             $to       = ACCOUNT_EMAIL;
-            $cc       = $CONFIGURATION['IT_TEAM_EMAIL'];
-            $bcc      = '';
+            $cc       = '';
+            $bcc      = $CONFIGURATION['IT_TEAM_EMAIL'];
             $reply_to = '';
             $subject  = 'PLEASE IGNORE - ' . strtoupper(SYSTEM_SUBDOMAIN) . ' : ' . strtoupper(SYSTEM_ENVIRONMENT) . ' SERVER TEST | ' . $subject;
         }
@@ -318,7 +318,7 @@ class Email
     {
         $email_body = '
                         <div class="container">
-                            <h4>GCash Claim Excel Data import is completed</h4>
+                            <h4>GCash Microsite Excel Data import is completed</h4>
                             <p class="success">The data from your Excel file has been successfully imported into the system.</p>
 
                             <br><br>

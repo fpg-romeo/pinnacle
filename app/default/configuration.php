@@ -75,7 +75,7 @@ class Configuration{
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		$value['BLACKLISTED_EMAIL'] 										= array();
-        $value['IT_TEAM_EMAIL'] 											= array('jeffreydimla@fpgins.com');
+        $value['IT_TEAM_EMAIL'] 											= array('jeffreydimla@fpgins.com', 'ranchinges@fpgins.com', 'ralmeda@fpgins.com', 'rgubat@fpgins.com');
 		
         if(in_array($_SERVER['SERVER_NAME'], array($value['DOMAIN_LIVE'], $value['DOMAIN_UAT']))){
 			//EMAIL DEFAULT RECIPIENT
