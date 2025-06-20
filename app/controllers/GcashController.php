@@ -270,7 +270,7 @@ class GcashController
                         $email_body      = Email::gcashPolicyUpload($total_uploaded_rows, $ctr_duplicate, $ctr_failed, $batch, $result['id']);
                         $email_body      = Email::templateDefault($email_body);
 
-                        Email::sendEmail('', 'Claims Upload', $email_body, '', '', '');
+                        Email::sendEmail('', 'GCash Policy', $email_body, '', '', '');
                     }
                     else if($transaction_type == 'update' && $highestRow > 501){
                         $result['status']   = 'failed';
