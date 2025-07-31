@@ -64,32 +64,45 @@
                                                 <th class="wd-10p tx-center">NO. OF <br>DUPLICATE</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>FAILED</th>
                                                 <th class="wd-10p tx-center">NO. OF <br>DELETED</th>
-                                                <th class="wd-5p tx-center">TOTAL</th>
+                                                <th class="wd-10p tx-right">TOTAL</th>
                                                 <th class="wd-10p tx-center">MANAGED BY</th>
-                                                <th class="wd-25p">UPLOADED FILE</th>
+                                                <th class="wd-20">UPLOADED FILE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if (isset($data['summary']) && !empty($data['summary'])) {
-                                                foreach ($data['summary'] as $key_summary => $value_summary) {
-                                                    echo '
-                                                            <tr >
-                                                                <td class="tx-center">' . dateDisplaySystem($value_summary['created_when']) . '</td>
-                                                                <td class="tx-center">' . $value_summary['id'] . '</td>
-                                                                <td class="tx-center">' . htmlDecode($value_summary['success']) . '</td>
-                                                                <td class="tx-center">' . htmlDecode($value_summary['duplicate']) . '</td>
-                                                                <td class="tx-center">' . htmlDecode($value_summary['failed']) . '</td>
-                                                                <td class="tx-center">' . htmlDecode($value_summary['deleted']) . '</td>
-                                                                <td class="tx-center">' . ($value_summary['success'] + $value_summary['duplicate'] + $value_summary['failed'] + $value_summary['deleted'] + $value_summary['manual_entry']) . '</td>
-                                                                <td class="tx-center">' . htmlDecode($value_summary['account_name']) . '</td>
-                                                                <td>' . (!empty($value_summary['file']) ? '<span class="tx-14 valign-top"><i class="icon ion-android-attach"></i><small> <a href="/file/gcash/' . htmlDecode($value_summary['file']) . '" target="_blank">' . htmlDecode($value_summary['file_name']) . '</a></small></span>' : '') . '</td>
-                                                            </tr>
-                                                        ';
+                                                if (isset($data['summary']) && !empty($data['summary'])) {
+                                                    $total = 0;
+                                                    foreach ($data['summary'] as $key_summary => $value_summary) {
+
+                                                        $count = ($value_summary['success'] + $value_summary['duplicate'] + $value_summary['failed'] + $value_summary['deleted'] + $value_summary['manual_entry']);
+
+                                                        echo '
+                                                                <tr >
+                                                                    <td class="tx-center">' . dateDisplaySystem($value_summary['created_when']) . '</td>
+                                                                    <td class="tx-center">' . $value_summary['id'] . '</td>
+                                                                    <td class="tx-center">' . formatNumber($value_summary['success']) . '</td>
+                                                                    <td class="tx-center">' . formatNumber($value_summary['duplicate']) . '</td>
+                                                                    <td class="tx-center">' . formatNumber($value_summary['failed']) . '</td>
+                                                                    <td class="tx-center">' . formatNumber($value_summary['deleted']) . '</td>
+                                                                    <td class="tx-right">' . formatNumber($count) . '</td>
+                                                                    <td class="tx-center">' . htmlDecode($value_summary['account_name']) . '</td>
+                                                                    <td>' . (!empty($value_summary['file']) ? '<span class="tx-14 valign-top"><i class="icon ion-android-attach"></i><small> <a href="/file/gcash/' . htmlDecode($value_summary['file']) . '" target="_blank">' . htmlDecode($value_summary['file_name']) . '</a></small></span>' : '') . '</td>
+                                                                </tr>
+                                                            ';
+
+                                                        $total += $count;
+                                                    }
+
+                                                    echo '<tr class="tx-bold">
+                                                            <td colspan="6" class="tx-right">Total records: </td>
+                                                            <td class="tx-right">'.formatNumber($total).'</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                          </tr>';
+
+                                                } else {
+                                                    echo '<tr><td colspan="9" class="tx-center">No record found</td></tr>';
                                                 }
-                                            } else {
-                                                echo '<tr><td colspan="9" class="tx-center">No record found</td></tr>';
-                                            }
                                             ?>
                                         </tbody>
                                     </table>

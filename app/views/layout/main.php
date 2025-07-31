@@ -1,4 +1,4 @@
-<?php checkLoggedIn('true'); ?>
+﻿<?php checkLoggedIn('true'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,7 +168,7 @@
                         </div>
                     </form>
                     -->
-            <?php echo '<h1 class="tx-danger mg-0 mg-t-10 mg-l-10">' . serverCurrent() . '</h1>'; ?>
+            <!--<?php echo '<h1 class="tx-danger mg-0 mg-t-10 mg-l-10">' . serverCurrent() . '</h1>'; ?>-->
         </div>
 
         <div class="br-header-right">

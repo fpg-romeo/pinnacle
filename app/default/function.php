@@ -532,6 +532,16 @@ function formatMoney($amount)
 	return $money;
 }
 
+//NUMBER FORMAT - ADDING COMMA
+function formatNumber($value = '')
+{
+	if (!empty($value)) {
+		return number_format($value, 0);
+	} else {
+		return '0';
+	}
+}
+
 //GENERATE A GLOBALLY UNIQUE IDENTIFIER (GUID)
 function getGUID()
 {
@@ -753,7 +763,7 @@ function pagination($value, $total = '')
 //PAGINATION COUNTER
 function paginationCounter($page, $total_page, $total_record)
 {
-	$value = 'Showing <b>' . (!empty($page) ? $page : 1) . '</b> to <b>' . $total_page . '</b> of <b>' . $total_record . '</b> entries';
+	$value = 'Showing <b>' . (!empty($page) ? formatNumber($page) : 1) . '</b> to <b>' .formatNumber($total_page). '</b> of <b>' .formatNumber($total_record). '</b> entries';
 
 	return $value;
 }
@@ -1967,8 +1977,8 @@ function reportDateTime($date)
 	return date("m-d-Y H:i", strtotime(htmlEncode($date)));
 }
 
-//ADD ZERO
-function formatNumber($value, $number = 4)
+//ADD ZERO 
+function numberPadding($value, $number = 4)
 {
 	return str_pad($value, $number, "0", STR_PAD_LEFT);
 }
