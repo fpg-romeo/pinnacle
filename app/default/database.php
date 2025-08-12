@@ -109,7 +109,7 @@ class MySql{
 	}
 
     public static function buildFields($post, $sep=" "){    
-        $count  	= '';
+        $count  	= 0;
         $fields 	= ''; 
 		//$connection = self::$connection;
 		

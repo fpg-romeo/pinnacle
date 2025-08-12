@@ -14,8 +14,8 @@ class Configuration{
 		$value['DOMAIN_UAT']  												= DOMAIN_UAT;
 		$value['DOMAIN_LOCAL']  											= DOMAIN_LOCAL;
 
-		$value['SYSTEM_NAME'] 												= 'Intuit - FPG Insurance Internal Application';
-		$value['SYSTEM_ALIAS'] 												= 'Intuit';
+		$value['SYSTEM_NAME'] 												= 'Pinnacle - FPG Insurance';
+		$value['SYSTEM_ALIAS'] 												= 'Pinnacle';
 		$value['SYSTEM_VERSION'] 											= 'v.1.0';
 		$value['SYSTEM_COMPANY']  											= 'FPG Insurance Co., Inc.';
 		$value['SYSTEM_COMPANY_URL']  										= 'https://ph.fpgins.com';

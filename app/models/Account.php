@@ -439,7 +439,7 @@ class Account
         return $result;
     }
 
-    public static function getRecordByDepartmentIdAndTeamId($account_department_id = "", $account_team_id)
+    public static function getRecordByDepartmentIdAndTeamId($account_department_id='', $account_team_id='')
     {
         if (!empty($account_department_id)) {
             if (is_array($account_department_id)) {

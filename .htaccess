@@ -27,6 +27,8 @@ RewriteRule ^public/sound/(.*) /template/audio/$1 [NC,L]
 RewriteRule ^public/film/(.*) /template/video/$1 [NC,L]
 RewriteRule ^public/doc/(.*) /template/document/$1 [NC,L]
 RewriteRule ^public/guide/(.*) /template/file/$1 [NC,L]
+RewriteRule ^public/vendor/(.*) /template/vendor/$1 [NC,L]
+RewriteRule ^public/json/(.*) /template/json/$1 [NC,L]
 
 ### UPLOAD
 RewriteRule ^file/(.*) /upload/$1 [NC,L]

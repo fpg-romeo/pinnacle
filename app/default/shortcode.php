@@ -115,7 +115,7 @@
             return $return;
         }
 
-        public static function notificationEmail($name, $subject, $recipient_to, $recipient_cc='', $recipient_bcc='', $attachment='', $body, $template, $created_by = ACCOUNT_ID, $reply_to = ''){
+        public static function notificationEmail($name, $subject, $recipient_to, $recipient_cc='', $recipient_bcc='', $attachment='', $body='', $template='', $created_by = ACCOUNT_ID, $reply_to = ''){
             includeModel(['Notification']);
 
             $CONFIGURATION              = Configuration::general();
