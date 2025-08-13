@@ -45,6 +45,7 @@
                                                     'manual', 'comingSoon', 'underMaintenance'
                                                    ],
                             'notification'      => ['email', 'emailJson'],
+                            'maintenance'      => ['teamLeader'],
                         );
 
     if(array_key_exists($controller, $controllers)){
