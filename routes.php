@@ -13,15 +13,31 @@
     }
 
     $controllers = array(
-                             'gcash'             => [
-                                                    'claim', 'claimSummary', 'importClaimUpload', 'importClaimJson',  
-                                                    'policyJson', 'importPolicyView', 'importPolicyManage',
-                                                    'declaration', 'declarationJson', 'importDeclarationView', 'importDeclarationManage'
+                            'account'           => [
+                                                    'login', 'logout', 'all', 'user', 'profile', 'manage', 'deleteJson', 'importView',
+                                                    'forgotPassword', 'resetPassword', 'changePassword', 'verify', 'newPassword', 'resendValidation',
+                                                    'attachmentJson','removeAttachmentJson',
+                                                    'googleSigninCallback'
                                                    ],
-                            'cron'              => [
-                                                    'testEmail'
+                            'finance'           => [
+                                                    'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'importSoaDownload', 'importSoaDownloadJson', 'soaEmailTemplate' , 'soaEmailGeneric' 
+                                                   ],
+                            'collection'        => [
+                                                    'all', 'manage'
+                                                   ],
+                            'report'            => [
+                                                    'manual', 'automatic'
                                                    ],
                             'master'            => [
+                                                    'topro', 'toproJson',
+                                                    'branch', 'branchJson',
+                                                    'segment', 'segmentJson',
+                                                    'handler', 'handlerJson',
+                                                    'teamLeader', 'teamLeaderJson',
+                                                    'salesChannel', 'salesChannelJson',
+                                                    'intermediary', 'intermediaryJson',
+                                                    'classBusiness', 'classBusinessJson',
+
                                                     'accountRole', 'accountRoleJson',
                                                     'accountStatus', 'accountStatusJson',
                                                     'accountType', 'accountTypeJson',
@@ -32,20 +48,19 @@
                                                     'accountDesignation', 'accountDesignationJson',
                                                     'accountUnitRole', 'accountUnitRoleJson'
                                                    ],
-                            'account'           => [
-                                                    'login', 'logout', 'all', 'manage', 'deleteJson',
-                                                    'perTeamJson', 'perGroupJson', 
-                                                    'forgotPassword', 'resetPassword', 'profile', 
-                                                    'googleSigninCallback', 'importOnlineMember',
-                                                     'importView',
-                                                    'attachmentJson','removeAttachmentJson','perDepartmentManagerJson'
+                            'cron'              => [
+                                                    'schedule','testEmail'
+                                                   ],
+                            'miscellaneous'     => [
+                                                    'cronJob'
+                                                   ],
+                            'notification'      => [
+                                                    'email', 'emailJson'
                                                    ],
                             'page'              => [
                                                     'error400', 'error401', 'error403', 'error404', 'error500', 'errorModal', 'dashboard', 
                                                     'manual', 'comingSoon', 'underMaintenance'
-                                                   ],
-                            'notification'      => ['email', 'emailJson'],
-                            'maintenance'      => ['teamLeader'],
+                                                   ]
                         );
 
     if(array_key_exists($controller, $controllers)){

@@ -3,13 +3,19 @@
 * File include item demo only specific css only
 ******************************************************************************/
 
-.menu .app-brand.demo {
+.menu .app-brand {
   height: 64px;
 }
 
-.app-brand-logo.demo svg {
-  width: 34px;
-  height: 24px;
+.menu .app-brand .logo {
+  width: 160px;
+  height: auto;
+}
+
+.menu .app-brand .by {
+  display: block;
+  width: 200px !important;
+  background: #f0f0f0;
 }
 
 .app-brand-text.demo {
