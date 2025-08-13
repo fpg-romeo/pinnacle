@@ -48,20 +48,28 @@ RewriteRule ^logout/$ index.php?controller=account&view=logout [NC,L]
 RewriteRule ^reset-password/([a-zA-Z0-9-]*)/([a-zA-Z0-9-]*)/?$ index.php?controller=account&view=reset-password&email=$1&code=$2 [NC,L]
 RewriteRule ^account/manage/([0-9]+)/?$ index.php?controller=account&view=manage&id=$1 [NC,L]
 RewriteRule ^account/manage/?$ index.php?controller=account&view=manage [NC,L]
-RewriteRule ^account/profile/([a-zA-Z0-9-]*)/?$ index.php?controller=account&view=profile&id=$1 [NC,L]
+RewriteRule ^account/profile/([^/]+)/?$ index.php?controller=account&view=profile&id=$1 [NC,L]
 RewriteRule ^account/all/([0-9]+)/?$ index.php?controller=account&view=all&page=$1 [NC,L]
 RewriteRule ^account/user/([0-9]+)/?$ index.php?controller=account&view=user&page=$1 [NC,L]
 
-### GCASH
-RewriteRule ^gcash/claim/([0-9]+)/?$ index.php?controller=gcash&view=claim&page=$1 [NC,L]
-RewriteRule ^gcash/claim-summary/([0-9]+)/?$ index.php?controller=gcash&view=claim-summary&page=$1 [NC,L]
-RewriteRule ^gcash/declaration/([0-9]+)/?$ index.php?controller=gcash&view=declaration&page=$1 [NC,L]
+### FINANCE - SOA
+RewriteRule ^finance/soa-immediate/([0-9]+)/?$ index.php?controller=finance&view=soa-immediate&page=$1 [NC,L]
+RewriteRule ^finance/soa-scheduled/([0-9]+)/?$ index.php?controller=finance&view=soa-scheduled&page=$1 [NC,L]
+RewriteRule ^finance/soa-download/([0-9]+)/?$ index.php?controller=finance&view=soa-download&page=$1 [NC,L]
+RewriteRule ^finance/soa-email-template/([0-9]+)/?$ index.php?controller=finance&view=soa-email-template&page=$1 [NC,L]
+RewriteRule ^finance/soa-email-generic/([0-9]+)/?$ index.php?controller=finance&view=soa-email-generic&page=$1 [NC,L]
 
-### PAGE
-RewriteRule ^dashboard/$ index.php?controller=page&view=dashboard [NC,L]
+### COLLECTION
+RewriteRule ^collection/all/([0-9]+)/?$ index.php?controller=collection&view=all&page=$1 [NC,L]
+
+### REPORT
+RewriteRule ^report/automatic/([0-9]+)/?$ index.php?controller=report&view=automatic&page=$1 [NC,L]
 
 ### NOTIFICATION
 RewriteRule ^notification/email/([0-9]+)/?$ index.php?controller=notification&view=email&page=$1 [NC,L]
+
+### PAGE
+RewriteRule ^dashboard/$ index.php?controller=page&view=dashboard [NC,L]
 
 ### DEFAULT
 RewriteRule ^([a-z]+)/([^/]+)/([a-zA-Z0-9-]*)/?$ index.php?controller=$1&view=$2&id=$3 [QSA] 

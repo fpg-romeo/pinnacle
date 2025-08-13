@@ -41,23 +41,22 @@
 			
 				<!-- Menu -->
 				<aside id="layout-menu" class="layout-menu menu-vertical menu">
-					<div class="app-brand demo">
-						<a href="index.html" class="app-brand-link">
+					<div class="app-brand">
+						<a href="/" class="app-brand-link">
 							<img src="/public/img/logo.png" class="logo">
-							<br>
-							<small>By FPG Insurance</small>
 						</a>
+
 						<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
 							<i class="icon-base ti menu-toggle-icon d-none d-xl-block"></i>
 							<i class="icon-base ti tabler-x d-block d-xl-none"></i>
 						</a>
 					</div>
 					<div class="menu-inner-shadow"></div>
-
+					<br>
 					<ul class="menu-inner py-1">
 						<li class="menu-item active">
-							<a href="app-email.html" class="menu-link">
-								<i class="menu-icon icon-base ti tabler-mail"></i>
+							<a href="/" class="menu-link">
+								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="DASHBOARD">DASHBOARD</div>
 							</a>
 						</li>
@@ -67,7 +66,7 @@
 
 						<li class="menu-item">
 							<a href="javascript:void(0)" class="menu-link menu-toggle">
-								<i class="menu-icon icon-base ti tabler-layout-board"></i>
+								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Finance">Finance</div>
 							</a>
 							<ul class="menu-sub">
@@ -77,39 +76,39 @@
 									</a>
 									<ul class="menu-sub">
 										<li class="menu-item">
-											<a href="javascript:void(0)" class="menu-link">
+											<a href="/finance/soa-immediate/1" class="menu-link">
 												<div data-i18n="Immediate">Immediate</div>
 											</a>
 										</li>
 										<li class="menu-item">
-											<a href="javascript:void(0)" class="menu-link">
+											<a href="/finance/soa-scheduled/1" class="menu-link">
 												<div data-i18n="Scheduled">Scheduled</div>
 											</a>
 										</li>
 									</ul>
 								</li>
 								<li class="menu-item">
-									<a href="app-email.html" class="menu-link">
+									<a href="/finance/soa-setting" class="menu-link">
 										<div data-i18n="SOA Settings">SOA Settings</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="app-email.html" class="menu-link">
+									<a href="/finance/soa-download/1" class="menu-link">
 										<div data-i18n="Download">Download</div>
 									</a>
 								</li>
 								<li class="menu-item">
 									<a href="javascript:void(0)" class="menu-link menu-toggle">
-										<div data-i18n="Email Template">Email Template</div>
+										<div data-i18n="Email Template">Email</div>
 									</a>
 									<ul class="menu-sub">
 										<li class="menu-item">
-											<a href="javascript:void(0)" class="menu-link">
-												<div data-i18n="Fixed">Fixed</div>
+											<a href="/finance/soa-email-template/1" class="menu-link">
+												<div data-i18n="Template">Template</div>
 											</a>
 										</li>
 										<li class="menu-item">
-											<a href="javascript:void(0)" class="menu-link">
+											<a href="/finance/soa-email-generic/1" class="menu-link">
 												<div data-i18n="Generic">Generic</div>
 											</a>
 										</li>
@@ -118,8 +117,8 @@
 							</ul>
 						</li>
 						<li class="menu-item">
-							<a href="app-email.html" class="menu-link">
-								<i class="menu-icon icon-base ti tabler-mail"></i>
+							<a href="/collection/all/1" class="menu-link">
+								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Collection">Collection</div>
 							</a>
 						</li>
@@ -130,12 +129,12 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/report/manual" class="menu-link" target="_blank">
 										<div data-i18n="Manual Generation">Manual Generation</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/pricing-page.html" class="menu-link" target="_blank">
+									<a href="/report/automatic/1" class="menu-link" target="_blank">
 										<div data-i18n="Automatic Generation">Automatic Generation</div>
 									</a>
 								</li>
@@ -151,42 +150,42 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/topro" class="menu-link" target="_blank">
 										<div data-i18n="TOPRO">TOPRO</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/branch" class="menu-link" target="_blank">
 										<div data-i18n="Branch">Branch</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/segment" class="menu-link" target="_blank">
 										<div data-i18n="Segment">Segment</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
-										<div data-i18n="Handlers">Handlers</div>
+									<a href="/master/handler" class="menu-link" target="_blank">
+										<div data-i18n="Handler">Handler</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/team-leader" class="menu-link" target="_blank">
 										<div data-i18n="Team Leader">Team Leader</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/sales-channel" class="menu-link" target="_blank">
 										<div data-i18n="Sales Channel">Sales Channel</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/intermediary" class="menu-link" target="_blank">
 										<div data-i18n="Intermediary">Intermediary</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/master/class-business" class="menu-link" target="_blank">
 										<div data-i18n="Class of Busines">Class of Business</div>
 									</a>
 								</li>
@@ -202,12 +201,12 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/account/all/1" class="menu-link" target="_blank">
 										<div data-i18n="Records">Records</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/pricing-page.html" class="menu-link" target="_blank">
+									<a href="/account/user/1" class="menu-link" target="_blank">
 										<div data-i18n="User Profile">User Profile</div>
 									</a>
 								</li>
@@ -220,13 +219,13 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="../front-pages/landing-page.html" class="menu-link" target="_blank">
+									<a href="/notification/email/1" class="menu-link" target="_blank">
 									<div data-i18n="Email Notificaton">Email Notificaton</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="../front-pages/pricing-page.html" class="menu-link" target="_blank">
-										<div data-i18n="Cron Jobs">Cron Jobs</div>
+									<a href="/miscellaneous/cron-job" class="menu-link" target="_blank">
+										<div data-i18n="Cron Jobs">Cron Jobs Schedule</div>
 									</a>
 								</li>
 							</ul>
@@ -293,7 +292,7 @@
 									</a>
 									<ul class="dropdown-menu dropdown-menu-end">
 										<li>
-											<a class="dropdown-item mt-0" href="pages-account-settings-account.html">
+											<a class="dropdown-item mt-0">
 												<div class="d-flex align-items-center">
 													<div class="flex-shrink-0 me-2">
 														<div class="avatar avatar-online">
@@ -311,12 +310,12 @@
 											<div class="dropdown-divider my-1 mx-n2"></div>
 										</li>
 										<li>
-											<a class="dropdown-item" href="pages-profile-user.html">
+											<a href="/account/profile" class="dropdown-item">
 												<i class="icon-base ti tabler-user me-3 icon-md"></i><span class="align-middle">My Profile</span>
 											</a>
 										</li>
 										<li>
-											<a class="dropdown-item" href="pages-account-settings-account.html">
+											<a href="/account/setting" class="dropdown-item">
 												<i class="icon-base ti tabler-settings me-3 icon-md"></i><span class="align-middle">Settings</span>
 											</a>
 										</li>
@@ -325,7 +324,7 @@
 										</li>
 										<li>
 											<div class="d-grid px-2 pt-2 pb-1">
-												<a class="btn btn-sm btn-danger d-flex" href="auth-login-cover.html" target="_blank">
+												<a href="/logout" class="btn btn-sm btn-danger d-flex">
 													<small class="align-middle">Logout</small>
 													<i class="icon-base ti tabler-logout ms-2 icon-14px"></i>
 												</a>
