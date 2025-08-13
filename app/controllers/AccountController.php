@@ -831,6 +831,86 @@ class AccountController
         views('account.profile', $data);
     }
 
+    public function security()
+    {
+        checkLoggedIn('true');
+        $data = array();
+
+        $CONFIGURATION = Configuration::general();
+        $id            = idDecrypt(getVar('id'));
+
+        if (isset($_POST['submit'])) {
+            $field['password']          = passwordEncode(postVar('password', ''));
+            $field['new_password']      = passwordEncode(postVar('new_password', ''));
+            $field['confirm_password']  = passwordEncode(postVar('confirm_password', ''));
+            $personal['alias']          = postVar('alias', '');
+
+            if (isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['new_password']) && !empty($_POST['new_password'])) {
+                $record = Account::getRecordByIdAndPassword(ACCOUNT_ID, $field['password']);
+                if (is_array($record) && !empty($record)) {
+                    if (empty($field['confirm_password'])) {
+                        $data['error']['confirm_password'] = requiredPrompt('This field is required.');
+                    } else {
+                        if ($field['new_password'] != $field['confirm_password']) {
+                            $data['error']['confirm_password'] = requiredPrompt('Password mismatch.');
+                        } else {
+                            $field['password'] = $field['new_password'];
+                            unset($field['confirm_password']);
+                            unset($field['new_password']);
+                        }
+                    }
+                } else {
+                    $data['error']['password'] = requiredPrompt('Account verification failed');
+                }
+            } else {
+                unset($field['password']);
+                unset($field['confirm_password']);
+                unset($field['new_password']);
+            }
+            if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
+                $file_name          = $_FILES['file']['name'];
+                $file_size          = $_FILES['file']['size'];
+                $file_tmp           = $_FILES['file']['tmp_name'];
+                $file_type          = $_FILES['file']['type'];
+                $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                $file_new_name      = ACCOUNT_ID . '.' . $file_ext;
+                $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
+                if (!in_array($file_ext, $extensions)) {
+                    $data['error']['file'] = requiredPrompt('File format is not allowed');
+                } else {
+                    if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
+                        $personal['photo'] = $file_new_name;
+
+                        thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
+                    } else {
+                        promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
+                    }
+                }
+            }
+
+            if (isset($_POST['file_delete'])) {
+                $personal['photo'] = '';
+                deleteFile('account', postVar('file_hidden'));
+                deleteFile('account', thumbnailName(postVar('file_hidden')));
+            }
+
+            if (!array_key_exists('error', $data)) {
+                $field['id']              = $id;
+                $personal['account_id']   = $id;
+                $employment['account_id'] = $id;
+                $result                   = Account::editRecord($field);
+                $personal                 = Account::manageDynamic('account_personal', $personal);
+                $employment               = Account::manageDynamic('account_employment', $employment);
+
+                alertAndRedirect($result['message'], '/account/profile/' . idEncrypt($id) . '/');
+            }
+        }
+
+        $data['account'] = recastArray(Account::getRecordById($id));
+
+        views('account.security', $data);
+    }
+
     public function importView()
     {
         $data = array();

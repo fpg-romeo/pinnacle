@@ -313,12 +313,12 @@
 										</li>
 										<li>
 											<a href="/account/profile" class="dropdown-item">
-												<i class="icon-base ti tabler-user me-3 icon-md"></i><span class="align-middle">My Profile</span>
+												<i class="icon-base ti tabler-user me-3 icon-md"></i><span class="align-middle">Profile</span>
 											</a>
 										</li>
 										<li>
-											<a href="/account/setting" class="dropdown-item">
-												<i class="icon-base ti tabler-settings me-3 icon-md"></i><span class="align-middle">Settings</span>
+											<a href="/account/security" class="dropdown-item">
+												<i class="icon-base ti tabler-settings me-3 icon-md"></i><span class="align-middle">Security</span>
 											</a>
 										</li>
 										<li>

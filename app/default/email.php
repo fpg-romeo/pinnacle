@@ -1,12 +1,19 @@
 <?php
-class Email
-{
+require_once('app/library/mail/PHPMailer.php');
+require_once('app/library/mail/SMTP.php');
+require_once('app/library/mail/Exception.php');
 
-    public function __construct() {}
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    public static function sendEmail($to, $subject, $message, $cc = '', $bcc = '', $attachment = '', $reply_to = '')
-    {
-        includeLibrary(['mail/phpMailer.php']);
+class Email{
+
+    public function __construct() {
+
+    }
+
+    public static function sendEmail($to, $subject, $message, $cc = '', $bcc = '', $attachment = '', $reply_to = ''){
+
         includeDefault(['configuration']);
 
         $CONFIGURATION = Configuration::general();
@@ -20,99 +27,106 @@ class Email
             $subject  = 'PLEASE IGNORE - ' . strtoupper(SYSTEM_SUBDOMAIN) . ' : ' . strtoupper(SYSTEM_ENVIRONMENT) . ' SERVER TEST | ' . $subject;
         }
 
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->SetLanguage('en', 'phpmailer/language/');
-        $mail->Host = $CONFIGURATION['MAIL_HOST'];
-        $mail->Port = $CONFIGURATION['MAIL_PORT'];
-        $mail->SMTPAuth = false;
+        $mail = new PHPMailer(true);
 
-        if (is_array($to)) {
-            foreach ($to as $to_email) {
-                if (!empty($to_email) && Shortcode::checkIfValidEmail($to_email)) {
-                    $mail->addAddress($to_email);
-                }
-            }
-        } else {
-            if (!empty($to) && Shortcode::checkIfValidEmail($to)) {
-                $mail->addAddress($to);
-            }
-        }
+        try {
+            $mail->isSMTP();
+            $mail->SetLanguage('en', 'phpmailer/language/');
+            $mail->Host = $CONFIGURATION['MAIL_HOST'];
+            $mail->Port = $CONFIGURATION['MAIL_PORT'];
+            $mail->SMTPAuth = false;
 
-        if (!empty($cc)) {
-            if (is_array($cc)) {
-                foreach ($cc as $cc_email) {
-                    if (!empty($cc_email) && Shortcode::checkIfValidEmail($cc_email)) {
-                        $mail->AddCC($cc_email);
+            if (is_array($to)) {
+                foreach ($to as $to_email) {
+                    if (!empty($to_email) && Shortcode::checkIfValidEmail($to_email)) {
+                        $mail->addAddress($to_email);
                     }
                 }
             } else {
-                if (!empty($cc) && Shortcode::checkIfValidEmail($cc)) {
-                    $mail->AddCC($cc);
+                if (!empty($to) && Shortcode::checkIfValidEmail($to)) {
+                    $mail->addAddress($to);
                 }
             }
-        }
 
-        if (!empty($bcc)) {
-            $bcc = $bcc;
-        } else {
-            $bcc = $CONFIGURATION['IT_TEAM_EMAIL'];
-        }
-
-        if (is_array($bcc)) {
-            foreach ($bcc as $bcc_email) {
-                if (!empty($bcc_email) && Shortcode::checkIfValidEmail($bcc_email)) {
-                    $mail->AddBCC($bcc_email);
+            if (!empty($cc)) {
+                if (is_array($cc)) {
+                    foreach ($cc as $cc_email) {
+                        if (!empty($cc_email) && Shortcode::checkIfValidEmail($cc_email)) {
+                            $mail->AddCC($cc_email);
+                        }
+                    }
+                } else {
+                    if (!empty($cc) && Shortcode::checkIfValidEmail($cc)) {
+                        $mail->AddCC($cc);
+                    }
                 }
             }
-        } else {
-            if (!empty($bcc) && Shortcode::checkIfValidEmail($bcc)) {
-                $mail->AddBCC($bcc);
-            }
-        }
 
-        if (!empty($attachment)) {
-            if (is_array($attachment)) {
-                foreach ($attachment as $k_attachment) {
-                    $mail->AddAttachment($k_attachment);
+            if (!empty($bcc)) {
+                $bcc = $bcc;
+            } else {
+                $bcc = $CONFIGURATION['IT_TEAM_EMAIL'];
+            }
+
+            if (is_array($bcc)) {
+                foreach ($bcc as $bcc_email) {
+                    if (!empty($bcc_email) && Shortcode::checkIfValidEmail($bcc_email)) {
+                        $mail->AddBCC($bcc_email);
+                    }
                 }
             } else {
-                $mail->AddAttachment($attachment);
-            }
-        }
-
-        if (!empty($reply_to)) {
-            $reply_to = $reply_to;
-        } else {
-            $reply_to = $CONFIGURATION['MAIL_REPLYTO'];
-        }
-
-        if (is_array($reply_to)) {
-            foreach ($reply_to as $reply_to_email) {
-                if (!empty($reply_to_email) && Shortcode::checkIfValidEmail($reply_to_email)) {
-                    $mail->addReplyTo($reply_to_email);
+                if (!empty($bcc) && Shortcode::checkIfValidEmail($bcc)) {
+                    $mail->AddBCC($bcc);
                 }
             }
-        } else {
-            if (!empty($reply_to) && Shortcode::checkIfValidEmail($reply_to)) {
-                $mail->addReplyTo($reply_to);
+
+            if (!empty($attachment)) {
+                if (is_array($attachment)) {
+                    foreach ($attachment as $k_attachment) {
+                        $mail->AddAttachment($k_attachment);
+                    }
+                } else {
+                    $mail->AddAttachment($attachment);
+                }
             }
+
+            if (!empty($reply_to)) {
+                $reply_to = $reply_to;
+            } else {
+                $reply_to = $CONFIGURATION['MAIL_REPLYTO'];
+            }
+
+            if (is_array($reply_to)) {
+                foreach ($reply_to as $reply_to_email) {
+                    if (!empty($reply_to_email) && Shortcode::checkIfValidEmail($reply_to_email)) {
+                        $mail->addReplyTo($reply_to_email);
+                    }
+                }
+            } else {
+                if (!empty($reply_to) && Shortcode::checkIfValidEmail($reply_to)) {
+                    $mail->addReplyTo($reply_to);
+                }
+            }
+
+            $mail->Subject = htmlDecode($subject);
+            $mail->SetFrom($CONFIGURATION['MAIL_SENDER'], $CONFIGURATION['MAIL_FROM_NAME']);
+            $mail->msgHTML($message);
+
+            if (!$mail->Send()) {
+                $return['status']  = 'failed';
+                $return['message'] = 'Encounter sending email error. Mailer Error: ' . $mail->ErrorInfo;
+            } else {
+                $return['status']  = 'success';
+                $return['message'] = 'Email sent';
+            }
+
+            $mail->clearAddresses();
+            $mail->clearAttachments();
+
+        } catch (Exception $e) {
+            $return['status']  = "error";
+            $return['message'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
-
-        $mail->Subject = htmlDecode($subject);
-        $mail->SetFrom($CONFIGURATION['MAIL_SENDER'], $CONFIGURATION['MAIL_FROM_NAME']);
-        $mail->msgHTML($message);
-
-        if (!$mail->Send()) {
-            $return['status']  = 'failed';
-            $return['message'] = 'Encounter sending email error. Mailer Error: ' . $mail->ErrorInfo;
-        } else {
-            $return['status']  = 'success';
-            $return['message'] = 'Email sent';
-        }
-
-        $mail->clearAddresses();
-        $mail->clearAttachments();
 
         return $return;
     }

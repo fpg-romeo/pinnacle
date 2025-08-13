@@ -1,5 +1,5 @@
 <?php
-define('SYSTEM_SUBDOMAIN', 'intuit');
+define('SYSTEM_SUBDOMAIN', 'pinnacle');
 define('SYSTEM_SERVER_PRODUCTION', 'fpgins.com');
 define('SYSTEM_SERVER_STAGING', 'fpgins.staging');
 define('DOMAIN_LIVE', SYSTEM_SUBDOMAIN . '.' . SYSTEM_SERVER_PRODUCTION);
