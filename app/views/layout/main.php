@@ -6,6 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 		<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
 		<meta name="robots" content="noindex, nofollow" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 		<title><?php echo CONFIGURATION_SYSTEM_NAME; ?> <?php echo CONFIGURATION_SYSTEM_VERSION; ?></title>
 		<meta name="description" content="" />
 		<!-- Favicon -->
@@ -45,7 +48,6 @@
 						<a href="/" class="app-brand-link">
 							<img src="/public/img/logo.png" class="logo">
 						</a>
-
 						<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
 							<i class="icon-base ti menu-toggle-icon d-none d-xl-block"></i>
 							<i class="icon-base ti tabler-x d-block d-xl-none"></i>
