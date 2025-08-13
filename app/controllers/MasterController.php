@@ -433,5 +433,9 @@
             
             echo json_encode($result);
         }
+
+        public function teamLeader(){
+            views('master.team-leader');
+        }
     }
 ?>
