@@ -435,7 +435,8 @@
         }
 
         public function teamLeader(){
-            views('master.team-leader');
+            $data['team_leaders']   = Master::getTeamLeader();
+            views('master.team-leader', $data);
         }
     }
 ?>

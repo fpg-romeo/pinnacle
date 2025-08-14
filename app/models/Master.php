@@ -271,5 +271,12 @@
                                     'name ASC');        
             return $result;
         }
+
+        public static function getTeamLeader(){
+            $result = mysql::select('master_team_leader', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
     }
 ?>
