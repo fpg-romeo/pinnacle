@@ -36,18 +36,42 @@
         <a href="/forgot-password" class="tx-info d-block mg-t-10 tx-bold tx-underline"><u>Forgot password?</u></a>
     </div>
 </form>
-<!--
-<hr>
-<div class="mg-t-20 tx-gray-600">
-    <p>Need help? Please contact us:</p>
-    <p>
-        Email: <a href="mailto:support@oom.com.sg" class="tx-gray-600">support@oom.com.sg</a>
-        <br>
-        Office: +65 6391 0930
-    </p>
-</div>
--->
 
+
+
+<form id="formAuthentication" class="mb-4" action="index.html" method="GET">
+    <div class="mb-6 form-control-validation">
+        <label for="email" class="form-label">Email or Username</label>
+        <input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus />
+    </div>
+    <div class="mb-6 form-password-toggle form-control-validation">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-group input-group-merge">
+            <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+            <span class="input-group-text cursor-pointer"><i class="icon-base ti tabler-eye-off"></i></span>
+        </div>
+    </div>
+    <div class="my-8">
+        <div class="d-flex justify-content-between">
+            <div class="form-check mb-0 ms-2">
+                <input class="form-check-input" type="checkbox" id="remember-me" />
+                <label class="form-check-label" for="remember-me"> Remember Me </label>
+            </div>
+            <a href="auth-forgot-password-basic.html">
+                <p class="mb-0">Forgot Password?</p>
+            </a>
+        </div>
+    </div>
+    <div class="mb-6">
+        <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+    </div>
+</form>
+<p class="text-center">
+    <span>New on our platform?</span>
+    <a href="auth-register-basic.html">
+        <span>Create an account</span>
+    </a>
+</p>
 <script type="text/javascript">
     function loginSubmit(token) {
         document.getElementById("loginForm").submit();

@@ -1,5 +1,5 @@
 <?php
-define('SYSTEM_SUBDOMAIN', 'intuit');
+define('SYSTEM_SUBDOMAIN', 'pinnacle');
 define('SYSTEM_SERVER_PRODUCTION', 'fpgins.com');
 define('SYSTEM_SERVER_STAGING', 'fpgins.staging');
 define('DOMAIN_LIVE', SYSTEM_SUBDOMAIN . '.' . SYSTEM_SERVER_PRODUCTION);
@@ -44,7 +44,7 @@ if ($controller == 'page' && $view == 'errorModal') {
 
 $CONFIGURATION = Configuration::general();
 
-$_SESSION['login_id'] = idEncrypt(1000);
+//$_SESSION['login_id'] = idEncrypt(1000);
 
 if (isset($_SESSION['login_id'])) {
 
