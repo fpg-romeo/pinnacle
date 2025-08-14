@@ -433,5 +433,21 @@
             
             echo json_encode($result);
         }
+
+        public function teamLeader(){
+            $data['team_leaders']   = Master::getTeamLeader();
+            views('master.team-leader', $data);
+        }
+
+        public function segment(){
+            $data['segments']   = Master::getSegment();
+            views('master.segment', $data);
+        }
+
+        public function handler(){
+            $data['handlers']   = Master::getHandler();
+            views('master.handler', $data);
+        }
+        
     }
 ?>

@@ -271,5 +271,26 @@
                                     'name ASC');        
             return $result;
         }
+
+        public static function getTeamLeader(){
+            $result = mysql::select('master_team_leader', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
+
+        public static function getSegment(){
+            $result = mysql::select('master_segment', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
+
+        public static function getHandler(){
+            $result = mysql::select('master_handler', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
     }
 ?>
