@@ -7,20 +7,18 @@
                   <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Contact Number</th>
+                                <th>Code</th>
+                                <th>Name</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                                foreach($data['team_leaders'] as $team_leader){
+                                foreach($data['segments'] as $segment){
                             ?>
                                     <tr>
-                                        <td><?=$team_leader['first_name'] . " " . $team_leader['last_name']?></td>
-                                        <td><?=$team_leader['email']?></td>
-                                        <td><?=$team_leader['contact_number']?></td>
+                                        <td><?=$segment['code']?></td>
+                                        <td><?=$segment['name']?></td>
                                         <td></td>
                                     </tr>
                             <?php

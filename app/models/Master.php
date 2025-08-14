@@ -278,5 +278,12 @@
                                     '');        
             return $result;
         }
+
+        public static function getSegment(){
+            $result = mysql::select('master_segment', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
     }
 ?>
