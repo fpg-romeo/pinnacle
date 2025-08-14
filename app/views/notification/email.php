@@ -1,3 +1,254 @@
+<?php flash(promptMessage('message')); ?>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-between">
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
+                <h4 class="lh-lg mb-0 fw-bolder">Notification Email</h4>
+                <p class="mb-0">
+                    Automation Email Sender | 
+                    <span class="notification-email-status-unprocessed"><i class="fa fa-circle" aria-hidden="true"></i> UNPROCESSED</span>
+                    <span class="notification-email-status-queue"><i class="fa fa-circle" aria-hidden="true"></i> QUEUE</span>
+                    <span class="notification-email-status-error"><i class="fa fa-circle" aria-hidden="true"></i> ERROR</span>
+                    <span class="notification-email-status-failed"><i class="fa fa-circle" aria-hidden="true"></i> FAILED</span>
+                </p>
+            </div>
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+                <a href="/cron/test-email/" class="btn btn-info text-white">
+                    <i class="icon-base ti tabler-send me-2"></i>
+                    <span class="align-middle">Send Test Email</span>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                                <select id="form-repeater-1-3" class="form-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
+                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>TYPE / SUBJECT</th>
+                                        <th>RECIPIENT TO</th>
+                                        <th>RECIPIENT CC</th>
+                                        <th>RECIPIENT BCC</th>
+                                        <th>PROCESS BY</th>
+                                        <th>ATTEMPT</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    <?php
+                                        if(is_array($data['email'])){
+                                            foreach($data['email'] as $key => $value){
+                                                echo '
+                                                    <tr id="'.$value['id'].'" class="notification-email-status-'.strtolower(htmlDecode($value['status_name'])).'">
+                                                        <td>
+                                                            <small class="text-muted">
+                                                                ( '.htmlDecode($value['id']).' -  '.htmlDecode($value['template']).' )
+                                                            </small>
+                                                            <br>
+                                                            '.htmlDecode($value['name']).'
+                                                            <br>
+                                                            '.htmlDecode($value['subject']).'
+                                                        </td>
+                                                        <td>'.htmlDecode($value['recipient_to']).'</td>
+                                                        <td>'.htmlDecode($value['recipient_cc']).'</td>
+                                                        <td>'.htmlDecode($value['recipient_bcc']).'</td>
+                                                        <td class="tx-center">
+                                                            '.htmlDecode($value['account_name']).'<br>
+                                                            <span class="text-muted">
+                                                                '.dateReformat($value['created_when'], 'd-M-Y').'<br>
+                                                                '.dateReformat($value['created_when'], 'h:i A').'
+                                                            </span>
+                                                        </td>
+                                                        <td class="tx-center">'.htmlDecode($value['attempt']).'</td>
+                                                        <td class="tx-center">
+                                                            '.htmlDecode($value['status_name']).'
+                                                            <br>
+                                                    ';
+
+                                                if(!empty($value['updated_when'])){
+                                                echo '
+
+                                                            <span class="text-muted">
+                                                                '.dateReformat($value['updated_when'], 'd-M-Y').'<br>
+                                                                '.dateReformat($value['updated_when'], 'h:i A').'
+                                                            </span>
+                                                            <br>
+                                                    ';
+                                                }
+
+                                                echo '
+                                                            <div class="dropdown">
+                                                                <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
+                                                                    <i class="icon-base ti tabler-settings"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item view" href="javascript:void(0);" data-action="view" data-id="'.idEncrypt($value['id']).'"><i class="icon-base ti tabler-pencil me-1"></i> Update</a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="dropdown d-inline-block">
+                                                                <a href="" class="tx-gray-800 d-inline-block" data-toggle="dropdown">
+                                                                    <div class="pd-x-5 bd d-flex align-items-center justify-content-center">
+                                                                        <span><i class="fa fa-cog"></i></span>
+                                                                        <i class="fa fa-angle-down mg-l-10"></i>
+                                                                    </div>
+                                                                </a>
+                                                                <div class="dropdown-menu pd-5">
+                                                                    <nav class="nav nav-style-2 flex-column">
+                                                                        <a class="nav-link people view" data-action="view" data-id="'.idEncrypt($value['id']).'"><i class="fa fa-pencil-square-o"></i> Update</a>
+                                                                    </nav>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ';
+                                            }
+                                        }else{
+                                            echo '<tr><td colspan="7" class="text-center">No record found</td></tr>';
+                                        }
+                                    ?> 
+                                    <!--
+                                    <tr>
+                                        <td>
+                                            <i class="icon-base ti tabler-brand-angular icon-md text-danger me-4"></i>
+                                            <span class="fw-medium">Angular Project</span>
+                                        </td>
+                                        <td>Albert Cook</td>
+                                        <td>
+                                            <ul class="list-unstyled m-0 avatar-group d-flex align-items-center">
+                                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                                    <img src="/public/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                                </li>
+                                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
+                                                    <img src="/public/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
+                                                </li>
+                                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="Christina Parker">
+                                                    <img src="/public/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                                        <td >
+                                            <div class="dropdown">
+                                                <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
+                                                    <i class="icon-base ti tabler-settings"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);"><i class="icon-base ti tabler-trash me-1"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <?php if(is_array($data['email'])){ ?>
+                            <div class="row justify-content-between">
+                                <div class="d-md-flex justify-content-between align-items-center col-md-auto me-auto mt-0">
+                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                </div>
+
+
+                                
+                            </div>
+
+                            <div class="row mg-t-40">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
+                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <ul class="pagination mg-0 float-right">
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/notification/email/', 'page', true); ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+
+
+                        <div class="row justify-content-between">
+                            <div class="d-md-flex justify-content-between align-items-center col-md-auto me-auto mt-0">
+                                Showing 1 to 10 of 100 entries 
+                            </div>
+                            <div class="d-md-flex justify-content-between align-items-center col-md-auto ms-auto mt-5">
+                                <ul class="pagination">
+                                    <li class="dt-paging-button page-item disabled">
+                                        <button class="page-link first" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">
+                                            <i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>
+                                        </button>
+                                    </li>
+                                    <li class="dt-paging-button page-item disabled">
+                                        <button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">
+                                            <i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>
+                                        </button>
+                                    </li>
+                                    <li class="dt-paging-button page-item active">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" aria-current="page" data-dt-idx="0">1</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="1">2</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="2">3</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="3">4</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="4">5</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item disabled">
+                                        <button class="page-link ellipsis" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" data-dt-idx="ellipsis" tabindex="-1">…</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="9">10</button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Next" data-dt-idx="next">
+                                            <i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>
+                                        </button>
+                                    </li>
+                                    <li class="dt-paging-button page-item">
+                                        <button class="page-link last" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Last" data-dt-idx="last">
+                                            <i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+    
+    
+    
+    <!--
     <div class="br-mainpanel">
         <div class="br-pageheader">
             <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -204,11 +455,7 @@
             </form>
         </div>
     </div>
-
-    <script src="/public/lib/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/public/lib/datatables.net-dt/js/dataTables.dataTables.min.js"></script>
-    <script src="/public/lib/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="/public/lib/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+    -->
     
     <script type="text/javascript">
         //DATATABLE FILTER

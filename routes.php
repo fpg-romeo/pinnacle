@@ -52,7 +52,7 @@
                                                     'schedule','testEmail'
                                                    ],
                             'miscellaneous'     => [
-                                                    'cronJob'
+                                                    'cronJob', 'faq'
                                                    ],
                             'notification'      => [
                                                     'email', 'emailJson'

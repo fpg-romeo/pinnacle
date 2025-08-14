@@ -230,6 +230,11 @@
 										<div data-i18n="Cron Jobs">Cron Jobs Schedule</div>
 									</a>
 								</li>
+								<li class="menu-item">
+									<a href="/miscellaneous/faq" class="menu-link" target="_blank">
+										<div data-i18n="FAQs">FAQs</div>
+									</a>
+								</li>
 							</ul>
 						</li>
 					</ul>
