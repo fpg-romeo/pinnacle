@@ -2,26 +2,25 @@
 
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-between">
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
+                <h4 class="lh-lg mb-0 fw-bolder">Collection <span class="text-primary">[ List ]</span></h4>
+            </div>
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+                <button class="btn btn-info me-4">
+                    <i class="icon-base ti tabler-download me-2"></i>
+                    <span class="align-middle">Export Report</span>
+                </button>
+                <a href="/collection/manage" class="btn btn-primary text-white">
+                    <i class="icon-base ti tabler-plus me-2"></i>
+                    <span class="align-middle">Add Record</span>
+                </a>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
-
                 <div class="card">
                     <div class="card-header pb-0">
-                        <div class="row justify-content-between">
-                            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
-                                <h5>Collection</h5>
-                            </div>
-                            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
-                                <button class="btn btn-info me-4">
-                                    <i class="icon-base ti tabler-download me-2"></i>
-                                    <span class="align-middle">Export Report</span>
-                                </button>
-                                <button class="btn btn-primary">
-                                    <i class="icon-base ti tabler-plus me-2"></i>
-                                    <span class="align-middle">Add Record</span>
-                                </button>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
                                 <select id="form-repeater-1-3" class="form-select">

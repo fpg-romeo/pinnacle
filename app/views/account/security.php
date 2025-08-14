@@ -17,7 +17,7 @@
                 <div class="card mb-6">
                     <h5 class="card-header">Change Password</h5>
                     <div class="card-body pt-1">
-                        <form id="formAccountSettings" method="GET" onsubmit="return false">
+                        <form id="form-1" method="POST">
                             <div class="row mb-sm-6 mb-2">
                                 <div class="col-md-6 form-password-toggle form-control-validation">
                                     <label class="form-label" for="currentPassword">Current Password</label>
