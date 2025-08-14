@@ -443,6 +443,11 @@
             $data['segments']   = Master::getSegment();
             views('master.segment', $data);
         }
+
+        public function handler(){
+            $data['handlers']   = Master::getHandler();
+            views('master.handler', $data);
+        }
         
     }
 ?>

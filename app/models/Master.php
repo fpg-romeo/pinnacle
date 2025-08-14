@@ -285,5 +285,12 @@
                                     '');        
             return $result;
         }
+
+        public static function getHandler(){
+            $result = mysql::select('master_handler', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
     }
 ?>
