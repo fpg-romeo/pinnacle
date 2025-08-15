@@ -26,6 +26,7 @@
 		<link rel="stylesheet" href="/public/css/demo.css?ver=<?php echo strtotime(date('Ymd')); ?>" />
 		<!-- Vendors CSS -->
 		<link rel="stylesheet" href="/public/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/bootstrap-select/bootstrap-select.css" />
 		<!-- endbuild -->
 		<!-- Page CSS -->
 		<link rel="stylesheet" href="/public/vendor/css/pages/page-faq.css" />
@@ -369,6 +370,7 @@
 		<script src="/public/vendor/libs/hammer/hammer.js"></script>
 		<script src="/public/vendor/libs/i18n/i18n.js"></script>
 		<script src="/public/vendor/js/menu.js"></script>
+		<script src="/public/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
 		<!-- endbuild -->
 		<!-- Vendors JS -->
 		<!-- Main JS -->

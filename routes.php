@@ -33,7 +33,7 @@
                                                     'branch', 'branchJson',
                                                     'segment', 'segmentJson',
                                                     'handler', 'handlerJson',
-                                                    'teamLeader', 'teamLeaderJson',
+                                                    'teamLeader', 'teamLeader_json',
                                                     'salesChannel', 'salesChannelJson',
                                                     'intermediary', 'intermediaryJson',
                                                     'classBusiness', 'classBusinessJson',

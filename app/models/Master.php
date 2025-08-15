@@ -279,6 +279,13 @@
             return $result;
         }
 
+        public static function getTeamLeaderById($id){
+            $result = mysql::select('master_team_leader', '*', 
+                                    'id='.$id, 
+                                    '');        
+            return $result;
+        }
+
         public static function getSegment(){
             $result = mysql::select('master_segment', '*', 
                                     "", 

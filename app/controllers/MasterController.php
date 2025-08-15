@@ -439,6 +439,11 @@
             views('master.team-leader', $data);
         }
 
+        public function teamLeader_json(){
+            $result = recastArray(Master::getTeamLeaderById($_POST['id']));
+            echo json_encode($result);
+        }
+
         public function segment(){
             $data['segments']   = Master::getSegment();
             views('master.segment', $data);
