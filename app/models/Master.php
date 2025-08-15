@@ -286,10 +286,35 @@
             return $result;
         }
 
-        public static function getSegment(){
-            $result = mysql::select('master_segment', '*', 
-                                    "", 
-                                    '');        
+        public static function addTeamLeader($field){
+
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::insert('master_team_leader', $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+            return $result;
+        }
+
+        public static function updateTeamLeader($id, $post){
+            $record = self::getTeamLeaderById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update('master_team_leader', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
             return $result;
         }
 
@@ -297,6 +322,182 @@
             $result = mysql::select('master_handler', '*', 
                                     "", 
                                     '');        
+            return $result;
+        }
+
+        public static function getHandlerById($id){
+            $result = mysql::select('master_handler', '*', 
+                                    'id='.$id, 
+                                    '');        
+            return $result;
+        }
+
+        public static function addHandler($field){
+
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::insert('master_handler', $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+            return $result;
+        }
+
+        public static function updateHandler($id, $post){
+            $record = self::getHandlerById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update('master_handler', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
+            return $result;
+        }
+
+        public static function getSegment(){
+            $result = mysql::select('master_segment', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
+
+        public static function getSegmentById($id){
+            $result = mysql::select('master_segment', '*', 
+                                    'id='.$id, 
+                                    '');        
+            return $result;
+        }
+
+        public static function addSegment($field){
+
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::insert('master_segment', $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+            return $result;
+        }
+
+        public static function updateSegment($id, $post){
+            $record = self::getSegmentById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update('master_segment', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
+            return $result;
+        }
+
+        public static function getBranch(){
+            $result = mysql::select('master_branch', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
+
+        public static function getBranchById($id){
+            $result = mysql::select('master_branch', '*', 
+                                    'id='.$id, 
+                                    '');        
+            return $result;
+        }
+
+        public static function addBranch($field){
+
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::insert('master_branch', $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+            return $result;
+        }
+
+        public static function updateBranch($id, $post){
+            $record = self::getBranchById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update('master_branch', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
+            return $result;
+        }
+        public static function getSalesChannel(){
+            $result = mysql::select('master_sales_channel', '*', 
+                                    "", 
+                                    '');        
+            return $result;
+        }
+
+        public static function getSalesChannelById($id){
+            $result = mysql::select('master_sales_channel', '*', 
+                                    'id='.$id, 
+                                    '');        
+            return $result;
+        }
+
+        public static function addSalesChannel($field){
+
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::insert('master_sales_channel', $fields)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+            return $result;
+        }
+
+        public static function updateSalesChannel($id, $post){
+            $record = self::getSalesChannelById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($post, ", ");
+                if(mysql::update('master_sales_channel', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
             return $result;
         }
     }

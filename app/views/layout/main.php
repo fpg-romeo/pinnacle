@@ -30,6 +30,7 @@
 		<!-- endbuild -->
 		<!-- Page CSS -->
 		<link rel="stylesheet" href="/public/vendor/css/pages/page-faq.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/notyf/notyf.css" />
 
 		<!-- Added Core jQuery -->
 		<script src="/public/lib/jquery/jquery.js"></script>
@@ -380,6 +381,7 @@
 		<script src="/public/vendor/libs/i18n/i18n.js"></script>
 		<script src="/public/vendor/js/menu.js"></script>
 		<script src="/public/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+
 		<!-- endbuild -->
 		<!-- Vendors JS -->
 		<!-- Main JS -->
