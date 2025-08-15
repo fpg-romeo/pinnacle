@@ -5,10 +5,10 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row justify-content-between">
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
-                <h4 class="lh-lg mb-0 fw-bolder">Team Leader <span class="text-primary">[ List ]</span></h4>
+                <h4 class="lh-lg mb-0 fw-bolder">Branch <span class="text-primary">[ List ]</span></h4>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
-                <a class="btn btn-primary text-white showModal" action="add" data-bs-toggle="modal" data-bs-target="#teamleadModal">
+                <a class="btn btn-primary text-white showModal" action="add" data-bs-toggle="modal" data-bs-target="#branchModal">
                     <i class="icon-base ti tabler-plus me-2"></i>
                     <span class="align-middle">Add Record</span>
                 </a>
@@ -38,30 +38,28 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Contact Number</th>
+                                        <th>Code</th>
+                                        <th>Name</th>
                                         <th>Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                   <?php
-                                      foreach($data['team_leaders'] as $team_leader){
+                                      foreach($data['branches'] as $branch){
                                   ?>
                                         <tr>
-                                            <td><?=$team_leader['first_name'] . " " . $team_leader['last_name']?></td>
-                                            <td><?=$team_leader['email']?></td>
-                                            <td><?=$team_leader['contact_number']?></td>
-                                            <td><?=$team_leader['is_active'] == 1 ? "Active" : "Inactive"?></td>
+                                            <td><?=$branch['code']?></td>
+                                            <td><?=$branch['name']?></td>
+                                            <td><?=$branch['is_active'] == 1 ? "Active" : "Inactive"?></td>
                                             <td>
                                               <div class="dropdown">
                                                 <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
                                                     <i class="icon-base ti tabler-settings"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#teamleadModal" data-id="<?=$team_leader['id']?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
-                                                    <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#teamleadModal" data-id="<?=$team_leader['id']?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
+                                                    <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?=$branch['id']?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                    <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?=$branch['id']?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
                                                 </div>
                                               </div>
                                             </td>
@@ -136,41 +134,23 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="teamleadModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="branchModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
-    <form method="post" id="teamLeaderForm">
+    <form method="post" id="branchForm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel3">Team Leader</h5>
+          <h5 class="modal-title" id="exampleModalLabel3">Branch</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="first_name" class="form-label">First Name</label>
-              <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter First Name">
+            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
+              <label for="code" class="form-label">Code</label>
+              <input type="text" id="code" name="code" class="form-control" placeholder="Enter Code">
             </div>
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="middle_name" class="form-label">Middle Name</label>
-              <input type="text" id="middle_name" name="middle_name" class="form-control" placeholder="Enter Middle Name">
-            </div>
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="last_name" class="form-label">Last Name</label>
-              <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter Last Name">
-            </div>
-          </div>
-          <div class="row g-4">
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="suffix" class="form-label">Suffix</label>
-              <input type="text" id="suffix" name="suffix" class="form-control" placeholder="Enter Suffix">
-            </div>
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="email" class="form-label">Email</label>
-              <input type="text" id="email" name="email" class="form-control" placeholder="Enter Email">
-            </div>
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="contact_number" class="form-label">Contact Number</label>
-              <input type="text" id="contact_number" name="contact_number" class="form-control" placeholder="Enter Contact Number">
+            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
             </div>
           </div>
           <div class="row g-4">
@@ -194,39 +174,36 @@
   </div>
 </div>
 
+
 <script>
   $('.showModal').click(function(e){
     
       e.preventDefault();
-      $('#teamleadModal').find('form')[0].reset();
-      $('#teamleadModal').find('input').prop('readonly', false);
-      $('#teamleadModal').find('select').prop('disabled', false);
+      $('#branchModal').find('form')[0].reset();
+      $('#branchModal').find('input').prop('readonly', false);
+      $('#branchModal').find('select').prop('disabled', false);
       var action = $(this).attr('action');
       $('[name="action"]').val(action);
       $('.submit').css('display', 'block');
 
       if(action != 'add'){
         $.ajax({
-          url: '/master/teamLeader_json/',
+          url: '/master/branch_json/',
           method: 'POST',
           data:{
             id: $(this).data('id')
           },
           success: function(data){
               $('[name="id"]').val(data.id);
-              $('#first_name').val(data.first_name);
-              $('#middle_name').val(data.middle_name);
-              $('#last_name').val(data.last_name);
-              $('#suffix').val(data.suffix);
-              $('#email').val(data.email);
-              $('#contact_number').val(data.contact_number);
+              $('#code').val(data.code);
+              $('#name').val(data.name);
               $('#is_active').val(data.is_active);
           }
         });
 
         if(action == "show"){
-          $('#teamleadModal').find('input').prop('readonly', true);
-          $('#teamleadModal').find('select').prop('disabled', true);
+          $('#branchModal').find('input').prop('readonly', true);
+          $('#branchModal').find('select').prop('disabled', true);
           $('.submit').css('display', 'none');
         }
       }
