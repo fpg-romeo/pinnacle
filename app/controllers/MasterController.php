@@ -436,6 +436,27 @@
 
         public function teamLeader(){
             $data['team_leaders']   = Master::getTeamLeader();
+            
+            if(isset($_POST['action'])){
+                $field['first_name']        = postVar('first_name');
+                $field['middle_name']       = postVar('middle_name');
+                $field['last_name']         = postVar('last_name');
+                $field['suffix']            = postVar('suffix');
+                $field['email']             = postVar('email');
+                $field['contact_number']    = postVar('contact_number');
+                $field['is_active']         = $_POST['is_active'];
+
+                if($_POST['action'] == 'add'){
+                    $insert = Master::addTeamLeader($field);
+                }
+                else if($_POST['action'] == 'edit'){
+                    $id = $_POST['id'];
+                    $update = Master::updateTeamLeader($id, $field);
+                }
+
+                header('Location: /master/team-leader');
+            }
+
             views('master.team-leader', $data);
         }
 
@@ -444,14 +465,115 @@
             echo json_encode($result);
         }
 
+        public function handler(){
+            $data['handlers']   = Master::getHandler();
+            
+            if(isset($_POST['action'])){
+                $field['first_name']        = postVar('first_name');
+                $field['middle_name']       = postVar('middle_name');
+                $field['last_name']         = postVar('last_name');
+                $field['suffix']            = postVar('suffix');
+                $field['email']             = postVar('email');
+                $field['contact_number']    = postVar('contact_number');
+                $field['is_active']         = $_POST['is_active'];
+
+                if($_POST['action'] == 'add'){
+                    $insert = Master::addHandler($field);
+                }
+                else if($_POST['action'] == 'edit'){
+                    $id = $_POST['id'];
+                    $update = Master::updateHandler($id, $field);
+                }
+
+                header('Location: /master/handler');
+            }
+
+            views('master.handler', $data);
+        }
+
+        public function handler_json(){
+            $result = recastArray(Master::getHandlerById($_POST['id']));
+            echo json_encode($result);
+        }
+
         public function segment(){
             $data['segments']   = Master::getSegment();
+            
+            if(isset($_POST['action'])){
+                $field['code']          = postVar('code');
+                $field['name']          = postVar('name');
+                $field['is_active']     = $_POST['is_active'];
+
+                if($_POST['action'] == 'add'){
+                    $insert = Master::addSegment($field);
+                }
+                else if($_POST['action'] == 'edit'){
+                    $id = $_POST['id'];
+                    $update = Master::updateSegment($id, $field);
+                }
+
+                header('Location: /master/segment');
+            }
+
             views('master.segment', $data);
         }
 
-        public function handler(){
-            $data['handlers']   = Master::getHandler();
-            views('master.handler', $data);
+        public function segment_json(){
+            $result = recastArray(Master::getSegmentById($_POST['id']));
+            echo json_encode($result);
+        }
+
+        public function branch(){
+            $data['branches']   = Master::getBranch();
+            
+            if(isset($_POST['action'])){
+                $field['code']          = postVar('code');
+                $field['name']          = postVar('name');
+                $field['is_active']     = $_POST['is_active'];
+
+                if($_POST['action'] == 'add'){
+                    $insert = Master::addBranch($field);
+                }
+                else if($_POST['action'] == 'edit'){
+                    $id = $_POST['id'];
+                    $update = Master::updateBranch($id, $field);
+                }
+
+                header('Location: /master/branch');
+            }
+
+            views('master.branch', $data);
+        }
+
+        public function branch_json(){
+            $result = recastArray(Master::getBranchById($_POST['id']));
+            echo json_encode($result);
+        }
+
+        public function salesChannel(){
+            $data['salesChannels']   = Master::getsalesChannel();
+            
+            if(isset($_POST['action'])){
+                $field['name']          = postVar('name');
+                $field['is_active']     = $_POST['is_active'];
+
+                if($_POST['action'] == 'add'){
+                    $insert = Master::addsalesChannel($field);
+                }
+                else if($_POST['action'] == 'edit'){
+                    $id = $_POST['id'];
+                    $update = Master::updatesalesChannel($id, $field);
+                }
+
+                header('Location: /master/sales-channel');
+            }
+
+            views('master.sales-channel', $data);
+        }
+
+        public function salesChannel_json(){
+            $result = recastArray(Master::getsalesChannelById($_POST['id']));
+            echo json_encode($result);
         }
         
     }

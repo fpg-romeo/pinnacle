@@ -25,13 +25,11 @@ if (!empty(getVar('controller')) && !empty(getVar('view'))) {
 $account = array('login', 'logout', 'forgotPassword', 'resetPassword', 'googleSigninCallback');
 $blank   = array('cron', 'source', 'pdf');
 $request = array('import', 'pdf');
-$json 	 = array('quickbooks', 'api');
+$json 	 = array('api');
 $error 	 = array('error400', 'error401', 'error403', 'error404', 'error500', 'comingSoon', 'underMaintenance');
 
 if ($controller == 'page' && $view == 'errorModal') {
 	$template = 'error';
-} elseif ($view == 'tv' && $controller != 'notification') {
-	$template = 'tv';
 } elseif (strpos($_SERVER['REQUEST_URI'], 'json') !== false || in_array($controller, $json)) {
 	$template = 'json';
 } elseif (requestUri($request, $_SERVER['REQUEST_URI']) || in_array($controller, $blank)) {
@@ -110,3 +108,10 @@ define('CONFIGURATION_SYSTEM_ALIAS', $CONFIGURATION['SYSTEM_ALIAS']);
 define('CONFIGURATION_SYSTEM_VERSION', $CONFIGURATION['SYSTEM_VERSION']);
 
 require_once('app/views/layout/' . $template . '.php');
+?>
+
+<?php
+// TEST EMAIL BODY
+// $data['content'] = 'woot woot';
+// echo  safe_b64encode(serialize($data));
+?>

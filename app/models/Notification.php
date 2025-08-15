@@ -11,18 +11,31 @@
         }
 
         public static function getEmail(){
-            $result = mysql::select('notification_email nem', 
+            $result = mysql::select('notification_email nem
+                                     LEFT JOIN master_notification_email_status mne 
+                                     ON nem.status_id = mne.id
+                                     LEFT JOIN account_personal ape
+                                     ON nem.created_by = ape.account_id
+                                    ', 
                                     'nem.*,
+                                     mne.name AS status_name,
                                      (CASE 
-                                        WHEN nem.status_id = 1
-                                            THEN "Sent"
-                                        WHEN nem.status_id = 2
-                                            THEN "Failed"
-                                        ELSE 
-                                            "Queue"
+                                        WHEN nem.created_by = 100
+                                            THEN "CRON JOB" 
+                                        WHEN nem.created_by = 200
+                                            THEN "API ACTION" 
+                                        WHEN nem.created_by = 300
+                                            THEN "SCRIPT AUTO-RUN" 
+                                        ELSE
+                                            (CASE 
+                                                WHEN ape.alias = "" OR ape.alias IS NULL
+                                                    THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                                ELSE 
+                                                    ape.alias
+                                                END
+                                            ) 
                                         END
-                                     ) AS status_name,
-                                     (SELECT CONCAT(COALESCE(first_name, "")," ",COALESCE(last_name, "")) FROM account_personal USE INDEX(account_id) WHERE account_id = nem.created_by) AS account_name
+                                     ) AS created_name
                                     ',
                                     "",
                                     'nem.id DESC');
@@ -30,36 +43,62 @@
         }
 
         public static function getEmailById($id){
-            $result = mysql::select('notification_email nem',
+            $result = mysql::select('notification_email nem
+                                     LEFT JOIN master_notification_email_status mne 
+                                     ON nem.status_id = mne.id
+                                     LEFT JOIN account_personal ape
+                                     ON nem.created_by = ape.account_id
+                                    ',
                                     'nem.*,
+                                     mne.name AS status_name,
                                      (CASE 
-                                        WHEN nem.status_id = 1
-                                            THEN "Sent"
-                                        WHEN nem.status_id = 2
-                                            THEN "Failed"
-                                        ELSE 
-                                            "Queue"
+                                        WHEN nem.created_by = 100
+                                            THEN "CRON JOB" 
+                                        WHEN nem.created_by = 200
+                                            THEN "API ACTION" 
+                                        WHEN nem.created_by = 300
+                                            THEN "SCRIPT AUTO-RUN" 
+                                        ELSE
+                                            (CASE 
+                                                WHEN ape.alias = "" OR ape.alias IS NULL
+                                                    THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                                ELSE 
+                                                    ape.alias
+                                                END
+                                            ) 
                                         END
-                                     ) AS status_name,
-                                     (SELECT CONCAT(COALESCE(first_name, "")," ",COALESCE(last_name, "")) FROM account_personal USE INDEX(account_id) WHERE account_id = nem.created_by) AS account_name
+                                     ) AS created_name
                                     ',
                                     "nem.id='{$id}'");
             return $result;
         }
 
         public static function getEmailByStatus($status_id){
-            $result = mysql::select('notification_email nem USE INDEX(status_id)',
+            $result = mysql::select('notification_email nem USE INDEX(status_id) 
+                                     LEFT JOIN master_notification_email_status mne 
+                                     ON nem.status_id = mne.id
+                                     LEFT JOIN account_personal ape
+                                     ON nem.created_by = ape.account_id
+                                    ',
                                     'nem.*,
+                                     mne.name AS status_name,
                                      (CASE 
-                                        WHEN nem.status_id = 1
-                                            THEN "Sent"
-                                        WHEN nem.status_id = 2
-                                            THEN "Failed"
-                                        ELSE 
-                                            "Queue"
+                                        WHEN nem.created_by = 100
+                                            THEN "CRON JOB" 
+                                        WHEN nem.created_by = 200
+                                            THEN "API ACTION" 
+                                        WHEN nem.created_by = 300
+                                            THEN "SCRIPT AUTO-RUN" 
+                                        ELSE
+                                            (CASE 
+                                                WHEN ape.alias = "" OR ape.alias IS NULL
+                                                    THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                                ELSE 
+                                                    ape.alias
+                                                END
+                                            ) 
                                         END
-                                     ) AS status_name,
-                                     (SELECT CONCAT(COALESCE(first_name, "")," ",COALESCE(last_name, "")) FROM account_personal USE INDEX(account_id) WHERE account_id = nem.created_by) AS account_name
+                                     ) AS created_name
                                     ',
                                     "nem.status_id='{$status_id}'",
                                     'nem.id ASC',
@@ -128,21 +167,28 @@
             $result = mysql::select('notification_email nem 
                                      LEFT JOIN master_notification_email_status mne 
                                      ON nem.status_id = mne.id
+                                     LEFT JOIN account_personal ape
+                                     ON nem.created_by = ape.account_id
                                     ', 
                                     'nem.*,
                                      mne.name AS status_name,
-                                     (
-                                        CASE 
-                                            WHEN nem.created_by = 100
-                                                THEN "CRON JOB" 
-                                            WHEN nem.created_by = 200
-                                                THEN "API ACTION" 
-                                            WHEN nem.created_by = 300
-                                                THEN "SCRIPT AUTO-RUN" 
-                                            ELSE
-                                                (SELECT CONCAT(COALESCE(first_name, "")," ",COALESCE(last_name, "")) FROM account_personal USE INDEX(account_id) WHERE account_id = nem.created_by)
+                                     (CASE 
+                                        WHEN nem.created_by = 100
+                                            THEN "CRON JOB" 
+                                        WHEN nem.created_by = 200
+                                            THEN "API ACTION" 
+                                        WHEN nem.created_by = 300
+                                            THEN "SCRIPT AUTO-RUN" 
+                                        ELSE
+                                            (CASE 
+                                                WHEN ape.alias = "" OR ape.alias IS NULL
+                                                    THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                                ELSE 
+                                                    ape.alias
+                                                END
+                                            ) 
                                         END
-                                    ) AS account_name
+                                     ) AS created_name
                                     ',
                                     $filter,
                                     'nem.id DESC',$startLimit);
@@ -190,27 +236,41 @@
             
             $result = mysql::select('notification_email nem',
                                     'nem.recipient_to,
-                                    nem.updated_when,
-                                    nem.status_id',
-                                    "nem.subject LIKE '%{$subject}%'"
-                                    ,'',1);
+                                     nem.updated_when,
+                                     nem.status_id',
+                                    "nem.subject LIKE '%{$subject}%'",
+                                    "",
+                                    1);
             return $result;
         }
 
         public static function getEmailBySubjectAndTemplate($subject,$template){
             
-            $result = mysql::select('notification_email nem',
+            $result = mysql::select('notification_email nem
+                                     LEFT JOIN master_notification_email_status mne 
+                                     ON nem.status_id = mne.id
+                                     LEFT JOIN account_personal ape
+                                     ON nem.created_by = ape.account_id
+                                    ',
                                     'nem.*,
-                                    (CASE 
-                                        WHEN nem.status_id = 1
-                                            THEN "Sent"
-                                        WHEN nem.status_id = 2
-                                            THEN "Failed"
-                                        ELSE 
-                                            "Queue"
+                                     mne.name AS status_name,
+                                     (CASE 
+                                        WHEN nem.created_by = 100
+                                            THEN "CRON JOB" 
+                                        WHEN nem.created_by = 200
+                                            THEN "API ACTION" 
+                                        WHEN nem.created_by = 300
+                                            THEN "SCRIPT AUTO-RUN" 
+                                        ELSE
+                                            (CASE 
+                                                WHEN ape.alias = "" OR ape.alias IS NULL
+                                                    THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
+                                                ELSE 
+                                                    ape.alias
+                                                END
+                                            ) 
                                         END
-                                     ) AS status_name,
-                                     (SELECT CONCAT(COALESCE(first_name, "")," ",COALESCE(last_name, "")) FROM account_personal USE INDEX(account_id) WHERE account_id = nem.created_by) AS account_name
+                                     ) AS created_name
                                     ',
                                     "nem.subject = '{$subject}' AND nem.template = '{$template}'",
                                     'nem.id ASC',

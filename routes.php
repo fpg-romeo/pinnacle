@@ -30,11 +30,11 @@
                                                    ],
                             'master'            => [
                                                     'topro', 'toproJson',
-                                                    'branch', 'branchJson',
-                                                    'segment', 'segmentJson',
-                                                    'handler', 'handlerJson',
+                                                    'branch', 'branch_json',
+                                                    'segment', 'segment_json',
+                                                    'handler', 'handler_json',
                                                     'teamLeader', 'teamLeader_json',
-                                                    'salesChannel', 'salesChannelJson',
+                                                    'salesChannel', 'salesChannel_json',
                                                     'intermediary', 'intermediaryJson',
                                                     'classBusiness', 'classBusinessJson',
 
@@ -49,7 +49,7 @@
                                                     'accountUnitRole', 'accountUnitRoleJson'
                                                    ],
                             'cron'              => [
-                                                    'schedule','testEmail'
+                                                    'testEmail', 'notificationEmail'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'

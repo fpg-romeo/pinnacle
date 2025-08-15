@@ -1,152 +1,234 @@
-<!-- Content -->
-<div class="container-xxl flex-grow-1 container-p-y">
-  <div class="row my-6">
-    <div class="col-12 text-center my-6">
-      <div class="card">
-        <div class="table-responsive text-nowrap">
-          <table class="table">
-            <thead class="table-dark">
-              <tr>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Contact Number</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                <?php
-                    foreach($data['handlers'] as $handler){
-                ?>
-                        <tr>
-                            <td><?=$handler['first_name'] . " " . $handler['last_name']?></td>
-                            <td><?=$handler['email']?></td>
-                            <td><?=$handler['contact_number']?></td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                  <i class="icon-base ti tabler-dots-vertical"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item waves-effect" href="javascript:void(0);"><i class="icon-base ti tabler-pencil me-2"></i> Edit</a>
-                                  <a class="dropdown-item waves-effect" href="javascript:void(0);"><i class="icon-base ti tabler-trash me-2"></i> Delete</a>
-                                </div>
-                              </div>
-                            </td>
-                        </tr>
-                <?php
-                    }
-                ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="modal fade show" id="editUser" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-lg modal-simple modal-edit-user">
+<?php flash(promptMessage('message')); ?>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-between">
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
+                <h4 class="lh-lg mb-0 fw-bolder">Handler <span class="text-primary">[ List ]</span></h4>
+            </div>
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+                <a class="btn btn-primary text-white showModal" action="add" data-bs-toggle="modal" data-bs-target="#handlerModal">
+                    <i class="icon-base ti tabler-plus me-2"></i>
+                    <span class="align-middle">Add Record</span>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                                <select id="form-repeater-1-3" class="form-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
+                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Contact Number</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                  <?php
+                                      foreach($data['handlers'] as $handler){
+                                  ?>
+                                        <tr>
+                                            <td><?=$handler['first_name'] . " " . $handler['last_name']?></td>
+                                            <td><?=$handler['email']?></td>
+                                            <td><?=$handler['contact_number']?></td>
+                                            <td><?=$handler['is_active'] == 1 ? "Active" : "Inactive"?></td>
+                                            <td>
+                                              <div class="dropdown">
+                                                <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
+                                                    <i class="icon-base ti tabler-settings"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#handlerModal" data-id="<?=$handler['id']?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                    <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#handlerModal" data-id="<?=$handler['id']?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
+                                                </div>
+                                              </div>
+                                            </td>
+                                        </tr>
+                                  <?php
+                                      }
+                                  ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row justify-content-between">
+                            <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
+                                <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">
+                                    Showing 1 to 10 of 100 entries 
+                                </div>
+                            </div>
+                            <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto mt-5">
+                                <div class="dt-paging">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination">
+                                            <li class="dt-paging-button page-item disabled">
+                                                <button class="page-link first" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">
+                                                    <i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>
+                                                </button>
+                                            </li>
+                                            <li class="dt-paging-button page-item disabled">
+                                                <button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">
+                                                    <i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>
+                                                </button>
+                                            </li>
+                                            <li class="dt-paging-button page-item active">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" aria-current="page" data-dt-idx="0">1</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="1">2</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="2">3</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="3">4</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="4">5</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item disabled">
+                                                <button class="page-link ellipsis" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" data-dt-idx="ellipsis" tabindex="-1">…</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="9">10</button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Next" data-dt-idx="next">
+                                                    <i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>
+                                                </button>
+                                            </li>
+                                            <li class="dt-paging-button page-item">
+                                                <button class="page-link last" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Last" data-dt-idx="last">
+                                                    <i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="handlerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <form method="post" id="handlerForm">
       <div class="modal-content">
-        <div class="modal-body">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel3">Handler</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="text-center mb-6">
-            <h4 class="mb-2">Edit User Information</h4>
-            <p>Updating user details will receive a privacy audit.</p>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="first_name" class="form-label">First Name</label>
+              <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter First Name">
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="middle_name" class="form-label">Middle Name</label>
+              <input type="text" id="middle_name" name="middle_name" class="form-control" placeholder="Enter Middle Name">
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="last_name" class="form-label">Last Name</label>
+              <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter Last Name">
+            </div>
           </div>
-          <form id="editUserForm" class="row g-6" onsubmit="return false">
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserFirstName">First Name</label>
-              <input type="text" id="modalEditUserFirstName" name="modalEditUserFirstName" class="form-control" placeholder="John" value="John">
+          <div class="row g-4">
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="suffix" class="form-label">Suffix</label>
+              <input type="text" id="suffix" name="suffix" class="form-control" placeholder="Enter Suffix">
             </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserLastName">Last Name</label>
-              <input type="text" id="modalEditUserLastName" name="modalEditUserLastName" class="form-control" placeholder="Doe" value="Doe">
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="email" class="form-label">Email</label>
+              <input type="text" id="email" name="email" class="form-control" placeholder="Enter Email">
             </div>
-            <div class="col-12">
-              <label class="form-label" for="modalEditUserName">Username</label>
-              <input type="text" id="modalEditUserName" name="modalEditUserName" class="form-control" placeholder="johndoe007" value="johndoe007">
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="contact_number" class="form-label">Contact Number</label>
+              <input type="text" id="contact_number" name="contact_number" class="form-control" placeholder="Enter Contact Number">
             </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserEmail">Email</label>
-              <input type="text" id="modalEditUserEmail" name="modalEditUserEmail" class="form-control" placeholder="example@domain.com" value="example@domain.com">
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserStatus">Status</label>
-              <div class="position-relative"><div class="position-relative"><select id="modalEditUserStatus" name="modalEditUserStatus" class="select2 form-select select2-hidden-accessible" aria-label="Default select example" tabindex="-1" aria-hidden="true" data-select2-id="modalEditUserStatus">
-                <option selected="" data-select2-id="42">Status</option>
+          </div>
+          <div class="row g-4">
+            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+              <label for="is_active" class="form-label">Status</label>
+              <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
                 <option value="1">Active</option>
-                <option value="2">Inactive</option>
-                <option value="3">Suspended</option>
-              </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="41" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-modalEditUserStatus-container"><span class="select2-selection__rendered" id="select2-modalEditUserStatus-container" role="textbox" aria-readonly="true" title="Status">Status</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div></div>
+                <option value="0">Inactive</option>
+              </select>
             </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditTaxID">Tax ID</label>
-              <input type="text" id="modalEditTaxID" name="modalEditTaxID" class="form-control modal-edit-tax-id" placeholder="123 456 7890" value="123 456 7890">
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserPhone">Phone Number</label>
-              <div class="input-group">
-                <span class="input-group-text">US (+1)</span>
-                <input type="text" id="modalEditUserPhone" name="modalEditUserPhone" class="form-control phone-number-mask" placeholder="202 555 0111" value="202 555 0111">
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserLanguage">Language</label>
-              <div class="position-relative"><div class="position-relative"><select id="modalEditUserLanguage" name="modalEditUserLanguage" class="select2 form-select select2-hidden-accessible" multiple="" tabindex="-1" aria-hidden="true" data-select2-id="modalEditUserLanguage">
-                <option value="">Select</option>
-                <option value="english" selected="" data-select2-id="53">English</option>
-                <option value="spanish">Spanish</option>
-                <option value="french">French</option>
-                <option value="german">German</option>
-                <option value="dutch">Dutch</option>
-                <option value="hebrew">Hebrew</option>
-                <option value="sanskrit">Sanskrit</option>
-                <option value="hindi">Hindi</option>
-              </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="52" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="false"><ul class="select2-selection__rendered"><li class="select2-selection__choice" title="English" data-select2-id="54"><span class="select2-selection__choice__remove" role="presentation">×</span>English</li><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="searchbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div></div>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label" for="modalEditUserCountry">Country</label>
-              <div class="position-relative"><div class="position-relative"><select id="modalEditUserCountry" name="modalEditUserCountry" class="select2 form-select select2-hidden-accessible" data-allow-clear="true" tabindex="-1" aria-hidden="true" data-select2-id="modalEditUserCountry">
-                <option value="">Select</option>
-                <option value="Australia">Australia</option>
-                <option value="Bangladesh">Bangladesh</option>
-                <option value="Belarus">Belarus</option>
-                <option value="Brazil">Brazil</option>
-                <option value="Canada">Canada</option>
-                <option value="China">China</option>
-                <option value="France">France</option>
-                <option value="Germany">Germany</option>
-                <option value="India" selected="" data-select2-id="81">India</option>
-                <option value="Indonesia">Indonesia</option>
-                <option value="Israel">Israel</option>
-                <option value="Italy">Italy</option>
-                <option value="Japan">Japan</option>
-                <option value="Korea">Korea, Republic of</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Philippines">Philippines</option>
-                <option value="Russia">Russian Federation</option>
-                <option value="South Africa">South Africa</option>
-                <option value="Thailand">Thailand</option>
-                <option value="Turkey">Turkey</option>
-                <option value="Ukraine">Ukraine</option>
-                <option value="United Arab Emirates">United Arab Emirates</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="United States">United States</option>
-              </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="80" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-modalEditUserCountry-container"><span class="select2-selection__rendered" id="select2-modalEditUserCountry-container" role="textbox" aria-readonly="true" title="India"><span class="select2-selection__clear" title="Remove all items" data-select2-id="82">×</span>India</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div></div>
-            </div>
-            <div class="col-12">
-              <div class="form-check form-switch">
-                <input type="checkbox" class="form-check-input" id="editBillingAddress">
-                <label for="editBillingAddress" class="switch-label">Use as a billing address?</label>
-              </div>
-            </div>
-            <div class="col-12 text-center">
-              <button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Submit</button>
-              <button type="reset" class="btn btn-label-secondary waves-effect" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-            </div>
-          </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" value="" name="action">
+          <input type="hidden" value="" name="id">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary submit">Save Changes</button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
-<!-- / Content -->
+
+<script>
+  $('.showModal').click(function(e){
+    
+      e.preventDefault();
+      $('#handlerModal').find('form')[0].reset();
+      $('#handlerModal').find('input').prop('readonly', false);
+      $('#handlerModal').find('select').prop('disabled', false);
+      var action = $(this).attr('action');
+      $('[name="action"]').val(action);
+      $('.submit').css('display', 'block');
+
+      if(action != 'add'){
+        $.ajax({
+          url: '/master/handler_json/',
+          method: 'POST',
+          data:{
+            id: $(this).data('id')
+          },
+          success: function(data){
+              $('[name="id"]').val(data.id);
+              $('#first_name').val(data.first_name);
+              $('#middle_name').val(data.middle_name);
+              $('#last_name').val(data.last_name);
+              $('#suffix').val(data.suffix);
+              $('#email').val(data.email);
+              $('#contact_number').val(data.contact_number);
+              $('#is_active').val(data.is_active);
+          }
+        });
+
+        if(action == "show"){
+          $('#handlerModal').find('input').prop('readonly', true);
+          $('#handlerModal').find('select').prop('disabled', true);
+          $('.submit').css('display', 'none');
+        }
+      }
+  });
+</script>
