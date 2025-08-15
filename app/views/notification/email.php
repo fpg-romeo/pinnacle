@@ -373,77 +373,74 @@
             </div>
         </div>
     </div>
+    -->
+
 
     <div id="modal" class="modal fade">
-        <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form id="form">
                 <div class="modal-content bd-0">
-                    <div class="modal-header pd-y-20 pd-x-25">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title">Manage Record</h6>
-                        <button type="button" class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">View Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body pd-25">
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Type</label>
-                            <label class="col-sm-9 tx-bold name"></label>
+                            <label class="col-sm-9 name"></label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
+                            <label class="col-sm-3">Email Template</label>
+                            <label class="col-sm-9 template"></label>
+                        </div>
+                        <div class="row mb-3">
                             <label class="col-sm-3">Subject</label>
-                            <label class="col-sm-9 tx-bold subject"></label>
+                            <label class="col-sm-9 subject"></label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Recipient To</label>
-                            <label class="col-sm-9 tx-bold recipient_to"></label>
+                            <label class="col-sm-9 recipient_to"></label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Recipient CC</label>
-                            <label class="col-sm-9 tx-bold recipient_cc"></label>
+                            <label class="col-sm-9 recipient_cc"></label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Recipient BCC</label>
-                            <label class="col-sm-9 tx-bold recipient_bcc"></label>
+                            <label class="col-sm-9 recipient_bcc"></label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Process By</label>
-                            <label class="col-sm-9 tx-bold">
+                            <label class="col-sm-9">
                                 <span class="created_name"></span><br>
                                 <span class="created_when"></span>
                             </label>
                         </div>
-                        <div class="row mg-b-10">
+                        <div class="row mb-3">
                             <label class="col-sm-3">Status</label>
-                            <label class="col-sm-9 tx-bold">
+                            <label class="col-sm-9">
                                 <span class="response"></span><br>
                                 <span class="updated_when"></span>
                             </label>
                         </div>
-                        <div class="row">
+                        <div class="row mb-5">
                             <label class="col-sm-3 form-control-label">Action</label>
                             <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                <select name="status_id" class="form-control select" required>
+                                <select name="status_id" class="form-select select" required>
                                     <?php echo tool_dropdown_value(value_status_email(), '', 'array'); ?>
                                 </select>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row mg-t-30">
-                            <label class="col-sm-3">Email Template</label>
-                            <label class="col-sm-9 tx-bold template"></label>
-                        </div>
                     </div>
                     <div class="modal-footer">
-                        <center>
-                            <input name="id" type="hidden" class="form-control">
-                            <button type="submit" class="btn btn-primary w-150px submit"><small>SUBMIT</small></button>
-                        </center>
+                        <input name="id" type="hidden" class="form-control">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary submit">Submit</button>              
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    -->
     
     <script type="text/javascript">
         //DATATABLE FILTER
@@ -516,6 +513,7 @@
                     type: 'POST',
                     data: {id:id, action:action},
                     success: function(data){
+                        console.log(data);
                         $('.name').html(data.name);
                         $('.template').html(data.template);
                         $('.subject').html(data.subject);

@@ -87,8 +87,8 @@
     }
 
     function value_status_email(){
-        $value = array(0 => 'Unprocessed', 
-                       1 => 'Sent'
+        $value = array(1 => 'Unprocessed', 
+                       3 => 'Sent'
                       );
         return $value; 
     }
