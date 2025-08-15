@@ -825,7 +825,7 @@ class Account
 
         if (is_array($record)) {
             //$fields = mysql::buildFields($post, ", "); //This is passing a comma-prefixed string as the $fields to your update() function, which leads to invalid SQL
-            $fields = ltrim(mysql::buildFields($post, ", "), ", "); //IDK why but this fixes my issue
+            $fields = mysql::buildFields($post, ", "); 
             if (mysql::update('account', $fields, "id = '{$id}'")) {
                 $result['status']  = 'success';
                 $result['message'] = 'Record Successfully Updated';
@@ -861,11 +861,149 @@ class Account
         return $result;
     }
 
+    public static function addRecordEmployment($post)
+    {
+        $email  = $post['email'];
+        $record = self::getRowByEmail($email);
+
+        if (!is_array($record)) {
+            unset($post['email']);
+
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::insert('account_employment', $fields)) {
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record already exist';
+        }
+
+        return $result;
+    }
+
+    public static function editRecordEmployment($post)
+    {
+        $id     = $post['account_id'];
+        $record = self::getDynamicByAccountId('account_employment', $id);
+
+        if (is_array($record)) {
+            //$fields = mysql::buildFields($post, ", "); //This is passing a comma-prefixed string as the $fields to your update() function, which leads to invalid SQL
+            $fields = ltrim(mysql::buildFields($post, ", "), ", "); //IDK why but this fixes my issue
+            if (mysql::update('account_employment', $fields, "account_id = '{$id}'")) {
+                
+                $result['status']  = 'success';
+                $result['message'] = 'Record Successfully Updated';
+                $result['id']      = $id;
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+
+        return $result;
+    }
+
+    public static function deleteRecordEmployment($id)
+    {
+        $record = self::getDynamicByAccountId('account_employment', $id);
+
+        if (is_array($record)) {
+            if (mysql::delete('account_employment', "id = '{$id}'")) {
+                $result['status']   = 'success';
+                $result['message']  = 'Record Successfully Deleted';
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+        return $result;
+    }
+
+     public static function addRecordPersonal($post)
+    {
+        $email  = $post['email'];
+        $record = self::getRowByEmail($email);
+
+        if (!is_array($record)) {
+            unset($post['email']);
+
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::insert('account_personal', $fields)) {
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record already exist';
+        }
+
+        return $result;
+    }
+
+    public static function editRecordPersonal($post)
+    {
+        $id     = $post['account_id'];
+        $record = self::getDynamicByAccountId('account_personal', $id);
+
+        if (is_array($record)) {
+            //$fields = mysql::buildFields($post, ", "); //This is passing a comma-prefixed string as the $fields to your update() function, which leads to invalid SQL
+            $fields = ltrim(mysql::buildFields($post, ", "), ", "); //IDK why but this fixes my issue
+            if (mysql::update('account_personal', $fields, "account_id = '{$id}'")) {
+                $result['status']  = 'success';
+                $result['message'] = 'Record Successfully Updated';
+                $result['id']      = $id;
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+
+        return $result;
+    }
+
+    public static function deleteRecordPersonal($id)
+    {
+        $record = self::getDynamicByAccountId('account_personal', $id);
+
+        if (is_array($record)) {
+            if (mysql::delete('account_personal', "id = '{$id}'")) {
+                $result['status']   = 'success';
+                $result['message']  = 'Record Successfully Deleted';
+            } else {
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'No Record Found';
+        }
+        return $result;
+    }
+
+
     public static function changePasswordByAccountId($post)
     {
 
         $id     = $post['id'];
-        $record = self::getDynamicById('account', $id);
+        $record = self::getDynamicByAccountId('account', $id);
 
         if (is_array($record)) {
             $fields = mysql::buildFields($post, ", ");

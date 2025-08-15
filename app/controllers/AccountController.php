@@ -1,8 +1,13 @@
 <?php
+
+use Google\Service\Blogger\Post;
+
 class AccountController
 {
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     // public function login(){
     //     checkLoggedIn('false');
@@ -295,76 +300,190 @@ class AccountController
         views('account.all', $data);
     }
 
+    // public function manage()
+    // {
+    //     $data = array();
+
+    //     $CONFIGURATION = Configuration::general();
+
+    //     includeModel(['Master']);
+
+    //     $account_id = idDecrypt(getVar('id'));
+
+    //     if (isset($_POST['submit'])) {
+
+
+    //         if (isset($_POST['password']) && !empty($_POST['password'])) {
+    //             $field['password'] = passwordEncode(postVar('password'));
+    //         }
+
+    //         $personal['first_name']               = postVar('first_name');
+    //         $personal['last_name']                = postVar('last_name');
+    //         $personal['middle_name']              = postVar('middle_name', '');
+    //         $personal['alias']                    = postVar('alias', '');
+    //         $personal['gender']                   = postvar('gender', '');
+    //         $personal['birthday']                 = dateSaveDB(postvar('birthday'));
+    //         $personal['contact_no']               = postvar('contact_no', '');
+    //         $employment['account_region_id']      = postvar('account_region_id', 0);
+    //         $employment['email']                  = strtolower(postVar('employee_email'));
+    //         $employment['account_status_id']      = postVar('account_status_id', 0);
+    //         $employment['account_type_id']        = postVar('account_type_id', 0);
+    //         $employment['account_department_id']  = postVar('account_department_id', 0);
+    //         $employment['account_designation_id'] = postVar('account_designation_id', 0);
+    //         $employment['account_role_id']        = Shortcode::concatId($_POST['account_role_id']);
+    //         $employment['account_team_id']        = postVar('account_team_id', 0);
+    //         $employment['account_level_id']       = postVar('account_level_id', 0);
+    //         $employment['report_to']              = postvar('report_to', 0);
+
+    //         $field['active_directory']            = postVar('active_directory');
+    //         $field['relogin']                     = isset($_POST['relogin']) && $_POST['relogin'] == 'on' ? 'Yes' : '';
+
+    //         if (!empty($account_id)) {
+    //             $data = checkRequiredPost(array('active_directory', 'employee_email'));
+    //         } else {
+    //             $data = checkRequiredPost(array('active_directory', 'employee_email', 'password'));
+    //         }
+
+    //         if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
+    //             $file_name          = $_FILES['file']['name'];
+    //             $file_size          = $_FILES['file']['size'];
+    //             $file_tmp           = $_FILES['file']['tmp_name'];
+    //             $file_type          = $_FILES['file']['type'];
+    //             $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    //             $file_new_name      = $account_id . '.' . $file_ext;
+    //             $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
+    //             if (!in_array($file_ext, $extensions)) {
+    //                 $data['error']['file'] = requiredPrompt('File format is not allowed');
+    //             } else {
+    //                 if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
+    //                     $personal['photo'] = $file_new_name;
+
+    //                     thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
+    //                 } else {
+    //                     promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
+    //                 }
+    //             }
+    //         }
+
+    //         if (isset($_POST['file_delete'])) {
+    //             $personal['photo'] = '';
+    //             deleteFile('account', postVar('file_hidden'));
+    //             deleteFile('account', thumbnailName(postVar('file_hidden')));
+    //         }
+
+    //         if (!array_key_exists('error', $data)) {
+    //             if (!empty($account_id)) {
+    //                 $field['id']                  = $account_id;
+    //                 $field['updated_by']          = ACCOUNT_ID;
+    //                 $field['updated_when']        = dateTimeStamp();
+
+    //                 $result = Account::editRecord($field);
+    //             } else {
+    //                 $field['email']               = $employment['email'];
+    //                 $field['created_by']          = ACCOUNT_ID;
+    //                 $field['created_when']        = dateTimeStamp();
+    //                 $result = Account::addRecord($field);
+    //             }
+
+    //             if ($result['status'] == 'success') {
+    //                 $account_id                   = $result['id'];
+    //                 $bank['account_id']           = $account_id;
+    //                 $personal['account_id']       = $account_id;
+    //                 $emergency['account_id']      = $account_id;
+    //                 $employment['account_id']     = $account_id;
+    //                 $equipment['account_id']      = $account_id;
+
+    //                 $personal   = Account::manageDynamic('account_personal', $personal);
+    //                 $employment = Account::manageDynamic('account_employment', $employment);
+
+    //                 alertAndRedirect($result['message'], '/account/manage/' . idEncrypt($account_id));
+    //             }
+    //         }
+    //     }
+
+    //     $data['account']                    = recastArray(Account::getRecordById($account_id));
+    //     $data['account_all']                = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+    //     $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
+    //     $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
+    //     $data['account_department']         = Master::getDynamic('master_account_department');
+    //     $data['account_level']              = Master::getDynamic('master_account_level');
+    //     $data['account_type']               = Master::getDynamic('master_account_type');
+    //     $data['account_status']             = Master::getDynamic('master_account_status');
+    //     $data['account_role']               = Master::getDynamic('master_account_role');
+    //     $data['account_team']               = Master::getDynamic('master_account_team');
+
+    //     if (!empty($data['account_role'])) {
+    //         $ctr_role          = 1;
+    //         $data['role_list'] = '';
+    //         $arr_list_role     = array();
+
+    //         foreach ($data['account_role'] as $key_list_role => $value_list_role) {
+    //             if (!in_array($value_list_role['id'], $arr_list_role)) {
+
+    //                 if ($ctr_role < count($data['account_role'])) {
+    //                     $connector = '+';
+    //                 } else {
+    //                     $connector = '';
+    //                 }
+
+    //                 $data['role_list'] .= $value_list_role['id'] . '_' . $value_list_role['name'] . '_' . $value_list_role['description'] . $connector;
+    //                 array_push($arr_list_role, $value_list_role['id']);
+    //             }
+
+    //             $ctr_role++;
+    //         }
+    //     }
+
+    //     views('account.manage', $data);
+    // }
+
     public function manage()
     {
         $data = array();
-
         $CONFIGURATION = Configuration::general();
-
         includeModel(['Master']);
-
         $account_id = idDecrypt(getVar('id'));
 
-        if (isset($_POST['submit'])) {
-            
+        $data['account']                    = recastArray(Account::getRecordById($account_id));
+        $data['account_all']                = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
+        $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
+        $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
+        $data['account_department']         = Master::getDynamic('master_account_department');
+        $data['account_designation']        = Master::getDynamic('master_account_designation');
+        $data['account_level']              = Master::getDynamic('master_account_level');
+        $data['account_type']               = Master::getDynamic('master_account_type');
+        $data['account_status']             = Master::getDynamic('master_account_status');
+        $data['account_role']               = Master::getDynamic('master_account_role');
+        $data['account_team']               = Master::getDynamic('master_account_team');
 
-            if (isset($_POST['password']) && !empty($_POST['password'])) {
-                $field['password'] = passwordEncode(postVar('password'));
-            }
-            
-            $personal['first_name']               = postVar('first_name');
-            $personal['last_name']                = postVar('last_name');
-            $personal['middle_name']              = postVar('middle_name', '');
-            $personal['alias']                    = postVar('alias', '');
-            $personal['gender']                   = postvar('gender', '');
-            $personal['birthday']                 = dateSaveDB(postvar('birthday'));
-            $personal['contact_no']               = postvar('contact_no', '');
-            $employment['account_region_id']      = postvar('account_region_id', 0);
-            $employment['email']                  = strtolower(postVar('employee_email'));
-            $employment['account_status_id']      = postVar('account_status_id', 0);
-            $employment['account_type_id']        = postVar('account_type_id', 0);
-            $employment['account_department_id']  = postVar('account_department_id', 0);
-            $employment['account_designation_id'] = postVar('account_designation_id', 0);
-            $employment['account_role_id']        = Shortcode::concatId($_POST['account_role_id']);
-            $employment['account_team_id']        = postVar('account_team_id', 0);
-            $employment['account_level_id']       = postVar('account_level_id', 0);
-            $employment['report_to']              = postvar('report_to', 0);
 
-            $field['active_directory']            = postVar('active_directory');
-            $field['relogin']                     = isset($_POST['relogin']) && $_POST['relogin'] == 'on' ? 'Yes' : '';
+        if (isset($_POST) && !empty($_POST)) {
 
-            if (!empty($account_id)) {
-                $data = checkRequiredPost(array('active_directory','employee_email'));
-            } else {
-                $data = checkRequiredPost(array('active_directory','employee_email', 'password'));
-            }
+            $field['active_directory']                      = postvar('active_directory');
+            $field['created_by']                            = ACCOUNT_ID;
+            $field['created_when']                          = dateTimeStamp();
 
-            if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
-                $file_name          = $_FILES['file']['name'];
-                $file_size          = $_FILES['file']['size'];
-                $file_tmp           = $_FILES['file']['tmp_name'];
-                $file_type          = $_FILES['file']['type'];
-                $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-                $file_new_name      = $account_id . '.' . $file_ext;
-                $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
-                if (!in_array($file_ext, $extensions)) {
-                    $data['error']['file'] = requiredPrompt('File format is not allowed');
-                } else {
-                    if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
-                        $personal['photo'] = $file_new_name;
+            $employment['email']                            = postvar('employee_email');
+            $employment['account_type_id']                  = postvar('account_type_id');
+            $employment['account_status_id']                = postvar('account_status_id');
+            $employment['account_role_id']                  = postvar('account_role_id');
+            $employment['account_department_id']            = postvar('account_department_id');
+            $employment['account_team_id']                  = postvar('account_team_id');
+            $employment['account_designation_id']           = postvar('account_designation_id');
+            $employment['account_level_id']                 = postvar('account_level_id');
+            $employment['report_to']                        = postvar('report_to');
+            $employment['created_by']                            = ACCOUNT_ID;
+            $employment['created_when']                          = dateTimeStamp();
 
-                        thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
-                    } else {
-                        promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
-                    }
-                }
-            }
+            $personal['first_name']                         = postvar('first_name');
+            $personal['middle_name']                        = postvar('last_name');
+            $personal['last_name']                          = postvar('middle_name');
+            $personal['alias']                              = postvar('alias');
+            $personal['contact_no']                         = postvar('phoneNumber');
+            $personal['created_by']                         = ACCOUNT_ID;
+            $personal['created_when']                       = dateTimeStamp();
 
-            if (isset($_POST['file_delete'])) {
-                $personal['photo'] = '';
-                deleteFile('account', postVar('file_hidden'));
-                deleteFile('account', thumbnailName(postVar('file_hidden')));
-            }
+            $data = checkRequiredPost(array('active_directory', 'employee_email',));
 
             if (!array_key_exists('error', $data)) {
                 if (!empty($account_id)) {
@@ -379,14 +498,10 @@ class AccountController
                     $field['created_when']        = dateTimeStamp();
                     $result = Account::addRecord($field);
                 }
-
                 if ($result['status'] == 'success') {
                     $account_id                   = $result['id'];
-                    $bank['account_id']           = $account_id;
                     $personal['account_id']       = $account_id;
-                    $emergency['account_id']      = $account_id;
                     $employment['account_id']     = $account_id;
-                    $equipment['account_id']      = $account_id;
 
                     $personal   = Account::manageDynamic('account_personal', $personal);
                     $employment = Account::manageDynamic('account_employment', $employment);
@@ -396,38 +511,6 @@ class AccountController
             }
         }
 
-        $data['account']                    = recastArray(Account::getRecordById($account_id));
-        $data['account_all']                = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
-        $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
-        $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
-        $data['account_department']         = Master::getDynamic('master_account_department');
-        $data['account_level']              = Master::getDynamic('master_account_level');
-        $data['account_type']               = Master::getDynamic('master_account_type');
-        $data['account_status']             = Master::getDynamic('master_account_status');
-        $data['account_role']               = Master::getDynamic('master_account_role');
-        $data['account_team']               = Master::getDynamic('master_account_team');
-
-        if (!empty($data['account_role'])) {
-            $ctr_role          = 1;
-            $data['role_list'] = '';
-            $arr_list_role     = array();
-
-            foreach ($data['account_role'] as $key_list_role => $value_list_role) {
-                if (!in_array($value_list_role['id'], $arr_list_role)) {
-
-                    if ($ctr_role < count($data['account_role'])) {
-                        $connector = '+';
-                    } else {
-                        $connector = '';
-                    }
-
-                    $data['role_list'] .= $value_list_role['id'] . '_' . $value_list_role['name'] . '_' . $value_list_role['description'] . $connector;
-                    array_push($arr_list_role, $value_list_role['id']);
-                }
-
-                $ctr_role++;
-            }
-        }
 
         views('account.manage', $data);
     }
@@ -474,8 +557,8 @@ class AccountController
         $data['account_department'] = Master::getDynamic('master_account_department');
         $data['account_level']      = Master::getDynamic('master_account_level');
         $data['account_type']       = Master::getDynamic('master_account_type');
-        $data['employment_type']    = Master::getDynamic('master_employment_type');
-        $data['account_team']       = Master::getDynamicNotIn('master_account_team', 'id', $CONFIGURATION['ACCOUNT_TEAM_HOUSE']);
+        // $data['employment_type']    = Master::getDynamic('master_employment_type');
+        // $data['account_team']       = Master::getDynamicNotIn('master_account_team', 'id', $CONFIGURATION['ACCOUNT_TEAM_HOUSE']);
 
         views('account.user', $data);
     }
@@ -757,76 +840,104 @@ class AccountController
         $data = array();
 
         $CONFIGURATION = Configuration::general();
-        $id            = idDecrypt(getVar('id'));
+        $id           = ACCOUNT_ID;
 
-        if (isset($_POST['submit'])) {
-            $field['password']          = passwordEncode(postVar('password', ''));
-            $field['new_password']      = passwordEncode(postVar('new_password', ''));
-            $field['confirm_password']  = passwordEncode(postVar('confirm_password', ''));
-            $personal['alias']          = postVar('alias', '');
+        if (isset($_POST) && !empty($_POST)) {
+            $field['id']                            = $id;
+            $employment['account_id']               = $id;
+            $personal['account_id']                 = $id;
+            $personal['first_name']                 = postVar('firstName');
+            $personal['last_name']                  = postVar('lastName');
+            $employment['email']                    = postVar('email');
+            $employment['account_department_id']    = postVar('account_department_id');
+            $personal['contact_no']                 = postVar('phoneNumber');
 
-            if (isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['new_password']) && !empty($_POST['new_password'])) {
-                $record = Account::getRecordByIdAndPassword(ACCOUNT_ID, $field['password']);
-                if (is_array($record) && !empty($record)) {
-                    if (empty($field['confirm_password'])) {
-                        $data['error']['confirm_password'] = requiredPrompt('This field is required.');
-                    } else {
-                        if ($field['new_password'] != $field['confirm_password']) {
-                            $data['error']['confirm_password'] = requiredPrompt('Password mismatch.');
-                        } else {
-                            $field['password'] = $field['new_password'];
-                            unset($field['confirm_password']);
-                            unset($field['new_password']);
-                        }
-                    }
-                } else {
-                    $data['error']['password'] = requiredPrompt('Account verification failed');
-                }
+
+
+            $result2 = Account::editRecordEmployment($employment);
+            $result3 = Account::editRecordPersonal($personal);
+
+            if ($result2['status'] == 'success' || $result3['status'] == 'success') {
+                promptMessage('message', $result2['message'], 'success');
+                alertAndRedirect($result2['message'], '/account/profile');
             } else {
-                unset($field['password']);
-                unset($field['confirm_password']);
-                unset($field['new_password']);
-            }
-            if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
-                $file_name          = $_FILES['file']['name'];
-                $file_size          = $_FILES['file']['size'];
-                $file_tmp           = $_FILES['file']['tmp_name'];
-                $file_type          = $_FILES['file']['type'];
-                $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-                $file_new_name      = ACCOUNT_ID . '.' . $file_ext;
-                $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
-                if (!in_array($file_ext, $extensions)) {
-                    $data['error']['file'] = requiredPrompt('File format is not allowed');
-                } else {
-                    if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
-                        $personal['photo'] = $file_new_name;
-
-                        thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
-                    } else {
-                        promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
-                    }
-                }
-            }
-
-            if (isset($_POST['file_delete'])) {
-                $personal['photo'] = '';
-                deleteFile('account', postVar('file_hidden'));
-                deleteFile('account', thumbnailName(postVar('file_hidden')));
-            }
-
-            if (!array_key_exists('error', $data)) {
-                $field['id']              = $id;
-                $personal['account_id']   = $id;
-                $employment['account_id'] = $id;
-                $result                   = Account::editRecord($field);
-                $personal                 = Account::manageDynamic('account_personal', $personal);
-                $employment               = Account::manageDynamic('account_employment', $employment);
-
-                alertAndRedirect($result['message'], '/account/profile/' . idEncrypt($id) . '/');
+                //                 echo '<pre>';
+                //                 print_r($result);
+                // print_r($result2);
+                // print_r($result3);
+                // print_r($id);
+                //  exit;
             }
         }
+        // if (isset($_POST) && !empty($_POST)) {
+        //     $field['password']          = passwordEncode(postVar('password', ''));
+        //     $field['new_password']      = passwordEncode(postVar('new_password', ''));
+        //     $field['confirm_password']  = passwordEncode(postVar('confirm_password', ''));
+        //     $personal['alias']          = postVar('alias', '');
+
+        //     if (isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['new_password']) && !empty($_POST['new_password'])) {
+        //         $record = Account::getRecordByIdAndPassword(ACCOUNT_ID, $field['password']);
+        //         if (is_array($record) && !empty($record)) {
+        //             if (empty($field['confirm_password'])) {
+        //                 $data['error']['confirm_password'] = requiredPrompt('This field is required.');
+        //             } else {
+        //                 if ($field['new_password'] != $field['confirm_password']) {
+        //                     $data['error']['confirm_password'] = requiredPrompt('Password mismatch.');
+        //                 } else {
+        //                     $field['password'] = $field['new_password'];
+        //                     unset($field['confirm_password']);
+        //                     unset($field['new_password']);
+        //                 }
+        //             }
+        //         } else {
+        //             $data['error']['password'] = requiredPrompt('Account verification failed');
+        //         }
+        //     } else {
+        //         unset($field['password']);
+        //         unset($field['confirm_password']);
+        //         unset($field['new_password']);
+        //     }
+        //     if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
+        //         $file_name          = $_FILES['file']['name'];
+        //         $file_size          = $_FILES['file']['size'];
+        //         $file_tmp           = $_FILES['file']['tmp_name'];
+        //         $file_type          = $_FILES['file']['type'];
+        //         $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        //         $file_new_name      = ACCOUNT_ID . '.' . $file_ext;
+        //         $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
+        //         if (!in_array($file_ext, $extensions)) {
+        //             $data['error']['file'] = requiredPrompt('File format is not allowed');
+        //         } else {
+        //             if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
+        //                 $personal['photo'] = $file_new_name;
+
+        //                 thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
+        //             } else {
+        //                 promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
+        //             }
+        //         }
+        //     }
+
+        //     if (isset($_POST['file_delete'])) {
+        //         $personal['photo'] = '';
+        //         deleteFile('account', postVar('file_hidden'));
+        //         deleteFile('account', thumbnailName(postVar('file_hidden')));
+        //     }
+
+        //     if (!array_key_exists('error', $data)) {
+        //         $field['id']              = $id;
+        //         $personal['account_id']   = $id;
+        //         $employment['account_id'] = $id;
+        //         $result                   = Account::editRecord($field);
+        //         $personal                 = Account::manageDynamic('account_personal', $personal);
+        //         $employment               = Account::manageDynamic('account_employment', $employment);
+
+        //         alertAndRedirect($result['message'], '/account/profile/' . idEncrypt($id) . '/');
+        //     }
+        // }
 
         $data['account'] = recastArray(Account::getRecordById($id));
+        $data['department'] = recastArray(Master::getAccountDepartment());
 
         views('account.profile', $data);
     }
@@ -920,7 +1031,7 @@ class AccountController
         $data['account']                    = recastArray(Account::getRecordById($account_id));
         $data['account_personal']           = recastArray(Account::getDynamicByAccountId('account_personal', $account_id));
         $data['account_employment']         = recastArray(Account::getDynamicByAccountId('account_employment', $account_id));
-        
+
         if (is_array($data['account'])) {
 
             $data['account']['account_role_name'] = '';
@@ -947,9 +1058,9 @@ class AccountController
                 $data['account_employment']['account_department_name']  = recastArray(Master::getDynamicById('master_account_department', $data['account_employment']['account_department_id']))['name'];
                 $data['account_employment']['account_designation_name'] = recastArray(Master::getDynamicById('master_account_designation', $data['account_employment']['account_designation_id']))['name'];
                 $data['account_employment']['account_team_name']        = (!empty($data['account_employment']['account_team_id']) ? recastArray(Master::getDynamicById('master_account_team', $data['account_employment']['account_team_id']))['name'] : '');
-                
+
                 $data['account_employment']['account_level_name']       = (!empty($data['account_employment']['account_level_id']) ? recastArray(Master::getDynamicById('master_account_level', $data['account_employment']['account_level_id']))['name'] : '');
-                
+
                 $data['account_employment']['report_name']              = (!empty($data['account_employment']['report_to']) ? recastArray(Account::getPersonalByAccountId($data['account_employment']['report_to']))['full_name'] : '');
             }
         }

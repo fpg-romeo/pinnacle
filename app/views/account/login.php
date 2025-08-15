@@ -3,6 +3,7 @@
         <?php flash(promptMessage('message')); ?>
     </div>
 </div>
+<?php /*
 <form id="loginForm" method="post">
     <div class="form-group">
         <input name="username" type="text" class="form-control fc-outline-dark" placeholder="Enter your email/username" value="<?php echo multiArrayKeyExist($data, 'post', 'username'); ?>">
@@ -36,13 +37,14 @@
         <a href="/forgot-password" class="tx-info d-block mg-t-10 tx-bold tx-underline"><u>Forgot password?</u></a>
     </div>
 </form>
+*/ ?>
 
 
 
-<form id="formAuthentication" class="mb-4" action="index.html" method="GET">
+<form id="loginForm" method="post">
     <div class="mb-6 form-control-validation">
         <label for="email" class="form-label">Email or Username</label>
-        <input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus />
+        <input type="text" class="form-control" id="email" name="username" placeholder="Enter your email or username" autofocus />
     </div>
     <div class="mb-6 form-password-toggle form-control-validation">
         <label class="form-label" for="password">Password</label>
@@ -63,7 +65,9 @@
         </div>
     </div>
     <div class="mb-6">
-        <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+        <!-- <button class="btn btn-primary d-grid w-100" type="submit">Login</button> -->
+        <input type="hidden" name="submit_form" value="1">
+        <button class="g-recaptcha btn btn-info btn-block mg-b-10" data-sitekey="<?php echo multiKeyExists($data, 'site_key') ?>" data-callback='loginSubmit' data-action='submit' type="submit">Sign In</button>
     </div>
 </form>
 <p class="text-center">

@@ -33,32 +33,36 @@
                         </div>
                     </div>
                     <div class="card-body pt-4">
-                        <form id="formAccountSettings" method="GET" onsubmit="return false">
+                        <form id="form" role="form" method="post" enctype="multipart/form-data">
                             <div class="row gy-4 gx-6 mb-6">
                                 <div class="col-md-6 form-control-validation">
                                     <label for="firstName" class="form-label">First Name</label>
-                                    <input class="form-control" type="text" id="firstName" name="firstName" value="John" autofocus />
+                                    <input class="form-control" type="text" id="firstName" name="firstName" value="<?php echo multiArrayKeyExist($data, 'account', 'first_name'), ' ' .   multiArrayKeyExist($data, 'account', 'middle_name'); ?>" autofocus />
                                 </div>
                                 <div class="col-md-6 form-control-validation">
                                     <label for="lastName" class="form-label">Last Name</label>
-                                    <input class="form-control" type="text" name="lastName" id="lastName" value="Doe" />
+                                    <input class="form-control" type="text" name="lastName" id="lastName" value="<?php echo multiArrayKeyExist($data, 'account', 'last_name') ?>" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">E-mail</label>
-                                    <input class="form-control" type="text" id="email" name="email" value="john.doe@example.com" placeholder="john.doe@example.com" />
+                                    <input class="form-control" type="text" id="email" name="email" value="<?php echo multiArrayKeyExist($data, 'account', 'email') ?>" placeholder="email" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="organization" class="form-label">Organization</label>
-                                    <input type="text" class="form-control" id="organization" name="organization" value="Pixinvent" />
+                                 
+                                        <select name="account_department_id" class="form-control select" style="width: 100%" data-placeholder="---" required>
+                                            <?php echo tool_dropdown_option(multiKeyExists($data, 'department'), multiArrayKeyExist($data, 'account', 'account_department_id'), 'name'); ?>
+                                        </select>
+                               
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="phoneNumber">Phone Number</label>
                                     <div class="input-group input-group-merge">
-                                        <span class="input-group-text">US (+1)</span>
-                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="202 555 0111" />
+                                        <span class="input-group-text">PH (+63)</span>
+                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="911 111 2222" value="<?php echo multiArrayKeyExist($data, 'account', 'contact_no') ?>"/>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control" id="address" name="address" placeholder="Address" />
                                 </div>
@@ -106,16 +110,16 @@
                                         <option value="pound">Pound</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="mt-2">
-                                <button type="submit" class="btn btn-primary me-3">Save changes</button>
-                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                            </div>
+                            </div> -->
+                                <div class="mt-2">
+                                    <button type="submit" class="btn btn-primary me-3">Save changes</button>
+                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                </div>
                         </form>
                     </div>
                     <!-- /Account -->
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <h5 class="card-header">Delete Account</h5>
                     <div class="card-body">
                         <div class="mb-6 col-12 mb-0">
@@ -132,7 +136,7 @@
                             <button type="submit" class="btn btn-danger deactivate-account" disabled>Deactivate Account</button>
                         </form>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -141,7 +145,7 @@
 
 
 
-        <div class="br-pagebody">
+<!-- <div class="br-pagebody">
             <div class="br-section-wrapper">
                 <form id="form" role="form" method="post" enctype="multipart/form-data"> 
                     <div class="form-layout-4">
@@ -155,7 +159,7 @@
                             <label class="col-sm-3">Full Name</label>
                             <div class="col-sm-4 mg-t-10 mg-sm-t-0 tx-bold">
                                 <?php echo multiArrayKeyExist($data, 'account', 'full_name'); ?>
-                                <?php echo (!empty(multiArrayKeyExist($data, 'account', 'alias')) ? '<small class="text-muted">[ '.multiArrayKeyExist($data, 'account', 'alias').' ]</small>' : ''); ?>
+                                <?php echo (!empty(multiArrayKeyExist($data, 'account', 'alias')) ? '<small class="text-muted">[ ' . multiArrayKeyExist($data, 'account', 'alias') . ' ]</small>' : ''); ?>
                             </div>
                         </div>
                         <div class="row mg-b-10">
@@ -200,7 +204,7 @@
                                 <?php echo (!empty(multiArrayKeyExist($data, 'account', 'client_appointment')) ? multiArrayKeyExist($data, 'account', 'client_appointment') : 'No'); ?> <small>(Include in Round Robin Scheduling)</small>
                             </div>
                         </div>
-                        <?php if(!empty(multiArrayKeyExist($data, 'account', 'monthly_sales_target')) && (multiArrayKeyExist($data, 'account', 'monthly_sales_target') != 0.00 && multiArrayKeyExist($data, 'account', 'monthly_sales_target') != 0)){ ?>
+                        <?php if (!empty(multiArrayKeyExist($data, 'account', 'monthly_sales_target')) && (multiArrayKeyExist($data, 'account', 'monthly_sales_target') != 0.00 && multiArrayKeyExist($data, 'account', 'monthly_sales_target') != 0)) { ?>
                         <div class="row mg-t-10">
                             <label class="col-sm-3">Monthly Sales Target</label>             
                             <div class="col-sm-4 mg-t-10 mg-sm-t-0 tx-bold">
@@ -212,7 +216,7 @@
                         <div class="row mg-b-20">
                             <label class="col-sm-3 form-control-label">Nickname</label>             
                             <div class="col-sm-2 mg-t-10 mg-sm-t-0">
-                                <input name="alias" type="text" class="form-control" maxlength="20" value="<?php echo multiArrayKeyExist( $data,'account','alias' ); ?>">
+                                <input name="alias" type="text" class="form-control" maxlength="20" value="<?php echo multiArrayKeyExist($data, 'account', 'alias'); ?>">
                             </div>
                         </div>
                         <div class="row mg-b-20">
@@ -226,11 +230,11 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                     <?php
-                                        if(!empty(multiArrayKeyExist($data, 'account', 'photo'))){
-                                            echo '
+                                    if (!empty(multiArrayKeyExist($data, 'account', 'photo'))) {
+                                        echo '
                                                     <div class="row">
                                                         <div class="col-sm-12 mg-y-5">
-                                                            <div class="account-photo"><img src="'.displayImage(thumbnailName(multiArrayKeyExist($data, 'account', 'photo')), 'account').'" class="img-fluid"></div>
+                                                            <div class="account-photo"><img src="' . displayImage(thumbnailName(multiArrayKeyExist($data, 'account', 'photo')), 'account') . '" class="img-fluid"></div>
                                                         </div>
                                                         <div class="col-sm-12">
                                                             <label class="ckbox">
@@ -240,7 +244,7 @@
                                                         </div>
                                                     </div>
                                                  ';
-                                        }
+                                    }
                                     ?>
                                     </div>
                                 </div>
@@ -277,5 +281,5 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
+        </div> -->
+</div>
