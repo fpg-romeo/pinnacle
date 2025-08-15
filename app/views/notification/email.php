@@ -166,28 +166,20 @@
 
                         <?php if(is_array($data['email'])){ ?>
                             <div class="row justify-content-between">
-                                <div class="d-md-flex justify-content-between align-items-center col-md-auto me-auto mt-0">
+                                <div class="col-md-auto me-auto mt-8">
                                     <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
                                 </div>
 
-
-                                
-                            </div>
-
-                            <div class="row mg-t-40">
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 lh-22">
-                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                    <ul class="pagination mg-0 float-right">
+                                <div class="col-md-auto ms-auto mt-5">
+                                    <ul class="pagination">
                                         <?php echo tool_pagination(getVar('page'), $data['total_page'], '/notification/email/', 'page', true); ?>
                                     </ul>
                                 </div>
+                                
                             </div>
                         <?php } ?>
 
-
-
+                        <!--
                         <div class="row justify-content-between">
                             <div class="d-md-flex justify-content-between align-items-center col-md-auto me-auto mt-0">
                                 Showing 1 to 10 of 100 entries 
@@ -238,7 +230,7 @@
                                 </ul>
                             </div>
                         </div>
-
+                        -->
                     </div>
                 </div>
             </div>

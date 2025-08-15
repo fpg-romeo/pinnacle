@@ -8,10 +8,10 @@
 
             $number = '';       
             if($page > 1){
-                $number .= '<li class="page-item prev"><a href="'.$url.(empty(changeGetValue($variable)) ? ($page - 1) : changeGetValue($variable, ($page - 1))).'" class="page-link"><i class="fa fa-angle-left"></i></a></li>';
+                $number .= '<li class="page-item prev"><a href="'.$url.(empty(changeGetValue($variable)) ? ($page - 1) : changeGetValue($variable, ($page - 1))).'" class="page-link"><i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i></a></li>';
                 
                 if($page >= 5){
-                    $number .= '<li class="page-item prev"><a href="'.$url.(empty(changeGetValue($variable)) ? 1 : changeGetValue($variable, 1)).'" class="page-link">1</a></li><li class="page-item lh-16 mg-x-10">...</li>';
+                    $number .= '<li class="page-item prev"><a href="'.$url.(empty(changeGetValue($variable)) ? 1 : changeGetValue($variable, 1)).'" class="page-link">1</a></li><li class="page-item lh-16 mg-x-10"><label class="mt-1 ms-1">...</label></li>';
                 }
             }
 
@@ -52,9 +52,9 @@
             
             if($page < $total){
                 if($page <= ($total-4)){
-                    $number .= '<li class="page-item lh-16 mg-x-10">...</li><li class="page-item total"><a href="'.$url.(empty(changeGetValue($variable)) ? $total : changeGetValue($variable, $total)).'" class="page-link">'.$total.'</a></li>';
+                    $number .= '<li class="page-item lh-16 mg-x-10"><label class="mt-1 ms-1">...</label></li><li class="page-item total"><a href="'.$url.(empty(changeGetValue($variable)) ? $total : changeGetValue($variable, $total)).'" class="page-link">'.$total.'</a></li>';
                 }
-                $number .= '<li class="page-item next"><a href="'.$url.(empty(changeGetValue($variable)) ? ($page + 1) : changeGetValue($variable, ($page + 1))).'" class="page-link"><i class="fa fa-angle-right"></i></a></li>';
+                $number .= '<li class="page-item next"><a href="'.$url.(empty(changeGetValue($variable)) ? ($page + 1) : changeGetValue($variable, ($page + 1))).'" class="page-link"><i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i></a></li>';
             }
 
             $pages = '<div class="d-flex align-items-center justify-content-center">

@@ -131,12 +131,12 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="/report/manual" class="menu-link" target="_blank">
+									<a href="/report/manual" class="menu-link">
 										<div data-i18n="Manual Generation">Manual Generation</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/report/automatic/1" class="menu-link" target="_blank">
+									<a href="/report/automatic/1" class="menu-link">
 										<div data-i18n="Automatic Generation">Automatic Generation</div>
 									</a>
 								</li>
@@ -152,42 +152,42 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="/master/topro" class="menu-link" target="_blank">
+									<a href="/master/topro" class="menu-link">
 										<div data-i18n="TOPRO">TOPRO</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/branch" class="menu-link" target="_blank">
+									<a href="/master/branch" class="menu-link">
 										<div data-i18n="Branch">Branch</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/segment" class="menu-link" target="_blank">
+									<a href="/master/segment" class="menu-link">
 										<div data-i18n="Segment">Segment</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/handler" class="menu-link" target="_blank">
+									<a href="/master/handler" class="menu-link">
 										<div data-i18n="Handler">Handler</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/team-leader" class="menu-link" target="_blank">
+									<a href="/master/team-leader" class="menu-link">
 										<div data-i18n="Team Leader">Team Leader</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/sales-channel" class="menu-link" target="_blank">
+									<a href="/master/sales-channel" class="menu-link">
 										<div data-i18n="Sales Channel">Sales Channel</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/intermediary" class="menu-link" target="_blank">
+									<a href="/master/intermediary" class="menu-link">
 										<div data-i18n="Intermediary">Intermediary</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/master/class-business" class="menu-link" target="_blank">
+									<a href="/master/class-business" class="menu-link">
 										<div data-i18n="Class of Busines">Class of Business</div>
 									</a>
 								</li>
@@ -203,12 +203,12 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="/account/all/1" class="menu-link" target="_blank">
+									<a href="/account/all/1" class="menu-link">
 										<div data-i18n="Records">Records</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/account/user/1" class="menu-link" target="_blank">
+									<a href="/account/user/1" class="menu-link">
 										<div data-i18n="User Profile">User Profile</div>
 									</a>
 								</li>
@@ -221,17 +221,17 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="/notification/email/1" class="menu-link" target="_blank">
+									<a href="/notification/email/1" class="menu-link">
 									<div data-i18n="Email Notificaton">Email Notificaton</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/miscellaneous/cron-job" class="menu-link" target="_blank">
+									<a href="/miscellaneous/cron-job" class="menu-link">
 										<div data-i18n="Cron Jobs">Cron Jobs Schedule</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="/miscellaneous/faq" class="menu-link" target="_blank">
+									<a href="/miscellaneous/faq" class="menu-link">
 										<div data-i18n="FAQs">FAQs</div>
 									</a>
 								</li>
