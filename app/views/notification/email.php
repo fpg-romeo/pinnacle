@@ -14,7 +14,7 @@
                 </p>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
-                <a href="/cron/test-email/" class="btn btn-info text-white">
+                <a href="/cron/test-email/" class="btn btn-info text-white" target="_blank">
                     <i class="icon-base ti tabler-send me-2"></i>
                     <span class="align-middle">Send Test Email</span>
                 </a>
@@ -68,7 +68,7 @@
                                                         <td>'.htmlDecode($value['recipient_cc']).'</td>
                                                         <td>'.htmlDecode($value['recipient_bcc']).'</td>
                                                         <td class="tx-center">
-                                                            '.htmlDecode($value['account_name']).'<br>
+                                                            '.htmlDecode($value['created_name']).'<br>
                                                             <span class="text-muted">
                                                                 '.dateReformat($value['created_when'], 'd-M-Y').'<br>
                                                                 '.dateReformat($value['created_when'], 'h:i A').'
@@ -310,7 +310,7 @@
                                                 <td>'.htmlDecode($value['recipient_cc']).'</td>
                                                 <td>'.htmlDecode($value['recipient_bcc']).'</td>
                                                 <td class="tx-center">
-                                                    '.htmlDecode($value['account_name']).'<br>
+                                                    '.htmlDecode($value['created_name']).'<br>
                                                     <span class="text-muted">
                                                         '.dateReformat($value['created_when'], 'd-M-Y').'<br>
                                                         '.dateReformat($value['created_when'], 'h:i A').'
@@ -408,7 +408,7 @@
                         <div class="row mg-b-10">
                             <label class="col-sm-3">Process By</label>
                             <label class="col-sm-9 tx-bold">
-                                <span class="account_name"></span><br>
+                                <span class="created_name"></span><br>
                                 <span class="created_when"></span>
                             </label>
                         </div>
@@ -522,7 +522,7 @@
                         $('.recipient_to').html(data.recipient_to);
                         $('.recipient_cc').html(data.recipient_cc);
                         $('.recipient_bcc').html(data.recipient_bcc);
-                        $('.account_name').html(data.account_name);
+                        $('.created_name').html(data.created_name);
                         $('.created_when').html(data.created_when);
                         $('.updated_when').html(data.updated_when);
                         $('.response').html(data.response);

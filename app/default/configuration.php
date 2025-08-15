@@ -41,7 +41,7 @@ class Configuration{
 		$value['MAIL_PORT'] 												= 25;
 		$value['MAIL_REPLYTO'] 												= array($value['MAIL_SENDER']);
 		$value['MAIL_FROM_NAME'] 											= $value['SYSTEM_COMPANY'];
-		$value['MAIL_MAX_ATTEMPT'] 											= 10;
+		$value['MAIL_MAX_ATTEMPT'] 											= 3;
 
 		$value['PAGINATION'] 												= 10;
 		$value['ALLOWED_DOCUMENT'] 											= array('pdf', 'xls', 'xlsx', 'csv', 'doc', 'docx');
@@ -53,6 +53,10 @@ class Configuration{
 
 		$value['COOKIES_EXPIRATION'] 										= (30 * 24 * 60 * 60); //day * hour * minute * seconds | 30days
 	
+		$value['ENGINE_CRON_JOB'] 											= 100; //CRON JOB
+		$value['ENGINE_API_ACTION'] 										= 200; //API ACTION
+		$value['ENGINE_SCRIPT_AUTO_RUN'] 									= 300; //SCRIPT AUTO-RUN
+
 		//GOOGLE API (LOGIN)
 		$value['GOOGLE_SIGNIN_APPLICATION_NAME']							= 'FPG Insurance Google Sign In';
 		$value['GOOGLE_SIGNIN_CLIENT_ID']									= $KEY['GOOGLE_SIGNIN_CLIENT_ID'];

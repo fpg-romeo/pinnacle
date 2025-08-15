@@ -364,4 +364,11 @@ class Email{
                         </div>';
         return $email_body;
     }
+
+    public static function soa($post){
+
+        $message = htmlDecode($post['content']);
+
+        return self::templateDefault($message);
+    }
 }

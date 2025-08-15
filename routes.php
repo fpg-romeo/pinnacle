@@ -49,7 +49,7 @@
                                                     'accountUnitRole', 'accountUnitRoleJson'
                                                    ],
                             'cron'              => [
-                                                    'schedule','testEmail'
+                                                    'testEmail', 'notificationEmail'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
