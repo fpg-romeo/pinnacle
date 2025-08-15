@@ -32,6 +32,10 @@
         <!-- Page CSS -->
         <!-- Page -->
         <link rel="stylesheet" href="/public/vendor/css/pages/page-auth.css" />
+
+		<!-- Added Core jQuery -->
+		<script src="/public/lib/jquery/jquery.js"></script>
+
         <!-- Helpers -->
         <script src="/public/vendor/js/helpers.js"></script>
         <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
@@ -81,5 +85,8 @@
         <script src="/public/js/main.js"></script>
         <!-- Page JS -->
         <script src="/public/js/pages-auth.js"></script>
+
+		<!-- Default Javascript - customize script -->
+		<script src="/public/js/default.js?ver=<?php echo strtotime(date('Ymd')); ?>"></script>
     </body>
 </html>

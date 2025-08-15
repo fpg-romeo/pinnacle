@@ -10,5 +10,11 @@
 
             views('miscellaneous.cron-job', $data);  
         }
+
+        public function faq(){
+            $data = array();
+
+            views('miscellaneous.faq');  
+        }
     }
 ?>
