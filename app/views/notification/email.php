@@ -26,16 +26,12 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select id="form-repeater-1-3" class="form-select">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                    <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
-                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                                <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                         </div>
                     </div>

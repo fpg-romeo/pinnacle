@@ -29,6 +29,10 @@
 		<!-- endbuild -->
 		<!-- Page CSS -->
 		<link rel="stylesheet" href="/public/vendor/css/pages/page-faq.css" />
+
+		<!-- Added Core jQuery -->
+		<script src="/public/lib/jquery/jquery.js"></script>
+
 		<!-- Helpers -->
 		<script src="/public/vendor/js/helpers.js"></script>
 		<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
@@ -56,7 +60,7 @@
 					<div class="menu-inner-shadow"></div>
 					<br>
 					<ul class="menu-inner py-1">
-						<li class="menu-item active">
+						<li class="menu-item <?php activeDashboard('active'); ?>">
 							<a href="/" class="menu-link">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="DASHBOARD">DASHBOARD</div>
@@ -66,50 +70,50 @@
 							<span class="menu-header-text" data-i18n="MODULES">MODULES</span>
 						</li>
 
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
 							<a href="javascript:void(0)" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Finance">Finance</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled'], 'active open'); ?>">
 									<a href="javascript:void(0)" class="menu-link menu-toggle">
 										<div data-i18n="SOA Sending">SOA Sending</div>
 									</a>
 									<ul class="menu-sub">
-										<li class="menu-item">
+										<li class="menu-item <?php activeView(['finance'], ['soa-immediate'], 'active'); ?>">
 											<a href="/finance/soa-immediate/1" class="menu-link">
 												<div data-i18n="Immediate">Immediate</div>
 											</a>
 										</li>
-										<li class="menu-item">
+										<li class="menu-item <?php activeView(['finance'], ['soa-scheduled'], 'active'); ?>">
 											<a href="/finance/soa-scheduled/1" class="menu-link">
 												<div data-i18n="Scheduled">Scheduled</div>
 											</a>
 										</li>
 									</ul>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['finance'], ['soa-setting'], 'active'); ?>">
 									<a href="/finance/soa-setting" class="menu-link">
 										<div data-i18n="SOA Settings">SOA Settings</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['finance'], ['soa-download'], 'active'); ?>">
 									<a href="/finance/soa-download/1" class="menu-link">
 										<div data-i18n="Download">Download</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['finance'], ['soa-email-template', 'soa-email-generic'], 'active open'); ?>">
 									<a href="javascript:void(0)" class="menu-link menu-toggle">
 										<div data-i18n="Email Template">Email</div>
 									</a>
 									<ul class="menu-sub">
-										<li class="menu-item">
+										<li class="menu-item <?php activeView(['finance'], ['soa-email-template'], 'active'); ?>">
 											<a href="/finance/soa-email-template/1" class="menu-link">
 												<div data-i18n="Template">Template</div>
 											</a>
 										</li>
-										<li class="menu-item">
+										<li class="menu-item <?php activeView(['finance'], ['soa-email-generic'], 'active'); ?>">
 											<a href="/finance/soa-email-generic/1" class="menu-link">
 												<div data-i18n="Generic">Generic</div>
 											</a>
@@ -118,24 +122,24 @@
 								</li>
 							</ul>
 						</li>
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['collection'], ['all', 'manage'], 'active'); ?>">
 							<a href="/collection/all/1" class="menu-link">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Collection">Collection</div>
 							</a>
 						</li>
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['report'], ['manual', 'automatic'], 'active open'); ?>">
 							<a href="javascript:void(0);" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Reports">Reports</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['report'], ['manual'], 'active open'); ?>">
 									<a href="/report/manual" class="menu-link">
 										<div data-i18n="Manual Generation">Manual Generation</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['report'], ['automatic'], 'active open'); ?>">
 									<a href="/report/automatic/1" class="menu-link">
 										<div data-i18n="Automatic Generation">Automatic Generation</div>
 									</a>
@@ -145,48 +149,48 @@
 						<li class="menu-header small">
 							<span class="menu-header-text" data-i18n="MASTER">MASTER</span>
 						</li>
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['master'], ['topro', 'branch', 'segment', 'handler', 'team-leader', 'sales-channel', 'intermediary', 'class-business'], 'active open'); ?>">
 							<a href="javascript:void(0);" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Maintenance">Maintenance</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['topro'], 'active open'); ?>">
 									<a href="/master/topro" class="menu-link">
 										<div data-i18n="TOPRO">TOPRO</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['branch'], 'active open'); ?>">
 									<a href="/master/branch" class="menu-link">
 										<div data-i18n="Branch">Branch</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['segment'], 'active open'); ?>">
 									<a href="/master/segment" class="menu-link">
 										<div data-i18n="Segment">Segment</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['handler'], 'active open'); ?>">
 									<a href="/master/handler" class="menu-link">
 										<div data-i18n="Handler">Handler</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['team-leader'], 'active open'); ?>">
 									<a href="/master/team-leader" class="menu-link">
 										<div data-i18n="Team Leader">Team Leader</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['sales-channel'], 'active open'); ?>">
 									<a href="/master/sales-channel" class="menu-link">
 										<div data-i18n="Sales Channel">Sales Channel</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['intermediary'], 'active open'); ?>">
 									<a href="/master/intermediary" class="menu-link">
 										<div data-i18n="Intermediary">Intermediary</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['master'], ['class-business'], 'active open'); ?>">
 									<a href="/master/class-business" class="menu-link">
 										<div data-i18n="Class of Busines">Class of Business</div>
 									</a>
@@ -196,41 +200,41 @@
 						<li class="menu-header small">
 							<span class="menu-header-text" data-i18n="MAINTENANCE">MAINTENANCE</span>
 						</li>
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['account'], ['all', 'manage', 'user'], 'active open'); ?>">
 							<a href="javascript:void(0);" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Account">Account</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['account'], ['all', 'manage'], 'active'); ?>">
 									<a href="/account/all/1" class="menu-link">
 										<div data-i18n="Records">Records</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['account'], ['user'], 'active'); ?>">
 									<a href="/account/user/1" class="menu-link">
 										<div data-i18n="User Profile">User Profile</div>
 									</a>
 								</li>
 							</ul>
 						</li>
-						<li class="menu-item">
+						<li class="menu-item <?php activeView(['notification', 'miscellaneous'], ['email', 'cron-job', 'faq'], 'active open'); ?>">
 							<a href="javascript:void(0);" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Control Panel">Control Panel</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['notification'], ['email'], 'active'); ?>">
 									<a href="/notification/email/1" class="menu-link">
 									<div data-i18n="Email Notificaton">Email Notificaton</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['miscellaneous'], ['cron-job'], 'active'); ?>">
 									<a href="/miscellaneous/cron-job" class="menu-link">
-										<div data-i18n="Cron Jobs">Cron Jobs Schedule</div>
+										<div data-i18n="Cron Jobs Schedule">Cron Jobs Schedule</div>
 									</a>
 								</li>
-								<li class="menu-item">
+								<li class="menu-item <?php activeView(['miscellaneous'], ['faq'], 'active'); ?>">
 									<a href="/miscellaneous/faq" class="menu-link">
 										<div data-i18n="FAQs">FAQs</div>
 									</a>
@@ -379,5 +383,8 @@
 		<!-- Main JS -->
 		<script src="/public/js/main.js"></script>
 		<!-- Page JS -->
+
+		<!-- Default Javascript - customize script -->
+		<script src="/public/js/default.js?ver=<?php echo strtotime(date('Ymd')); ?>"></script>
 	</body>
 </html>
