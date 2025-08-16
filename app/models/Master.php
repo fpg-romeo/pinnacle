@@ -546,5 +546,43 @@ class Master
             }
             return $result;
         }
+
+        public static function syncTopro(){
+            $result = SqlServer::select('topro', 'topro as code,description,AllowedF as is_active', "", 'description ASC');
+            return $result;
+        }
+
+        public static function getTopro(){
+            $result = mysql::select('master_topro', '*', "", 'description ASC');
+            return $result;
+        }
+
+        public static function addTopro($fields){
+
+            $fields = MySql::buildFields($fields, ", ");
+                if (MySql::insert('master_topro', $fields)) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = MySql::insertedId();
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
+
+        public static function deleteTopro(){
+
+                if (MySql::delete('master_topro')) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
+
+    
     }
 ?>

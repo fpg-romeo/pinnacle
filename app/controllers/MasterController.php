@@ -576,5 +576,54 @@
             echo json_encode($result);
         }
         
+
+
+        public function topro()
+        {
+            $data = array();
+            $CONFIGURATION = Configuration::general();
+
+            $data['record'] = Master::getTopro();
+
+            $data['record'] = is_array($data['record']) ? $data['record'] : array();
+
+            views('master.topro', $data);
+        }
+
+        public function topro_json()
+        {
+            $data = array();
+            $CONFIGURATION = Configuration::general();
+
+            $data['record'] = Master::syncTopro();
+        
+            if(!empty($data['record'])) {
+
+                $delete = Master::deleteTopro();
+                
+                if($delete['status'] == 'success') {
+                    foreach($data['record'] as $record) {
+                        
+                        $field = array();
+                        $field['code'] = $record['code'];
+                        $field['description'] = $record['description']; 
+                        $field['sync_date'] = date('Y-m-d H:i:s');    
+                        $field['is_active'] = $record['is_active']; 
+
+                        $insert = Master::addTopro($field);  
+                    }
+                     $result['status']  = 'success';
+                    $result['message'] = 'Sync completed successfully.';
+                }
+               
+            } else {
+                $result['status']  = 'forbidden';
+                $result['message'] = 'Access to this resource on the server is denied';
+            }
+ 
+             header('Content-Type: application/json');
+    echo json_encode($result);
+    exit;
+        }
     }
 ?>

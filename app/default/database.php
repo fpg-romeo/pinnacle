@@ -145,3 +145,46 @@ class MySql
 		return $fields;
 	}
 }
+class SqlServer{
+	private static $connection 	= NULL;
+	private static $result 		= NULL;		
+	private static $sql 		= NULL;
+	private static $error 		= NULL;
+	private static $prefix 		= '';
+	
+
+	public static function connect(){
+
+		includeDefault(['key']);
+		$KEY 			  = Key::credential();
+		self::$connection = sqlsrv_connect($KEY['SQLSERVER'],array('Database'=>$KEY['SQLSERVER_DATABASE'],'UID'=>$KEY['SQLSERVER_USERNAME'], 'PWD'=>$KEY['SQLSERVER_PASSWORD'], "CharacterSet" => "UTF-8")) or self::debug(sqlsrv_errors());
+
+		return self::$connection;	
+	}	
+
+	public static function disconnect(){
+		mysqli_close(self::connect());
+	}	
+
+	public static function debug($error){
+		error_log(" SQLSERVER ERROR : ".json_encode($error));
+		//die();
+		//trigger_error();
+	}
+				
+	public static function select($table, $fields, $where='', $orderby='', $limit=''){
+		$row 		= [];
+		$where 		= (trim($where) != '') ? "WHERE {$where}" : $where;
+        $orderby 	= (trim($orderby) != '') ? "ORDER BY {$orderby}" : $orderby;
+		$limit 		= (trim($limit) != '') ? "LIMIT {$limit}" : $limit;
+		$result 	= sqlsrv_query(self::connect(), "SELECT {$fields} FROM ".self::$prefix.$table." {$where} {$orderby} {$limit}") or self::debug(sqlsrv_errors());
+
+		while( $fetchrow = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) ) {
+			$row[] = $fetchrow;
+	  	}
+		sqlsrv_free_stmt( $result);
+		
+		return $row;
+	}	
+				
+}

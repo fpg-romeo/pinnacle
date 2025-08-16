@@ -29,7 +29,7 @@
                                                     'manual', 'automatic'
                                                    ],
                             'master'            => [
-                                                    'topro', 'toproJson',
+                                                    'topro', 'topro_json',
                                                     'branch', 'branch_json',
                                                     'segment', 'segment_json',
                                                     'handler', 'handler_json',
