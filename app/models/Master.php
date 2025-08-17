@@ -548,7 +548,7 @@ class Master
         }
 
         public static function syncTopro(){
-            $result = SqlServer::select('topro', 'topro as code,description,AllowedF as is_active', "", 'description ASC');
+            $result = SqlServer::select('topro', 'topro as code,description,AllowedF as is_active', "AllowedF = 1", 'description ASC');
             return $result;
         }
 
@@ -618,6 +618,64 @@ class Master
                 }
                 return $result;
         }
-    
+
+        public static function getIntermediary(){
+            $result = mysql::select('master_intermediaries', '*', "", 'source_name ASC');
+            return $result;
+        }
+        
+        public static function getIntermediaryById($id){
+            $result = mysql::select('master_intermediaries', '*', 'id='.$id, '');
+            return $result;
+        }
+
+        public static function addIntermediary($fields){
+
+            $fields = MySql::buildFields($fields, ", ");
+                if (MySql::insert('master_intermediaries', $fields)) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = MySql::insertedId();
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
+
+        public static function deleteIntermediary(){
+
+                if (MySql::delete('master_intermediaries')) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
+
+        public static function syncIntermediary(){
+            $result = SqlServer::select('profile', "top 10  name as source_name,address_1 + ' ' + address_2 + ' ' + address_3 as ADDRESS", "ptype = 'M' and restrictedf = 0", 'name ASC');
+            return $result;
+        }
+
+        public static function updateIntermediary($id,$fields){
+            $record = self::getIntermediaryById($id);
+            if(is_array($record)){  
+                $fields = mysql::buildFields($fields, ", ");
+                if(mysql::update('master_intermediaries', $fields, 'id='.$id)){
+                    $result['status']  = 'success';
+                    $result['message'] = 'Record Successfully Updated';
+                }else{
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Record does not exist';
+            }
+            return $result;
+        }
     }
 ?>

@@ -695,5 +695,97 @@
              exit;
         }
 
+        public function intermediary(){
+            $data = array();
+            $CONFIGURATION = Configuration::general();
+
+            $data['record'] = Master::getIntermediary();
+
+            views('master.intermediary', $data);  
+        }
+
+        public function intermediary_json()
+        {
+            
+                
+                
+                if(isset($_POST) && $_POST['action'] === 'sync'){
+                    $data = array();
+                    
+                    $data['record'] = Master::syncIntermediary();
+                
+                    if(!empty($data['record'])) {
+
+                        $delete = Master::deleteIntermediary();
+                        
+                        if($delete['status'] == 'success') {
+                            $allInserted = true;
+                            foreach($data['record'] as $record) {
+                                
+                                $field = array();
+                                $field['source_name'] = $record['source_name'];
+                                $field['address'] = $record['ADDRESS']; 
+                                $field['created_at'] = date('Y-m-d H:i:s');    
+                                $field['is_active'] = 1; 
+
+                                $insert = Master::addIntermediary($field);  
+                                if(!isset($insert['status']) || $insert['status'] !== 'success') {
+                                    $allInserted = false;
+                                }
+                            }
+                            if ($allInserted) {
+                            $result['status']  = 'success';
+                            $result['message'] = 'Sync completed successfully.';
+                            } else {
+                                $result['status']  = 'error';
+                                $result['message'] = 'One or more records failed to insert.';
+                            }
+                        }
+                        else{
+                            $result['status']  = 'error';
+                            $result['message'] = 'Failed to sync data.';
+                        }
+                    
+                    } else {
+                        $result['status']  = 'forbidden';
+                        $result['message'] = 'Access to this resource on the server is denied';
+                    }   
+                }elseif(isset($_POST) && $_POST['action'] === 'edit'){
+                    
+                    $data = array();
+                    $id = htmlEncode($_POST['id']);
+                    
+                    $data['record'] = Master::getIntermediaryById($id);
+
+                    
+                    if(is_array($data['record']) && !empty($data['record'])){
+                        $result['id'] = $data['record'][0]['id'];
+                        $result['sourcename'] = $data['record'][0]['source_name'];
+                        $result['address'] = $data['record'][0]['address'];
+                        $result['is_active'] = $data['record'][0]['is_active'];
+                        $result['category'] = $data['record'][0]['categories'];
+                    }
+                }
+                elseif(isset($_POST) && $_POST['action'] === 'save'){
+                    $data = array();
+
+                    $data['id'] = htmlEncode($_POST['id']);
+                    $data['source_name'] = htmlEncode($_POST['sourcename']);
+                    $data['address'] = htmlEncode($_POST['address']);
+                    $data['categories'] = htmlEncode($_POST['category']);
+                    $data['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+                    $data['updated_at'] = date('Y-m-d H:i:s');
+                    
+                    $result = Master::updateIntermediary($data['id'],$data);
+                    if($result['status'] == 'success'){
+                        $result['message'] = 'Intermediary updated successfully.';
+                    }
+                }
+                header('Content-Type: application/json');
+                echo json_encode($result);
+                
+                exit;
+                
+        }
     }
 ?>
