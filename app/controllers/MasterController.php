@@ -593,7 +593,6 @@
         public function topro_json()
         {
             $data = array();
-            $CONFIGURATION = Configuration::general();
 
             $data['record'] = Master::syncTopro();
         
@@ -602,6 +601,7 @@
                 $delete = Master::deleteTopro();
                 
                 if($delete['status'] == 'success') {
+                    $allInserted = true;
                     foreach($data['record'] as $record) {
                         
                         $field = array();
@@ -611,9 +611,21 @@
                         $field['is_active'] = $record['is_active']; 
 
                         $insert = Master::addTopro($field);  
+                        if(!isset($insert['status']) || $insert['status'] !== 'success') {
+                            $allInserted = false;
+                        }
                     }
+                    if ($allInserted) {
                      $result['status']  = 'success';
                     $result['message'] = 'Sync completed successfully.';
+                    } else {
+                        $result['status']  = 'error';
+                        $result['message'] = 'One or more records failed to insert.';
+                    }
+                }
+                else{
+                    $result['status']  = 'error';
+                    $result['message'] = 'Failed to sync data.';
                 }
                
             } else {
@@ -622,8 +634,66 @@
             }
  
              header('Content-Type: application/json');
-    echo json_encode($result);
-    exit;
+             echo json_encode($result);
+             exit;
         }
+
+        public static function classBusiness(){
+            $data = array();
+
+            $data['record'] = Master::getcob();
+            
+            $data['record'] = is_array($data['record']) ? $data['record'] : array();
+
+            views('master.class-business', $data);
+
+        }
+
+        public function classBusiness_json()
+        {
+            $data = array();
+
+            $data['record'] = Master::synccob();
+        
+            if(!empty($data['record'])) {
+
+                $delete = Master::deletecob();
+                
+                if($delete['status'] == 'success') {
+                    $allInserted = true;
+                    foreach($data['record'] as $record) {
+                        
+                        $field = array();
+                        $field['code'] = $record['code'];
+                        $field['description'] = $record['description']; 
+                        $field['sync_date'] = date('Y-m-d H:i:s');    
+                        $field['is_active'] = 1; 
+
+                        $insert = Master::addcob($field);  
+                        if (!isset($insert['status']) || $insert['status'] !== 'success') {
+                            $allInserted = false;
+                        }
+                    }
+                    if ($allInserted) {
+                        $result['status']  = 'success';
+                        $result['message'] = 'Sync completed successfully.';
+                    } else {
+                        $result['status']  = 'error';
+                        $result['message'] = 'One or more records failed to insert.';
+                    }
+                } else{
+                    $result['status']  = 'error';
+                    $result['message'] = 'Failed to sync data.';
+                }
+            } else {
+                $result['status']  = 'forbidden';
+                $result['message'] = 'Access to this resource on the server is denied';
+            }
+ 
+             header('Content-Type: application/json');
+             echo json_encode($result);
+             exit;
+        }
+
     }
 ?>

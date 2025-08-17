@@ -36,7 +36,7 @@
                                                     'teamLeader', 'teamLeader_json',
                                                     'salesChannel', 'salesChannel_json',
                                                     'intermediary', 'intermediaryJson',
-                                                    'classBusiness', 'classBusinessJson',
+                                                    'classBusiness', 'classBusiness_json',
 
                                                     'accountRole', 'accountRoleJson',
                                                     'accountStatus', 'accountStatusJson',

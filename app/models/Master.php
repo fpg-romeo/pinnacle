@@ -583,6 +583,41 @@ class Master
                 return $result;
         }
 
+        public static function synccob(){
+            $result = SqlServer::select('cob', 'cob as code,description', "", 'description ASC');
+            return $result;
+        }
+
+        public static function getcob(){
+            $result = mysql::select('master_class_of_business', '*', "", 'description ASC');
+            return $result;
+        }
+
+        public static function addcob($fields){
+
+            $fields = MySql::buildFields($fields, ", ");
+                if (MySql::insert('master_class_of_business', $fields)) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = MySql::insertedId();
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
+
+        public static function deletecob(){
+
+                if (MySql::delete('master_class_of_business')) {
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                } else {
+                    $result['status']  = 'failed';
+                    $result['message'] = 'Encounter technical error. Pls try again';
+                }
+                return $result;
+        }
     
     }
 ?>
