@@ -72,53 +72,75 @@
 							<span class="menu-header-text" data-i18n="MODULES">MODULES</span>
 						</li>
 
-						<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
+						<li class="menu-item <?php activeView(['finance'], ['soa-dashboard', 'soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-master', 'soa-letter', 'soa-letter-manage', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
 							<a href="javascript:void(0)" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Finance">Finance</div>
 							</a>
 							<ul class="menu-sub">
-								<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled'], 'active open'); ?>">
+								<li class="menu-item <?php activeView(['finance'], ['soa-dashboard', 'soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-master', 'soa-letter', 'soa-letter-manage', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
 									<a href="javascript:void(0)" class="menu-link menu-toggle">
-										<div data-i18n="SOA Sending">SOA Sending</div>
+										<div data-i18n="SOA">SOA</div>
 									</a>
 									<ul class="menu-sub">
-										<li class="menu-item <?php activeView(['finance'], ['soa-immediate'], 'active'); ?>">
-											<a href="/finance/soa-immediate/1" class="menu-link">
-												<div data-i18n="Immediate">Immediate</div>
+										<li class="menu-item <?php activeView(['finance'], ['soa-dashboard'], 'active'); ?>">
+											<a href="/finance/soa-dashboard" class="menu-link">
+												<div data-i18n="Dashboard">Dashboard</div>
 											</a>
 										</li>
-										<li class="menu-item <?php activeView(['finance'], ['soa-scheduled'], 'active'); ?>">
-											<a href="/finance/soa-scheduled/1" class="menu-link">
-												<div data-i18n="Scheduled">Scheduled</div>
+										<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled'], 'active open'); ?>">
+											<a href="javascript:void(0)" class="menu-link menu-toggle">
+												<div data-i18n="Mailing">Mailing</div>
+											</a>
+											<ul class="menu-sub">
+												<li class="menu-item <?php activeView(['finance'], ['soa-immediate'], 'active'); ?>">
+													<a href="/finance/soa-immediate/1" class="menu-link">
+														<div data-i18n="Immediate">Immediate</div>
+													</a>
+												</li>
+												<li class="menu-item <?php activeView(['finance'], ['soa-scheduled'], 'active'); ?>">
+													<a href="/finance/soa-scheduled/1" class="menu-link">
+														<div data-i18n="Scheduled">Scheduled</div>
+													</a>
+												</li>
+											</ul>
+										</li>
+										<li class="menu-item <?php activeView(['finance'], ['soa-setting'], 'active'); ?>">
+											<a href="/finance/soa-setting/1" class="menu-link">
+												<div data-i18n="Settings">Settings</div>
 											</a>
 										</li>
-									</ul>
-								</li>
-								<li class="menu-item <?php activeView(['finance'], ['soa-setting'], 'active'); ?>">
-									<a href="/finance/soa-setting" class="menu-link">
-										<div data-i18n="SOA Settings">SOA Settings</div>
-									</a>
-								</li>
-								<li class="menu-item <?php activeView(['finance'], ['soa-download'], 'active'); ?>">
-									<a href="/finance/soa-download/1" class="menu-link">
-										<div data-i18n="Download">Download</div>
-									</a>
-								</li>
-								<li class="menu-item <?php activeView(['finance'], ['soa-email-template', 'soa-email-generic'], 'active open'); ?>">
-									<a href="javascript:void(0)" class="menu-link menu-toggle">
-										<div data-i18n="Email Template">Email</div>
-									</a>
-									<ul class="menu-sub">
-										<li class="menu-item <?php activeView(['finance'], ['soa-email-template'], 'active'); ?>">
-											<a href="/finance/soa-email-template/1" class="menu-link">
-												<div data-i18n="Template">Template</div>
+										<li class="menu-item <?php activeView(['finance'], ['soa-master'], 'active'); ?>">
+											<a href="/finance/soa-master/1" class="menu-link">
+												<div data-i18n="Master">Master</div>
 											</a>
 										</li>
-										<li class="menu-item <?php activeView(['finance'], ['soa-email-generic'], 'active'); ?>">
-											<a href="/finance/soa-email-generic/1" class="menu-link">
-												<div data-i18n="Generic">Generic</div>
+										<li class="menu-item <?php activeView(['finance'], ['soa-letter', 'soa-letter-manage'], 'active'); ?>">
+											<a href="/finance/soa-letter/1" class="menu-link">
+												<div data-i18n="Letters">Letters</div>
 											</a>
+										</li>
+										<li class="menu-item <?php activeView(['finance'], ['soa-download'], 'active'); ?>">
+											<a href="/finance/soa-download/1" class="menu-link">
+												<div data-i18n="Download">Download</div>
+											</a>
+										</li>
+										<li class="menu-item <?php activeView(['finance'], ['soa-email-template', 'soa-email-generic'], 'active open'); ?>">
+											<a href="javascript:void(0)" class="menu-link menu-toggle">
+												<div data-i18n="Email">Email</div>
+											</a>
+											<ul class="menu-sub">
+												<li class="menu-item <?php activeView(['finance'], ['soa-email-template'], 'active'); ?>">
+													<a href="/finance/soa-email-template/1" class="menu-link">
+														<div data-i18n="Template">Template</div>
+													</a>
+												</li>
+												<li class="menu-item <?php activeView(['finance'], ['soa-email-generic'], 'active'); ?>">
+													<a href="/finance/soa-email-generic/1" class="menu-link">
+														<div data-i18n="Generic">Generic</div>
+													</a>
+												</li>
+											</ul>
 										</li>
 									</ul>
 								</li>
