@@ -332,6 +332,60 @@ class Master
             return $result;
         }
 
+        public static function getAllTeamLeader($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 first_name LIKE {$keyword}
+                                 OR
+                                 last_name LIKE {$keyword}
+                                 OR
+                                 email LIKE {$keyword}
+                                 OR
+                                 contact_number LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_team_leader', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+         public static function countAllTeamLeader($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                first_name LIKE {$keyword}
+                                 OR
+                                 last_name LIKE {$keyword}
+                                 OR
+                                 email LIKE {$keyword}
+                                 OR
+                                 contact_number LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_team_leader', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addTeamLeader($field){
 
             $fields = mysql::buildFields($field, ", ");
@@ -377,6 +431,60 @@ class Master
                                     '');        
             return $result;
         }
+
+          public static function getAllHandler($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 first_name LIKE {$keyword}
+                                 OR
+                                 last_name LIKE {$keyword}
+                                 OR
+                                 email LIKE {$keyword}
+                                 OR
+                                 contact_number LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_handler', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+         public static function countAllHandler($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                first_name LIKE {$keyword}
+                                 OR
+                                 last_name LIKE {$keyword}
+                                 OR
+                                 email LIKE {$keyword}
+                                 OR
+                                 contact_number LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_handler', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
 
         public static function addHandler($field){
 
@@ -424,6 +532,56 @@ class Master
             return $result;
         }
 
+         public static function getAllSegment($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 name LIKE {$keyword}
+                                 OR
+                                 is_active LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_segment', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+         public static function countAllSegment($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 name LIKE {$keyword}
+                                 OR
+                                 is_active LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_segment', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addSegment($field){
 
             $fields = mysql::buildFields($field, ", ");
@@ -470,6 +628,56 @@ class Master
             return $result;
         }
 
+        public static function getAllBranch($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 name LIKE {$keyword}
+                                 OR
+                                 is_active LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_branch', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+        public static function countAllBranch($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 name LIKE {$keyword}
+                                 OR
+                                 is_active LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_branch', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addBranch($field){
 
             $fields = mysql::buildFields($field, ", ");
@@ -515,6 +723,48 @@ class Master
             return $result;
         }
 
+        public static function getAllSalesChannel($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 name LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_sales_channel', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+         public static function countAllSalesChannel($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                name LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_sales_channel', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addSalesChannel($field){
 
             $fields = mysql::buildFields($field, ", ");
@@ -557,6 +807,52 @@ class Master
             return $result;
         }
 
+         public static function getAllTopro($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 description LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_topro', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+        public static function countAllTopro($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 description LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_topro', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addTopro($fields){
 
             $fields = MySql::buildFields($fields, ", ");
@@ -583,15 +879,61 @@ class Master
                 return $result;
         }
 
-        public static function synccob(){
+        public static function syncCob(){
             $result = SqlServer::select('cob', 'cob as code,description', "", 'description ASC');
             return $result;
         }
 
-        public static function getcob(){
+        public static function getCob(){
             $result = mysql::select('master_class_of_business', '*', "", 'description ASC');
             return $result;
         }
+
+        public static function getAllCob($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 description LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_class_of_business', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+        public static function countAllCob($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 code LIKE {$keyword}
+                                 OR
+                                 description LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_class_of_business', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
 
         public static function addcob($fields){
 
@@ -678,4 +1020,3 @@ class Master
             return $result;
         }
     }
-?>

@@ -1,4 +1,3 @@
-
 <?php flash(promptMessage('message')); ?>
 
 <div class="content-wrapper">
@@ -20,16 +19,12 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select id="form-repeater-1-3" class="form-select">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                    <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
-                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                                <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                         </div>
                     </div>
@@ -45,34 +40,54 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                  <?php
-                                      foreach($data['segments'] as $segment){
-                                  ?>
+                                    <?php if (!empty($data['segments']) && is_array($data['segments'])) { ?>
+                                        <?php
+                                        foreach ($data['segments'] as $segment) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $segment['code'] ?></td>
+                                                <td><?= $segment['name'] ?></td>
+                                                <td><?= $segment['is_active'] == 1 ? "Active" : "Inactive" ?></td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
+                                                            <i class="icon-base ti tabler-settings"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#segmentModal" data-id="<?= $segment['id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                            <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#segmentModal" data-id="<?= $segment['id'] ?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
                                         <tr>
-                                            <td><?=$segment['code']?></td>
-                                            <td><?=$segment['name']?></td>
-                                            <td><?=$segment['is_active'] == 1 ? "Active" : "Inactive"?></td>
-                                            <td>
-                                              <div class="dropdown">
-                                                <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
-                                                    <i class="icon-base ti tabler-settings"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#segmentModal" data-id="<?=$segment['id']?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
-                                                    <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#segmentModal" data-id="<?=$segment['id']?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
-                                                </div>
-                                              </div>
-                                            </td>
+                                            <td colspan="4" class="text-center">No Segments found</td>
                                         </tr>
-                                  <?php
-                                      }
-                                  ?>
+                                    <?php } ?>
+
                                 </tbody>
                             </table>
                         </div>
 
+                        <?php if (is_array($data['segments'])) { ?>
+                            <div class="row justify-content-between">
+                                <div class="col-md-auto me-auto mt-8">
+                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                </div>
+
+                                <div class="col-md-auto ms-auto mt-5">
+                                    <ul class="pagination">
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/segment/', 'page', true); ?>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        <?php } ?>
+
                         <div class="row justify-content-between">
-                            <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
+                            <!-- <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
                                 <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">
                                     Showing 1 to 10 of 100 entries 
                                 </div>
@@ -126,85 +141,101 @@
                                     </nav>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="segmentModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <form method="post" id="segmentForm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel3">Segment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="segmentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form method="post" id="segmentForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Segment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
+                                <label for="code" class="form-label">Code</label>
+                                <input type="text" id="code" name="code" class="form-control" placeholder="Enter Code">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
+                                <label for="is_active" class="form-label">Status</label>
+                                <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" value="" name="action">
+                        <input type="hidden" value="" name="id">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary submit">Save Changes</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
-              <label for="code" class="form-label">Code</label>
-              <input type="text" id="code" name="code" class="form-control" placeholder="Enter Code">
-            </div>
-            <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
-            </div>
-          </div>
-          <div class="row g-4">
-            <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
-              <label for="is_active" class="form-label">Status</label>
-              <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <input type="hidden" value="" name="action">
-          <input type="hidden" value="" name="id">
-          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary submit">Save Changes</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
 
-<script>
-  $('.showModal').click(function(e){
-    
-      e.preventDefault();
-      $('#segmentModal').find('form')[0].reset();
-      $('#segmentModal').find('input').prop('readonly', false);
-      $('#segmentModal').find('select').prop('disabled', false);
-      var action = $(this).attr('action');
-      $('[name="action"]').val(action);
-      $('.submit').css('display', 'block');
+    <script type="text/javascript">
+        //DATATABLE FILTER
+        $(document).ready(function() {
+            $('.pagination').bind('blur change', function(e) {
+                e.preventDefault();
 
-      if(action != 'add'){
-        $.ajax({
-          url: '/master/segment_json/',
-          method: 'POST',
-          data:{
-            id: $(this).data('id')
-          },
-          success: function(data){
-              $('[name="id"]').val(data.id);
-              $('#code').val(data.code);
-              $('#name').val(data.name);
-              $('#is_active').val(data.is_active);
-          }
+                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit = $('select[name=pagination_limit]').find(":selected").val();
+                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
+
+                window.location.replace(link + parameter);
+            });
         });
+    </script>
 
-        if(action == "show"){
-          $('#segmentModal').find('input').prop('readonly', true);
-          $('#segmentModal').find('select').prop('disabled', true);
-          $('.submit').css('display', 'none');
-        }
-      }
-  });
-</script>
+    <script>
+        $('.showModal').click(function(e) {
+
+            e.preventDefault();
+            $('#segmentModal').find('form')[0].reset();
+            $('#segmentModal').find('input').prop('readonly', false);
+            $('#segmentModal').find('select').prop('disabled', false);
+            var action = $(this).attr('action');
+            $('[name="action"]').val(action);
+            $('.submit').css('display', 'block');
+
+            if (action != 'add') {
+                $.ajax({
+                    url: '/master/segment_json/',
+                    method: 'POST',
+                    data: {
+                        id: $(this).data('id')
+                    },
+                    success: function(data) {
+                        $('[name="id"]').val(data.id);
+                        $('#code').val(data.code);
+                        $('#name').val(data.name);
+                        $('#is_active').val(data.is_active);
+                    }
+                });
+
+                if (action == "show") {
+                    $('#segmentModal').find('input').prop('readonly', true);
+                    $('#segmentModal').find('select').prop('disabled', true);
+                    $('.submit').css('display', 'none');
+                }
+            }
+        });
+    </script>

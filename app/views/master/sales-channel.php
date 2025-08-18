@@ -1,4 +1,3 @@
-
 <?php flash(promptMessage('message')); ?>
 
 <div class="content-wrapper">
@@ -20,16 +19,12 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select id="form-repeater-1-3" class="form-select">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                    <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
-                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                                <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                         </div>
                     </div>
@@ -44,35 +39,54 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                  <?php
-                                      foreach($data['salesChannels'] as $salesChannel){
-                                  ?>
+                                    <?php if (!empty($data['sales_channel']) && is_array($data['sales_channel'])) { ?>
+                                        <?php
+                                        foreach ($data['sales_channel'] as $salesChannel) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $salesChannel['name'] ?></td>
+                                                <td><?= $salesChannel['is_active'] == 1 ? "Active" : "Inactive" ?></td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
+                                                            <i class="icon-base ti tabler-settings"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#salesChannelModal" data-id="<?= $salesChannel['id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                            <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#salesChannelModal" data-id="<?= $salesChannel['id'] ?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
                                         <tr>
-                                            <td><?=$salesChannel['name']?></td>
-                                            <td><?=$salesChannel['is_active'] == 1 ? "Active" : "Inactive"?></td>
-                                            <td>
-                                              <div class="dropdown">
-                                                <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
-                                                    <i class="icon-base ti tabler-settings"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#salesChannelModal" data-id="<?=$salesChannel['id']?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
-                                                    <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#salesChannelModal" data-id="<?=$salesChannel['id']?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a>
-                                                </div>
-                                              </div>
-                                            </td>
+                                            <td colspan="4" class="text-center">No sales channel found</td>
                                         </tr>
-                                  <?php
-                                      }
-                                  ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
 
+                        <?php if (is_array($data['sales_channel'])) { ?>
+                            <div class="row justify-content-between">
+                                <div class="col-md-auto me-auto mt-8">
+                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                </div>
+
+                                <div class="col-md-auto ms-auto mt-5">
+                                    <ul class="pagination">
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/sales-channel/', 'page', true); ?>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        <?php } ?>
+
                         <div class="row justify-content-between">
-                            <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
+                            <!-- <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
                                 <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">
-                                    Showing 1 to 10 of 100 entries 
+                                    Showing 1 to 10 of 100 entries
                                 </div>
                             </div>
                             <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto mt-5">
@@ -124,80 +138,95 @@
                                     </nav>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="salesChannelModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <form method="post" id="salesChannelForm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel3">Sales Channel</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="salesChannelModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form method="post" id="salesChannelForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Sales Channel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
+                                <label for="is_active" class="form-label">Status</label>
+                                <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" value="" name="action">
+                        <input type="hidden" value="" name="id">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary submit">Save Changes</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
-            </div>
-          </div>
-          <div class="row g-4">
-            <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
-              <label for="is_active" class="form-label">Status</label>
-              <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <input type="hidden" value="" name="action">
-          <input type="hidden" value="" name="id">
-          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary submit">Save Changes</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
+    <script type="text/javascript">
+        //DATATABLE FILTER
+        $(document).ready(function() {
+            $('.pagination').bind('blur change', function(e) {
+                e.preventDefault();
 
-<script>
-  $('.showModal').click(function(e){
-    
-      e.preventDefault();
-      $('#salesChannelModal').find('form')[0].reset();
-      $('#salesChannelModal').find('input').prop('readonly', false);
-      $('#salesChannelModal').find('select').prop('disabled', false);
-      var action = $(this).attr('action');
-      $('[name="action"]').val(action);
-      $('.submit').css('display', 'block');
+                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit = $('select[name=pagination_limit]').find(":selected").val();
+                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
 
-      if(action != 'add'){
-        $.ajax({
-          url: '/master/salesChannel_json/',
-          method: 'POST',
-          data:{
-            id: $(this).data('id')
-          },
-          success: function(data){
-              $('[name="id"]').val(data.id);
-              $('#name').val(data.name);
-              $('#is_active').val(data.is_active);
-          }
+                window.location.replace(link + parameter);
+            });
         });
+    </script>
 
-        if(action == "show"){
-          $('#salesChannelModal').find('input').prop('readonly', true);
-          $('#salesChannelModal').find('select').prop('disabled', true);
-          $('.submit').css('display', 'none');
-        }
-      }
-  });
-</script>
+    <script>
+        $('.showModal').click(function(e) {
+
+            e.preventDefault();
+            $('#salesChannelModal').find('form')[0].reset();
+            $('#salesChannelModal').find('input').prop('readonly', false);
+            $('#salesChannelModal').find('select').prop('disabled', false);
+            var action = $(this).attr('action');
+            $('[name="action"]').val(action);
+            $('.submit').css('display', 'block');
+
+            if (action != 'add') {
+                $.ajax({
+                    url: '/master/salesChannel_json/',
+                    method: 'POST',
+                    data: {
+                        id: $(this).data('id')
+                    },
+                    success: function(data) {
+                        $('[name="id"]').val(data.id);
+                        $('#name').val(data.name);
+                        $('#is_active').val(data.is_active);
+                    }
+                });
+
+                if (action == "show") {
+                    $('#salesChannelModal').find('input').prop('readonly', true);
+                    $('#salesChannelModal').find('select').prop('disabled', true);
+                    $('.submit').css('display', 'none');
+                }
+            }
+        });
+    </script>
