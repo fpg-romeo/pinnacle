@@ -381,7 +381,6 @@ class Email{
                             .footer a           { color: #969696 !important; }
                             .footer .note       { font-weight: bold; color: red; font-size: 9px; }
                             .bold               { font-weight: bold; }
-                            .center             { margin: 0 auto; width:100%; }
         
                             .table              { border-collapse: separate; border-spacing: 5px; width: 480px; font-size: 10px; }
                             .table td           { padding: 5px; border: 1px solid #ccc; } 
@@ -544,151 +543,145 @@ class Email{
                     <br>
                     <p>Please refer to the Summary below based on effectivity of the policies and number of days past due.</p>
                     <br>
-                    <div class="center">
-                        <table class="table">
-                            <tr class="header">
-                                <td colspan="2">COD POLICIES (DUE IMMEDIATELY)</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>AGING DAYS</td>
-                                <td class="text-right">NET PREMIUM DUE</td>
-                            </tr>
-                            <tr>
-                                <td>0 - 30 Days</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>31 - 60 Days</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>61 - 90 Days</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>91 - 180 Days</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>Above 180 Days</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>TOTAL COD ACCOUNTS</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="2">COD POLICIES (DUE IMMEDIATELY)</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">NET PREMIUM DUE</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL COD ACCOUNTS</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                    </table>
                     <br>
-                    <div class="center">
-                        <table class="table">
-                            <tr class="header">
-                                <td colspan="3">PREMIUM RECEIVABLE</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>AGING DAYS</td>
-                                <td class="text-right">NET PREMIUM DUE</td>
-                                <td>PAYMENT DUE DATE</td>
-                            </tr>
-                            <tr>
-                                <td>0 - 30 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>31 - 60 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>61 - 90 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr class="bold">
-                                <td>Total Current Accounts</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>91 - 180 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Above 180 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr class="bold">
-                                <td>Total Overdue Accounts</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                            <tr class="bold">
-                                <td>TOTAL PREMIUM RECEIVABLE</td>
-                                <td class="text-right">0.00</td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="3">PREMIUM RECEIVABLE</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">NET PREMIUM DUE</td>
+                            <td>PAYMENT DUE DATE</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Current Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Overdue Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL PREMIUM RECEIVABLE</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                    </table>
                     <br>
-                    <div class="center">
-                        <table class="table">
-                            <tr class="header">
-                                <td colspan="3">TAXES RECEIVABLE</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>AGING DAYS</td>
-                                <td class="text-right">OUTSTANDING DST</td>
-                                <td class="text-right">OUTSTANDING CWT</td>
-                            </tr>
-                            <tr>
-                                <td>0 - 30 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>31 - 60 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>61 - 90 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>Total Current Accounts</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>91 - 180 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>Above 180 Days</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>Total Overdue Accounts</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr class="bold">
-                                <td>TOTAL TAXES RECEIVABLE</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                            <tr class="bold">
-                                <td colspan="2">GRAND TOTAL</td>
-                                <td class="text-right">0.00</td>
-                            </tr>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="3">TAXES RECEIVABLE</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">OUTSTANDING DST</td>
+                            <td class="text-right">OUTSTANDING CWT</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Current Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Overdue Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL TAXES RECEIVABLE</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td colspan="2">GRAND TOTAL</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                    </table>
                     <br>
                     <p class="title-text">Overdue Accounts:</p>
                     <br>
