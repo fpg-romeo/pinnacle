@@ -183,7 +183,7 @@
 							<ul class="menu-sub">
 								<li class="menu-item <?php activeView(['master'], ['topro'], 'active open'); ?>">
 									<a href="/master/topro" class="menu-link">
-										<div data-i18n="TOPRO">TOPRO</div>
+										<div data-i18n="Topro">Topro</div>
 									</a>
 								</li>
 								<li class="menu-item <?php activeView(['master'], ['branch'], 'active open'); ?>">

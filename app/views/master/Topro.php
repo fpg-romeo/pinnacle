@@ -3,7 +3,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row justify-content-between">
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
-                <h4 class="lh-lg mb-0 fw-bolder">TOPRO <span class="text-primary">[ List ]</span></h4>
+                <h4 class="lh-lg mb-0 fw-bolder">Topro <span class="text-primary">[ List ]</span></h4>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
                 <a href="$" class="btn btn-primary text-white" action="sync" id="syncBtn">

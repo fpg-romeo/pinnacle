@@ -180,7 +180,7 @@
                 <?php
                     foreach($data['topros'] as $topro){
                 ?>
-                        <option value="<?=$topro['id']?>"><?=$topro['name']?></option>
+                        <option value="<?=$topro['id']?>"><?=$topro['code']?></option>
                 <?php
                     }
                 ?>
