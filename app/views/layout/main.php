@@ -43,6 +43,7 @@
 		<script src="/public/vendor/js/template-customizer.js"></script>
 		<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 		<script src="/public/js/config.js"></script>
+		<script src="/public/vendor/libs/select2/select2.js"></script>
 		
 	</head>
 	<body id="<?php echo (getVar('controller') ? getVar('controller') : '') . '-' . (getVar('view') ? getVar('view') : ''); ?>">
@@ -405,6 +406,7 @@
 		<script src="/public/vendor/libs/i18n/i18n.js"></script>
 		<script src="/public/vendor/js/menu.js"></script>
 		<script src="/public/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+		
 
 		<!-- endbuild -->
 		<!-- Vendors JS -->

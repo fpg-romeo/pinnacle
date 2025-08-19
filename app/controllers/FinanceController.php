@@ -70,8 +70,10 @@
             $data['cobs']               = Master::getActiveCOBs();
             $data['handlers']           = Master::getActiveHandlers();
             $data['team_leaders']       = Master::getActiveTeamLeaders();
-
+            
             if(isset($_POST['action'])){
+                pre($_POST);
+            die;
                 $field['master_list'] = array(
                     'intermediary_id'      => postVar('intermediary_id'),
                     'handler_id'           => postVar('handler_id'),

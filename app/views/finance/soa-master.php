@@ -107,7 +107,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="intermediary_id" class="form-label">Source Name <span>*</span></label>
-              <select id="intermediary_id" name="intermediary_id" class="select2 form-select" data-allow-clear="true" required>
+              <select id="intermediary_id" name="intermediary_id" class="select2 form-select" required>
                 <option value=""></option>
                 <?php
                     foreach($data['intermediaries'] as $intermediary){
@@ -123,7 +123,7 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="branch" class="form-label">Branches <span>(Optional)</span></label>
               <div class="select2-primary">
-                <select id="branch" name="branch" class="select2 form-select" data-allow-clear="true">
+                <select id="branch" name="branch[]" class="select2 form-select" multiple>
                   <option value=""></option>
                     <?php
                         foreach($data['branches'] as $branch){
@@ -139,7 +139,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="segment" class="form-label">Segments <span>(Optional)</span></label>
-              <select id="segment" name="segment" class="select2 form-select" data-allow-clear="true">
+              <select id="segment" name="segment" class="select2 form-select">
                 <option value=""></option>
                 <?php
                     foreach($data['segments'] as $segment){
@@ -160,7 +160,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="sales_channel" class="form-label">Sales Channel <span>(Optional)</span></label>
-              <select id="sales_channel" name="sales_channel" class="select2 form-select" data-allow-clear="true">
+              <select id="sales_channel" name="sales_channel" class="select2 form-select">
                 <option value=""></option>
                 <?php
                     foreach($data['sales_channels'] as $sales_channel){
@@ -175,7 +175,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="topro" class="form-label">TOPRO <span>(Optional)</span></label>
-              <select id="topro" name="topro" class="select2 form-select" data-allow-clear="true">
+              <select id="topro" name="topro" class="select2 form-select">
                 <option value=""></option>
                 <?php
                     foreach($data['topros'] as $topro){
@@ -190,7 +190,7 @@
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
               <label for="class_of_business" class="form-label">COB Description <span>(Optional)</span></label>
-              <select id="class_of_business" name="class_of_business" class="select2 form-select" data-allow-clear="true">
+              <select id="class_of_business" name="class_of_business" class="select2 form-select">
                 <option value=""></option>
                 <?php
                     foreach($data['cobs'] as $cob){
@@ -209,7 +209,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="handler_id" class="form-label">Handler <span>*</span></label>
-              <select id="handler_id" name="handler_id" class="select2 form-select" data-allow-clear="true" required>
+              <select id="handler_id" name="handler_id" class="select2 form-select" required>
                 <option value=""></option>
                 <?php
                     foreach($data['handlers'] as $handler){
@@ -224,7 +224,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="team_leader_id" class="form-label">Team Leader <span>*</span></label>
-              <select id="team_leader_id" name="team_leader_id" class="select2 form-select" data-allow-clear="true" required>
+              <select id="team_leader_id" name="team_leader_id" class="select2 form-select" required>
                 <option value=""></option>
                 <?php
                     foreach($data['team_leaders'] as $team_leader){
@@ -255,7 +255,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
               <label for="is_active" class="form-label">Status</label>
-              <select id="is_active" name="is_active" class="select2 form-select" data-allow-clear="true">
+              <select id="is_active" name="is_active" class="select2 form-select">
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>
               </select>
@@ -273,10 +273,12 @@
   </div>
 </div>
 
-<!-- <script src="/public/vendor/libs/select2/select2.js"></script>
 <script>
-    $(".select2").select2();
-</script> -->
+    $('#masterlistModal .select2').select2({
+      dropdownParent: $('#masterlistModal'),
+      width: '100%'
+  });
+</script>
 
 <script type="text/javascript">
     //DATATABLE FILTER
@@ -297,6 +299,7 @@
     $('.showModal').click(function(e){
     
       e.preventDefault();
+      $('#masterlistModal .select2').val(null).trigger('change');
       $('#masterlistModal').find('form')[0].reset();
       $('#masterlistModal').find('input').prop('readonly', false);
       $('#masterlistModal').find('select').prop('disabled', false);
@@ -313,20 +316,20 @@
           },
           success: function(data){
               $('[name="id"]').val(data.id);
-              $('#intermediary_id').val(data.intermediary_id);
-              $('#handler_id').val(data.handler_id);
-              $('#team_leader_id').val(data.team_leader_id);
-              $('#branch').val(data.branch.branch_id);
-              $('#topro').val(data.topro.topro_id);
-              $('#sales_channel').val(data.sales_channel.sales_channel_id);
-              $('#segment').val(data.segment.segment_id);
-              $('#cob').val(data.class_of_business.class_of_business_id);
+              $('#intermediary_id').val(data.intermediary_id).trigger('change');
+              $('#handler_id').val(data.handler_id).trigger('change');
+              $('#team_leader_id').val(data.team_leader_id).trigger('change');
+              $('#branch').val(data.branch.branch_id).trigger('change');
+              $('#topro').val(data.topro.topro_id).trigger('change');
+              $('#sales_channel').val(data.sales_channel.sales_channel_id).trigger('change');
+              $('#segment').val(data.segment.segment_id).trigger('change');
+              $('#class_of_business').val(data.class_of_business.class_of_business_id).trigger('change');
               $('#or_recipients').val(data.official_receipt.email);
               $('#soa_recipients').val(data.soa_recipients.email);
               $('#account_name').val(data.account_name);
               $('#email').val(data.email);
               $('#intermediary_code').val(data.intermediary_code);
-              $('#is_active').val(data.is_active);
+              $('#is_active').val(data.is_active).trigger('change');
           }
         });
 
@@ -337,5 +340,6 @@
         }
       }
   });
+
 </script>
 
