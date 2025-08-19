@@ -82,7 +82,7 @@
 
                                 <div class="col-md-auto ms-auto mt-5">
                                     <ul class="pagination">
-                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/finance/soa-masterlist/', 'page', true); ?>
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/finance/soa-master/', 'page', true); ?>
                                     </ul>
                                 </div>
                                 
@@ -106,8 +106,9 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
-              <label for="source_name" class="form-label">Source Name</label>
-              <select id="source_name" name="source_name" class="select2 form-select" data-allow-clear="true">
+              <label for="intermediary_id" class="form-label">Source Name <span>*</span></label>
+              <select id="intermediary_id" name="intermediary_id" class="select2 form-select" data-allow-clear="true" required>
+                <option value=""></option>
                 <?php
                     foreach($data['intermediaries'] as $intermediary){
                 ?>
@@ -122,7 +123,8 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="branch" class="form-label">Branches <span>(Optional)</span></label>
               <div class="select2-primary">
-                <select id="branch" name="branch" class="select2 form-select" data-allow-clear="true" multiple>
+                <select id="branch" name="branch" class="select2 form-select" data-allow-clear="true">
+                  <option value=""></option>
                     <?php
                         foreach($data['branches'] as $branch){
                     ?>
@@ -138,6 +140,7 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="segment" class="form-label">Segments <span>(Optional)</span></label>
               <select id="segment" name="segment" class="select2 form-select" data-allow-clear="true">
+                <option value=""></option>
                 <?php
                     foreach($data['segments'] as $segment){
                 ?>
@@ -158,6 +161,7 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="sales_channel" class="form-label">Sales Channel <span>(Optional)</span></label>
               <select id="sales_channel" name="sales_channel" class="select2 form-select" data-allow-clear="true">
+                <option value=""></option>
                 <?php
                     foreach($data['sales_channels'] as $sales_channel){
                 ?>
@@ -172,6 +176,7 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="topro" class="form-label">TOPRO <span>(Optional)</span></label>
               <select id="topro" name="topro" class="select2 form-select" data-allow-clear="true">
+                <option value=""></option>
                 <?php
                     foreach($data['topros'] as $topro){
                 ?>
@@ -184,8 +189,9 @@
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
-              <label for="cob" class="form-label">COB Description <span>(Optional)</span></label>
-              <select id="cob" name="cob" class="select2 form-select" data-allow-clear="true">
+              <label for="class_of_business" class="form-label">COB Description <span>(Optional)</span></label>
+              <select id="class_of_business" name="class_of_business" class="select2 form-select" data-allow-clear="true">
+                <option value=""></option>
                 <?php
                     foreach($data['cobs'] as $cob){
                 ?>
@@ -202,8 +208,9 @@
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
-              <label for="handler" class="form-label">Handler</label>
-              <select id="handler" name="handler" class="select2 form-select" data-allow-clear="true">
+              <label for="handler_id" class="form-label">Handler <span>*</span></label>
+              <select id="handler_id" name="handler_id" class="select2 form-select" data-allow-clear="true" required>
+                <option value=""></option>
                 <?php
                     foreach($data['handlers'] as $handler){
                 ?>
@@ -216,8 +223,9 @@
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
-              <label for="team_leader" class="form-label">Team Leader</label>
-              <select id="team_leader" name="team_leader" class="select2 form-select" data-allow-clear="true">
+              <label for="team_leader_id" class="form-label">Team Leader <span>*</span></label>
+              <select id="team_leader_id" name="team_leader_id" class="select2 form-select" data-allow-clear="true" required>
+                <option value=""></option>
                 <?php
                     foreach($data['team_leaders'] as $team_leader){
                 ?>
@@ -230,24 +238,24 @@
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
-              <label for="source_name" class="form-label">OR Recipients <span>(Optional)</span></label>
-              <input type="text" class="form-control">
+              <label for="or_recipients" class="form-label">OR Recipients <span>(Optional)</span></label>
+              <input type="text" name="or_recipients" id="or_recipients" class="form-control">
             </div>
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
-              <label for="soa_recipients" class="form-label">SOA Recipients</label>
-              <input type="text" class="form-control">
+              <label for="soa_recipients" class="form-label">SOA Recipients <span>*</span></label>
+              <input type="text" class="form-control" name="soa_recipients" id="soa_recipients" required>
             </div>
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
-              <label for="source_name" class="form-label">Intermediary Code</label>
-              <input type="text" class="form-control">
+              <label for="intermediary_code" class="form-label">Intermediary Code <span>*</span></label>
+              <input type="text" class="form-control" value="" id="intermediary_code" name="intermediary_code" required>
             </div>
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
-              <label for="source_name" class="form-label">Status</label>
-              <select id="source_name" name="source_name" class="select2 form-select" data-allow-clear="true">
+              <label for="is_active" class="form-label">Status</label>
+              <select id="is_active" name="is_active" class="select2 form-select" data-allow-clear="true">
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>
               </select>
@@ -284,5 +292,50 @@
             window.location.replace(link+parameter);
         });
     });
+
+
+    $('.showModal').click(function(e){
+    
+      e.preventDefault();
+      $('#masterlistModal').find('form')[0].reset();
+      $('#masterlistModal').find('input').prop('readonly', false);
+      $('#masterlistModal').find('select').prop('disabled', false);
+      var action = $(this).attr('action');
+      $('[name="action"]').val(action);
+      $('.submit').css('display', 'block');
+
+      if(action != 'add'){
+        $.ajax({
+          url: '/finance/soaMaster_json/',
+          method: 'POST',
+          data:{
+            id: $(this).data('id')
+          },
+          success: function(data){
+              $('[name="id"]').val(data.id);
+              $('#intermediary_id').val(data.intermediary_id);
+              $('#handler_id').val(data.handler_id);
+              $('#team_leader_id').val(data.team_leader_id);
+              $('#branch').val(data.branch.branch_id);
+              $('#topro').val(data.topro.topro_id);
+              $('#sales_channel').val(data.sales_channel.sales_channel_id);
+              $('#segment').val(data.segment.segment_id);
+              $('#cob').val(data.class_of_business.class_of_business_id);
+              $('#or_recipients').val(data.official_receipt.email);
+              $('#soa_recipients').val(data.soa_recipients.email);
+              $('#account_name').val(data.account_name);
+              $('#email').val(data.email);
+              $('#intermediary_code').val(data.intermediary_code);
+              $('#is_active').val(data.is_active);
+          }
+        });
+
+        if(action == "show"){
+          $('#masterlistModal').find('input').prop('readonly', true);
+          $('#masterlistModal').find('select').prop('disabled', true);
+          $('.submit').css('display', 'none');
+        }
+      }
+  });
 </script>
 

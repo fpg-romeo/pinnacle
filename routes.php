@@ -20,7 +20,7 @@
                                                     'googleSigninCallback'
                                                    ],
                             'finance'           => [
-                                                    'soa-dashboard', 'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'soaMaster', 'soaEmailTemplate' , 'soaEmailGeneric',
+                                                    'soa-dashboard', 'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate' , 'soaEmailGeneric',
                                                     'soaLetter', 'soaLetterManage', 
                                                     'importSoaDownload', 'importSoaDownloadJson'
                                                    ],

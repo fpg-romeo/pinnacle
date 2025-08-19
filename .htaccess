@@ -55,7 +55,7 @@ RewriteRule ^account/user/([0-9]+)/?$ index.php?controller=account&view=user&pag
 ### FINANCE - SOA
 RewriteRule ^finance/soa-immediate/([0-9]+)/?$ index.php?controller=finance&view=soa-immediate&page=$1 [NC,L]
 RewriteRule ^finance/soa-scheduled/([0-9]+)/?$ index.php?controller=finance&view=soa-scheduled&page=$1 [NC,L]
-RewriteRule ^finance/soa-masterlist/([0-9]+)/?$ index.php?controller=finance&view=soa-masterlist&page=$1 [NC,L]
+RewriteRule ^finance/soa-master/([0-9]+)/?$ index.php?controller=finance&view=soa-master&page=$1 [NC,L]
 RewriteRule ^finance/soa-download/([0-9]+)/?$ index.php?controller=finance&view=soa-download&page=$1 [NC,L]
 RewriteRule ^finance/soa-email-template/([0-9]+)/?$ index.php?controller=finance&view=soa-email-template&page=$1 [NC,L]
 RewriteRule ^finance/soa-email-generic/([0-9]+)/?$ index.php?controller=finance&view=soa-email-generic&page=$1 [NC,L]
