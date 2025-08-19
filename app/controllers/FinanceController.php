@@ -52,5 +52,26 @@
 
             views('finance.soa-email-generic', $data);  
         } 
+
+        public function soaMasterlist(){
+            $data = array();
+            includeModel('Master');
+
+            $keyword                    = urldecode(getVar('keyword'));
+            $data['masterlists']        = Finance::getAllMasterlists($keyword, pagination('start'), pagination('limit'));
+            $data['total_record']       = Finance::countAllMasterlist($keyword);
+            $data['total_page']         = pagination('total', $data['total_record']); 
+
+            $data['intermediaries']     = Master::getActiveIntermediary();
+            $data['branches']           = Master::getActiveBranches();
+            $data['segments']           = Master::getActiveSegments();
+            $data['sales_channels']     = Master::getActiveSalesChannels();
+            $data['topros']             = Master::getActiveTOPROs();
+            $data['cobs']               = Master::getActiveCOBs();
+            $data['handlers']           = Master::getActiveHandlers();
+            $data['team_leaders']       = Master::getActiveTeamLeaders();
+
+            views('finance.soa-masterlist', $data);  
+        } 
     }
 ?>

@@ -677,5 +677,38 @@ class Master
             }
             return $result;
         }
+        
+        public static function getActiveIntermediary(){
+            $result = mysql::select('master_intermediaries', '*', "is_active = 1 AND categories != ''", 'source_name ASC');
+            return $result;
+        }
+        public static function getActiveBranches(){
+            $result = mysql::select('master_branch', '*', "is_active = 1", 'name ASC');
+            return $result;
+        }
+        public static function getActiveSegments(){
+            $result = mysql::select('master_segment', '*', "is_active = 1", '');
+            return $result;
+        }
+        public static function getActiveSalesChannels(){
+            $result = mysql::select('master_sales_channel', '*', "is_active = 1", '');
+            return $result;
+        }
+        public static function getActiveTOPROs(){
+            $result = mysql::select('master_topro', '*', "is_active = 1", '');
+            return $result;
+        }
+        public static function getActiveCOBs(){
+            $result = mysql::select('master_class_of_business', '*', "is_active = 1", '');
+            return $result;
+        }
+        public static function getActiveHandlers(){
+            $result = mysql::select('master_handler', '*', "is_active = 1", '');
+            return $result;
+        }
+        public static function getActiveTeamLeaders(){
+            $result = mysql::select('master_team_leader', '*', "is_active = 1", '');
+            return $result;
+        }
     }
 ?>

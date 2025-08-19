@@ -20,6 +20,7 @@
 		<link rel="stylesheet" href="/public/vendor/fonts/iconify-icons.css" />
 		<!-- Core CSS -->
 		<!-- build:css assets/vendor/css/theme.css  -->
+		<link rel="stylesheet" href="/public/vendor/libs/select2/select2.css " />
 		<link rel="stylesheet" href="/public/vendor/libs/node-waves/node-waves.css" />
 		<link rel="stylesheet" href="/public/vendor/libs/pickr/pickr-themes.css" />
 		<link rel="stylesheet" href="/public/vendor/css/core.css" />
@@ -42,6 +43,7 @@
 		<script src="/public/vendor/js/template-customizer.js"></script>
 		<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 		<script src="/public/js/config.js"></script>
+		
 	</head>
 	<body id="<?php echo (getVar('controller') ? getVar('controller') : '') . '-' . (getVar('view') ? getVar('view') : ''); ?>">
 		<!-- Layout wrapper -->
@@ -72,7 +74,7 @@
 							<span class="menu-header-text" data-i18n="MODULES">MODULES</span>
 						</li>
 
-						<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
+						<li class="menu-item <?php activeView(['finance'], ['soa-immediate', 'soa-scheduled', 'soa-setting', 'soa-masterlist', 'soa-download', 'soa-email-template', 'soa-email-generic'], 'active open'); ?>">
 							<a href="javascript:void(0)" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
 								<div data-i18n="Finance">Finance</div>
@@ -98,6 +100,11 @@
 								<li class="menu-item <?php activeView(['finance'], ['soa-setting'], 'active'); ?>">
 									<a href="/finance/soa-setting" class="menu-link">
 										<div data-i18n="SOA Settings">SOA Settings</div>
+									</a>
+								</li>
+								<li class="menu-item <?php activeView(['finance'], ['soa-masterlist'], 'active'); ?>">
+									<a href="/finance/soa-masterlist" class="menu-link">
+										<div data-i18n="SOA Masterlist">SOA Masterlist</div>
 									</a>
 								</li>
 								<li class="menu-item <?php activeView(['finance'], ['soa-download'], 'active'); ?>">

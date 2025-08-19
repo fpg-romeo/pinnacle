@@ -580,6 +580,7 @@
 
         public function topro()
         {
+            phpinfo();
             $data = array();
             $CONFIGURATION = Configuration::general();
 
