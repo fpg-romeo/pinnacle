@@ -731,7 +731,11 @@ class MasterController
         $data = array();
         $CONFIGURATION = Configuration::general();
 
-        $data['record'] = Master::getIntermediary();
+        // $data['record'] = Master::getIntermediary();
+        $keyword                    = urldecode(getVar('keyword'));
+        $data['record']           = Master::getallIntermediary($keyword, pagination('start'), pagination('limit')) ?: [];
+        $data['total_record']       = Master::countAllIntermediary($keyword);
+        $data['total_page']         = pagination('total', $data['total_record']);
 
         views('master.intermediary', $data);
     }

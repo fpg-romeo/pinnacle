@@ -971,6 +971,52 @@ class Master
             return $result;
         }
 
+        public static function getAllIntermediary($keyword='',$start='', $limit=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 source_name LIKE {$keyword}
+                                 OR
+                                 created_at LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
+            $result = mysql::select('master_intermediaries', 
+                                    '*',
+                                    $filter,
+                                    'id DESC',$startLimit);
+            return $result;
+        }
+
+         public static function countAllIntermediary($keyword=''){
+            if(!empty(trim($keyword))){
+                $keyword = " '%{$keyword}%' ";
+                $filter  = "
+                              
+                             (
+                                 source_name LIKE {$keyword}
+                                 OR
+                                 created_at LIKE {$keyword}
+                             )
+                          ";
+            }else{
+                $filter = '';
+            }
+            $result = mysql::select('master_intermediaries', 
+                                    'COUNT(*) as count',
+                                    $filter);
+            if(is_array($result)){
+                return recastArray($result)['count'];
+            }else{
+                return 0;
+            } 
+        } 
+
         public static function addIntermediary($fields){
 
             $fields = MySql::buildFields($fields, ", ");

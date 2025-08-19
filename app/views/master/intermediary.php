@@ -79,7 +79,7 @@
 
                 <div class="col-md-auto ms-auto mt-5">
                   <ul class="pagination">
-                    <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/branch/', 'page', true); ?>
+                    <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/intermediary/', 'page', true); ?>
                   </ul>
                 </div>
 

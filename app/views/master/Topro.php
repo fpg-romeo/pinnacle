@@ -1,5 +1,4 @@
 <?php flash(promptMessage('message')); ?>
-
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row justify-content-between">
@@ -67,7 +66,7 @@
 
                                 <div class="col-md-auto ms-auto mt-5">
                                     <ul class="pagination">
-                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/branch/', 'page', true); ?>
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/topro/', 'page', true); ?>
                                     </ul>
                                 </div>
 
