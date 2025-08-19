@@ -1,4 +1,3 @@
-
 <?php flash(promptMessage('message')); ?>
 
 <div class="content-wrapper">
@@ -20,16 +19,12 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select id="form-repeater-1-3" class="form-select">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                    <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
-                                <input type="text" id="form-repeater-1-1" class="form-control" placeholder="Search..." />
+                                <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                         </div>
                     </div>
@@ -44,25 +39,44 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                  <?php
-                                      foreach($data['record'] as $record){
-                                  ?>
+                                    <?php if (!empty($data['record']) && is_array($data['record'])) { ?>
+                                        <?php
+                                        foreach ($data['record'] as $record) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $record['code'] ?></td>
+                                                <td><?= $record['description'] ?></td>
+                                                <td><?= $record['is_active'] ? 'Active' : 'Inactive' ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
                                         <tr>
-                                            <td><?=$record['code']?></td>
-                                            <td><?=$record['description']?></td>
-                                            <td><?=$record['is_active'] ? 'Active' : 'Inactive'?></td>
+                                            <td colspan="4" class="text-center">No class business found</td>
                                         </tr>
-                                  <?php
-                                      }
-                                  ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
 
+                        <?php if (is_array($data['record'])) { ?>
+                            <div class="row justify-content-between">
+                                <div class="col-md-auto me-auto mt-8">
+                                    <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
+                                </div>
+
+                                <div class="col-md-auto ms-auto mt-5">
+                                    <ul class="pagination">
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/master/class-business/', 'page', true); ?>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        <?php } ?>
+
                         <div class="row justify-content-between">
-                            <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
+                            <!-- <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
                                 <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">
-                                    Showing 1 to 10 of 100 entries 
+                                    Showing 1 to 10 of 100 entries
                                 </div>
                             </div>
                             <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto mt-5">
@@ -114,43 +128,58 @@
                                     </nav>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script type="text/javascript">
+        //DATATABLE FILTER
+        $(document).ready(function() {
+            $('.pagination').bind('blur change', function(e) {
+                e.preventDefault();
+
+                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit = $('select[name=pagination_limit]').find(":selected").val();
+                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
+
+                window.location.replace(link + parameter);
+            });
+        });
+    </script>
+
+    <script>
+        $('#syncBtn').on('click', function(e) {
+            e.preventDefault();
 
 
-<script>
-  $('#syncBtn').on('click', function(e) {
-    e.preventDefault();
+            var action = $(this).attr('action');
 
-   
-    var action = $(this).attr('action');
-
-    $.ajax({
-      url: '/master/classBusiness_json',
-      type: 'POST',
-      dataType: 'json',
+            $.ajax({
+                url: '/master/classBusiness_json',
+                type: 'POST',
+                dataType: 'json',
 
 
-      success: function(response) {
-        
-        if (response.status === 'success') {
-          alert('Sync successful!');
-          location.reload();
-        } else {
-          alert('Sync failed: ' + response.message);
-        }
-      },
-      error: function(xhr, status, error) {
-        console.error('AJAX Error:', error);
-        console.error('Raw Response:', xhr.responseText); 
-        alert('An error occurred: ' + error + ' - ' + xhr.responseText);
-      }
-    });
-  });
-</script>
+                success: function(response) {
+
+                    if (response.status === 'success') {
+                        alert('Sync successful!');
+                        location.reload();
+                    } else {
+                        alert('Sync failed: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    console.error('Raw Response:', xhr.responseText);
+                    alert('An error occurred: ' + error + ' - ' + xhr.responseText);
+                }
+            });
+        });
+    </script>

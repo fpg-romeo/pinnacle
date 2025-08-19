@@ -36,6 +36,16 @@ RewriteRule ^file/(.*) /upload/$1 [NC,L]
 ### BACKUP
 RewriteRule ^storage/(.*) /backup/$1 [NC,L]
 
+### MASTER
+RewriteRule ^master/topro/([0-9]+)/?$ index.php?controller=master&view=topro&page=$1 [NC,L]
+RewriteRule ^master/branch/([0-9]+)/?$ index.php?controller=master&view=branch&page=$1 [NC,L]
+RewriteRule ^master/segment/([0-9]+)/?$ index.php?controller=master&view=segment&page=$1 [NC,L]
+RewriteRule ^master/handler/([0-9]+)/?$ index.php?controller=master&view=handler&page=$1 [NC,L]
+RewriteRule ^master/team-leader/([0-9]+)/?$ index.php?controller=master&view=team-leader&page=$1 [NC,L]
+RewriteRule ^master/sales-channel/([0-9]+)/?$ index.php?controller=master&view=sales-channel&page=$1 [NC,L]
+RewriteRule ^master/intermediary/([0-9]+)/?$ index.php?controller=master&view=intermediary&page=$1 [NC,L]
+RewriteRule ^master/class-business/([0-9]+)/?$ index.php?controller=master&view=class-business&page=$1 [NC,L]
+
 ### ACCOUNT
 RewriteRule ^account/verify/([^/]+)/([^/]+)/?$ index.php?controller=account&view=verify&email=$1&code=$2 [NC,L]
 RewriteRule ^account/new-password/([^/]+)/([^/]+)/?$ index.php?controller=account&view=new-password&email=$1&code=$2 [NC,L]
