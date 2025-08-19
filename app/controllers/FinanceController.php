@@ -73,5 +73,18 @@
 
             views('finance.soa-masterlist', $data);  
         } 
+        public function soaLetter(){
+            $data = array();
+
+            views('finance.soa-letter', $data);  
+        } 
+
+        public function soaLetterManage(){
+            $data = array();
+
+            views('finance.soa-letter-manage', $data);  
+        } 
+
+        
     }
 ?>

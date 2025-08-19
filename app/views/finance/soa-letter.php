@@ -4,19 +4,12 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row justify-content-between">
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
-                <h4 class="lh-lg mb-0 fw-bolder">Notification Email</h4>
-                <p class="mb-0">
-                    Automation Email Sender | 
-                    <span class="notification-email-status-unprocessed"><i class="fa fa-circle" aria-hidden="true"></i> UNPROCESSED</span>
-                    <span class="notification-email-status-queue"><i class="fa fa-circle" aria-hidden="true"></i> QUEUE</span>
-                    <span class="notification-email-status-error"><i class="fa fa-circle" aria-hidden="true"></i> ERROR</span>
-                    <span class="notification-email-status-failed"><i class="fa fa-circle" aria-hidden="true"></i> FAILED</span>
-                </p>
+                <h4 class="lh-lg mb-0 fw-bolder">SOA <span class="text-primary">[ Letters ]</span></h4>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
-                <a href="/cron/test-email/" class="btn btn-info text-white" target="_blank">
-                    <i class="icon-base ti tabler-send me-2"></i>
-                    <span class="align-middle">Send Test Email</span>
+                <a href="/finance/soa-letter-manage" class="btn btn-primary text-white">
+                    <i class="icon-base ti tabler-plus me-2"></i>
+                    <span class="align-middle">Add Record</span>
                 </a>
             </div>
         </div>
@@ -35,24 +28,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body pb-2">
+                    <div class="card-body">
                         <div class="table-responsive text-nowrap">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>TYPE / SUBJECT</th>
-                                        <th>RECIPIENT TO</th>
-                                        <th>RECIPIENT CC</th>
-                                        <th>RECIPIENT BCC</th>
-                                        <th>PROCESS BY</th>
-                                        <th>ATTEMPT</th>
-                                        <th>STATUS</th>
+                                        <th>Aging</th>
+                                        <th>Letter</th>
+                                        <th>Status</th>
+                                        <th>Date Created</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                     <?php
-                                        if(isset($data['email']) && is_array($data['email'])){
-                                            foreach($data['email'] as $key => $value){
+                                        if(isset($data['letter']) && is_array($data['letter'])){
+                                            foreach($data['letter'] as $key => $value){
                                                 echo '
                                                     <tr id="'.$value['id'].'" class="notification-email-status-'.strtolower(htmlDecode($value['status_name'])).'">
                                                         <td>
@@ -125,7 +116,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <?php if(isset($data['email']) && is_array($data['email'])){ ?>
+
+                        <?php if(isset($data['letter']) && is_array($data['letter'])){ ?>
                             <div class="row justify-content-between">
                                 <div class="col-md-auto me-auto mt-8">
                                     <?php echo paginationCounter(getVar('page'), arrayKeyExist($data, 'total_page'), arrayKeyExist($data, 'total_record')); ?>
@@ -133,82 +125,17 @@
 
                                 <div class="col-md-auto ms-auto mt-5">
                                     <ul class="pagination">
-                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/notification/email/', 'page', true); ?>
+                                        <?php echo tool_pagination(getVar('page'), $data['total_page'], '/finance/soa-letter/', 'page', true); ?>
                                     </ul>
                                 </div>
                                 
                             </div>
                         <?php } ?>
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>    
-    
-<div id="modal" class="modal fade">
-    <div class="modal-dialog modal-lg" role="document">
-        <form id="form">
-            <div class="modal-content bd-0">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel3">View Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pd-25">
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Type</label>
-                        <label class="col-sm-9 name"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Email Template</label>
-                        <label class="col-sm-9 template"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Subject</label>
-                        <label class="col-sm-9 subject"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Recipient To</label>
-                        <label class="col-sm-9 recipient_to"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Recipient CC</label>
-                        <label class="col-sm-9 recipient_cc"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Recipient BCC</label>
-                        <label class="col-sm-9 recipient_bcc"></label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Process By</label>
-                        <label class="col-sm-9">
-                            <span class="created_name"></span><br>
-                            <span class="created_when"></span>
-                        </label>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3">Status</label>
-                        <label class="col-sm-9">
-                            <span class="response"></span><br>
-                            <span class="updated_when"></span>
-                        </label>
-                    </div>
-                    <div class="row mb-5">
-                        <label class="col-sm-3 form-control-label">Action</label>
-                        <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                            <select name="status_id" class="form-select select" required>
-                                <?php echo tool_dropdown_value(value_status_email(), '', 'array'); ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input name="id" type="hidden" class="form-control">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary submit">Submit</button>              
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -224,87 +151,6 @@
             var parameter = '?page=1&limit='+limit+'&keyword='+keyword;
             
             window.location.replace(link+parameter);
-        });
-    });
-</script>
-
-<script type="text/javascript">
-    //SUBMIT
-    $(document).on('click', '.submit', function(e){
-        e.preventDefault();
-        
-        $('.required').remove();
-
-        $('#form input, #form select').each(
-            function(index){  
-                var input   = $(this);
-                var prop    = input.prop("required");
-                var name    = input.prop("name");
-                var type    = input.prop("type");
-                var value   = input.val();
-                var parent  = input.parent();
-
-                if (typeof prop !== typeof undefined && prop !== false) {
-                    if(value == ''){
-                        parent.append('<i class="required">required field</i>');
-                    }
-                }
-            }
-        );
-
-        if($('#form .required').length <= 0) {
-            $.ajax({
-                url: '/notification/email-json/',
-                type: 'POST',
-                data: $('#form').serialize(),
-                beforeSend: function(){
-                    promptAjaxLoading('form');
-                },
-                success: function(data){
-                    promptAjaxSuccess('modal', data.message, 'reload');
-                },
-                error: function(xhr, desc, err){ 
-                    //console.log(xhr);
-                    console.warn(xhr.responseText);
-                }
-            });
-        }
-    });
-
-    //VIEW
-    $(document).ready(function(){
-        $(document).on('click', '.view', function(e){
-            e.preventDefault();
-            var id      = $(this).data('id');
-            var action  = $(this).data('action');
-
-            $.ajax({
-                url: '/notification/email-json/',
-                type: 'POST',
-                data: {id:id, action:action},
-                success: function(data){
-                    console.log(data);
-                    $('.name').html(data.name);
-                    $('.template').html(data.template);
-                    $('.subject').html(data.subject);
-                    $('.recipient_to').html(data.recipient_to);
-                    $('.recipient_cc').html(data.recipient_cc);
-                    $('.recipient_bcc').html(data.recipient_bcc);
-                    $('.created_name').html(data.created_name);
-                    $('.created_when').html(data.created_when);
-                    $('.updated_when').html(data.updated_when);
-                    $('.response').html(data.response);
-                    $('.status_name').html(data.status_name);
-                    $('input[name=id]').val(data.id);
-                    $('select[name=status_id]').val(data.status_id).find("option[value=" + data.status_id +"]").attr('selected', true);
-
-                    $('#modal').modal('show');
-                },
-                error: function(xhr, desc, err){ 
-                    //console.log(xhr);
-                    console.warn(xhr.responseText);
-                }
-            });
         });
     });
 </script>
