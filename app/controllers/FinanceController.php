@@ -72,8 +72,6 @@
             $data['team_leaders']       = Master::getActiveTeamLeaders();
             
             if(isset($_POST['action'])){
-                pre($_POST);
-            die;
                 $field['master_list'] = array(
                     'intermediary_id'      => postVar('intermediary_id'),
                     'handler_id'           => postVar('handler_id'),
@@ -84,14 +82,14 @@
                     'is_active'            => $_POST['is_active'],
                 );
 
-                $field['branch']               = postVar('branch');
-                $field['segment']              = postVar('segment');
+                $field['branch']               = isset($_POST['branch']) && $_POST['branch'][0] != "" ? $_POST['branch'] : "";
+                $field['segment']              = isset($_POST['segment']) && $_POST['segment'][0] != "" ? $_POST['segment'] : "";
                 $field['insured_name']         = postVar('insured_name');
-                $field['sales_channel']        = postVar('sales_channel');
-                $field['topro']                = postVar('topro');
-                $field['class_of_business']    = postVar('class_of_business');
-                $field['or_recipients']        = postVar('or_recipients');
-                $field['soa_recipients']       = postVar('soa_recipients');
+                $field['sales_channel']        = isset($_POST['sales_channel']) && $_POST['sales_channel'][0] != "" ? $_POST['sales_channel'] : "";
+                $field['topro']                = isset($_POST['topro']) && $_POST['topro'][0] != "" ? $_POST['topro'] : "";
+                $field['class_of_business']    = isset($_POST['class_of_business']) && $_POST['class_of_business'][0] != "" ? $_POST['class_of_business'] : "";
+                $field['or_recipients']        = isset($_POST['or_recipients']) && $_POST['or_recipients'][0] != "" ? $_POST['or_recipients'] : "";
+                $field['soa_recipients']       = isset($_POST['soa_recipients']) && $_POST['soa_recipients'][0] != "" ? $_POST['soa_recipients'] : "";
 
                 if($_POST['action'] == "add"){
                    $id = Finance::addMasterList($field);
@@ -122,13 +120,13 @@
         public function soaMaster_json(){
             $result = recastArray(Finance::getMasterlistById($_POST['id']));
 
-            $result['branch']               = recastArray(Finance::getMasterlistPivot($_POST['id'], 'branch_master_list_pivot')) ?: "";
+            $result['branch']               = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_branch_master_list_pivot')) ?: "";
             $result['segment']              = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_segment_master_list_pivot')) ?: "";
-            $result['class_of_business']    = recastArray(Finance::getMasterlistPivot($_POST['id'], 'cob_master_list_pivot')) ?: "";
+            $result['class_of_business']    = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_class_of_business_master_list_pivot')) ?: "";
             $result['sales_channel']        = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_sales_channel_master_list_pivot')) ?: "";
             $result['topro']                = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_topro_master_list_pivot')) ?: "";
-            $result['soa_recipients']       = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_recipients')) ?: "";
-            $result['official_receipt']     = recastArray(Finance::getMasterlistPivot($_POST['id'], 'official_receipt_recipients')) ?: "";
+            $result['soa_recipients']       = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_recipient')) ?: "";
+            $result['official_receipt']     = recastArray(Finance::getMasterlistPivot($_POST['id'], 'soa_official_receipt_recipient')) ?: "";
 
             echo json_encode($result);
         }

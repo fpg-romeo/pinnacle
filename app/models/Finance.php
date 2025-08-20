@@ -22,7 +22,7 @@ class Finance
                 $filter = '';
             }
             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('soa_masterlist sml 
+            $result = mysql::select('soa_master_list sml 
                                     INNER JOIN master_intermediaries mint ON mint.id = sml.intermediary_id
                                     INNER JOIN master_handler mha ON mha.id = sml.handler_id
                                     INNER JOIN master_team_leader mtl ON mtl.id = sml.team_leader_id
@@ -51,7 +51,7 @@ class Finance
             $filter = '';
         }
 
-        $result = mysql::select('soa_masterlist sml 
+        $result = mysql::select('soa_master_list sml 
                                  INNER JOIN master_intermediaries mint ON mint.id = sml.intermediary_id
                                  INNER JOIN master_handler mha ON mha.id = sml.handler_id
                                  INNER JOIN master_team_leader mtl ON mtl.id = sml.team_leader_id
@@ -68,59 +68,73 @@ class Finance
 
     public static function addMasterList($post){
         $fields = mysql::buildFields($post['master_list'], ", ");
-        if(mysql::insert('soa_masterlist', $fields)){
+        if(mysql::insert('soa_master_list', $fields)){
             $result['status']  = 'success';
             $result['message'] = 'New Record Saved';
 
             $id    = mysql::insertedId();
 
-            if($post['branch'] != ""){
-                $branch['master_list_id']    = $id;
-                $branch['created_at']        = date('Y-m-d H:i:s');
-                $branch['branch_id'] = $post['branch'];
-                $result['branch'] = self::addMasterlistPivot($branch, 'branch_master_list_pivot');
+            if(!empty($post['branch'])){
+                $insert_branch = array();
+                foreach($post['branch'] as $branch){
+                    $insert_branch[] = "(" . $id . ", '".$branch."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['branch']  = self::addMasterlistPivot($id, $insert_branch, 'soa_branch_master_list_pivot', '(master_list_id, branch_id, created_at)');
             }
 
-            if($post['segment'] != ""){
-                $segment['master_list_id']    = $id;
-                $segment['created_at']        = date('Y-m-d H:i:s');
-                $segment['segment_id'] = $post['segment'];
-                $result['segment'] = self::addMasterlistPivot($segment, 'soa_segment_master_list_pivot');
+            if(!empty($post['segment'])){
+                $insert_segment = array();
+                foreach($post['segment'] as $segment){
+                    $insert_segment[] = "(" . $id . ", '".$segment."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['segment']  = self::addMasterlistPivot($id, $insert_segment, 'soa_segment_master_list_pivot', '(master_list_id, segment_id, created_at)');
             }
 
-            if($post['class_of_business'] != ""){
-                $class_ob_business['master_list_id']    = $id;
-                $class_ob_business['created_at']        = date('Y-m-d H:i:s');
-                $class_ob_business['class_of_business_id'] = $post['class_of_business'];
-                $result['class_of_business'] = self::addMasterlistPivot($class_ob_business, 'cob_master_list_pivot');
+            if(!empty($post['class_of_business'])){
+                $insert_class_of_business = array();
+                foreach($post['class_of_business'] as $class_of_business){
+                    $insert_class_of_business[] = "(" . $id . ", '".$class_of_business."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['class_of_business']  = self::addMasterlistPivot($id, $insert_class_of_business, 'soa_class_of_business_master_list_pivot', '(master_list_id, class_of_business_id, created_at)');
             }
 
-            if($post['sales_channel'] != ""){
-                $sales_channel['master_list_id']    = $id;
-                $sales_channel['created_at']        = date('Y-m-d H:i:s');
-                $sales_channel['sales_channel_id'] = $post['sales_channel'];
-                $result['sales_channel'] = self::addMasterlistPivot($sales_channel, 'soa_sales_channel_master_list_pivot');
+            if(!empty($post['sales_channel'])){
+                $insert_sales_channel = array();
+                foreach($post['sales_channel'] as $sales_channel){
+                    $insert_sales_channel[] = "(" . $id . ", '".$sales_channel."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['sales_channel']  = self::addMasterlistPivot($id, $insert_sales_channel, 'soa_sales_channel_master_list_pivot', '(master_list_id, sales_channel_id, created_at)');
             }
 
-            if($post['topro'] != ""){
-                $topro['master_list_id']    = $id;
-                $topro['created_at']        = date('Y-m-d H:i:s');
-                $topro['topro_id'] = $post['topro'];
-                $result['topro'] = self::addMasterlistPivot($topro, 'soa_topro_master_list_pivot');
+            if(!empty($post['topro'])){
+                $insert_topro = array();
+                foreach($post['topro'] as $topro){
+                    $insert_topro[] = "(" . $id . ", '".$topro."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['topro']  = self::addMasterlistPivot($id, $insert_topro, 'soa_topro_master_list_pivot', '(master_list_id, topro_id, created_at)');
             }
 
-            if($post['soa_recipients'] != ""){
-                $soa_recipients['master_list_id']    = $id;
-                $soa_recipients['created_at']        = date('Y-m-d H:i:s');
-                $soa_recipients['email']             = $post['soa_recipients'];
-                $result['soa_recipients']   = self::addMasterlistPivot($soa_recipients, 'soa_recipients');
+            if(!empty($post['soa_recipients'])){
+                $insert_soa_recipients = array();
+                foreach($post['soa_recipients'] as $soa_recipients){
+                    $insert_soa_recipients[] = "(" . $id . ", '".$soa_recipients."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['soa_recipients']  = self::addMasterlistPivot($id, $insert_soa_recipients, 'soa_recipient', '(master_list_id, email, created_at)');
             }
-
-            if($post['or_recipients'] != ""){
-                $official_receipt['master_list_id']    = $id;
-                $official_receipt['created_at']        = date('Y-m-d H:i:s');
-                $official_receipt['email']             = $post['or_recipients'];
-                $result['official_receipt']   = self::addMasterlistPivot($official_receipt, 'official_receipt_recipients');
+            
+            if(!empty($post['or_recipients'])){
+                $insert_or_recipients = array();
+                foreach($post['or_recipients'] as $or_recipients){
+                    $insert_or_recipients[] = "(" . $id . ", '".$or_recipients."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['or_recipients']  = self::addMasterlistPivot($id, $insert_or_recipients, 'soa_official_receipt_recipient', '(master_list_id, email, created_at)');
             }
             
         }else{
@@ -132,57 +146,72 @@ class Finance
 
     public static function editMasterList($id, $post){
         $fields = mysql::buildFields($post['master_list'], ", ");
-        if(mysql::update('soa_masterlist', $fields, 'id='.$id)){
+        if(mysql::update('soa_master_list', $fields, 'id='.$id)){
             $result['status']  = 'success';
             $result['message'] = 'New Record Saved';
 
-            if($post['branch'] != ""){
-                $branch['master_list_id']       = $id;
-                $branch['created_at']           = date('Y-m-d H:i:s');
-                $branch['branch_id']            = $post['branch'];
-                $result['branch']               = self::editMasterlistPivot($branch, 'branch_master_list_pivot');
+            if(!empty($post['branch'])){
+                $insert_branch = array();
+                foreach($post['branch'] as $branch){
+                    $insert_branch[] = "(" . $id . ", '".$branch."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['branch']  = self::addMasterlistPivot($id, $insert_branch, 'soa_branch_master_list_pivot', '(master_list_id, branch_id, created_at)');
             }
 
-            if($post['segment'] != ""){
-                $segment['master_list_id']      = $id;
-                $segment['created_at']          = date('Y-m-d H:i:s');
-                $segment['segment_id']          = $post['segment'];
-                $result['segment']              = self::editMasterlistPivot($segment, 'soa_segment_master_list_pivot');
+            if(!empty($post['segment'])){
+                pre($post['segment']);
+                $insert_segment = array();
+                foreach($post['segment'] as $segment){
+                    $insert_segment[] = "(" . $id . ", '".$segment."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['segment']  = self::addMasterlistPivot($id, $insert_segment, 'soa_segment_master_list_pivot', '(master_list_id, segment_id, created_at)');
             }
 
-            if($post['class_of_business'] != ""){
-                $class_ob_business['master_list_id']    = $id;
-                $class_ob_business['created_at']        = date('Y-m-d H:i:s');
-                $class_ob_business['class_of_business_id'] = $post['class_of_business'];
-                $result['class_of_business'] = self::editMasterlistPivot($class_ob_business, 'cob_master_list_pivot');
+            if(!empty($post['class_of_business'])){
+                $insert_class_of_business = array();
+                foreach($post['class_of_business'] as $class_of_business){
+                    $insert_class_of_business[] = "(" . $id . ", '".$class_of_business."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['class_of_business']  = self::addMasterlistPivot($id, $insert_class_of_business, 'soa_class_of_business_master_list_pivot', '(master_list_id, class_of_business_id, created_at)');
             }
 
-            if($post['sales_channel'] != ""){
-                $sales_channel['master_list_id']    = $id;
-                $sales_channel['created_at']        = date('Y-m-d H:i:s');
-                $sales_channel['sales_channel_id'] = $post['sales_channel'];
-                $result['sales_channel'] = self::editMasterlistPivot($sales_channel, 'soa_sales_channel_master_list_pivot');
+            if(!empty($post['sales_channel'])){
+                $insert_sales_channel = array();
+                foreach($post['sales_channel'] as $sales_channel){
+                    $insert_sales_channel[] = "(" . $id . ", '".$sales_channel."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['sales_channel']  = self::addMasterlistPivot($id, $insert_sales_channel, 'soa_sales_channel_master_list_pivot', '(master_list_id, sales_channel_id, created_at)');
             }
 
-            if($post['topro'] != ""){
-                $topro['master_list_id']    = $id;
-                $topro['created_at']        = date('Y-m-d H:i:s');
-                $topro['topro_id'] = $post['topro'];
-                $result['topro'] = self::editMasterlistPivot($topro, 'soa_topro_master_list_pivot');
+            if(!empty($post['topro'])){
+                $insert_topro = array();
+                foreach($post['topro'] as $topro){
+                    $insert_topro[] = "(" . $id . ", '".$topro."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['topro']  = self::addMasterlistPivot($id, $insert_topro, 'soa_topro_master_list_pivot', '(master_list_id, topro_id, created_at)');
             }
 
-            if($post['soa_recipients'] != ""){
-                $soa_recipients['master_list_id']    = $id;
-                $soa_recipients['created_at']        = date('Y-m-d H:i:s');
-                $soa_recipients['email']             = $post['soa_recipients'];
-                $result['soa_recipients']   = self::editMasterlistPivot($soa_recipients, 'soa_recipients');
+            if(!empty($post['soa_recipients'])){
+                $insert_soa_recipients = array();
+                foreach($post['soa_recipients'] as $soa_recipients){
+                    $insert_soa_recipients[] = "(" . $id . ", '".$soa_recipients."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['soa_recipients']  = self::addMasterlistPivot($id, $insert_soa_recipients, 'soa_recipient', '(master_list_id, email, created_at)');
             }
-
-            if($post['or_recipients'] != ""){
-                $official_receipt['master_list_id']    = $id;
-                $official_receipt['created_at']        = date('Y-m-d H:i:s');
-                $official_receipt['email']             = $post['or_recipients'];
-                $result['official_receipt']   = self::editMasterlistPivot($official_receipt, 'official_receipt_recipients');
+            
+            if(!empty($post['or_recipients'])){
+                $insert_or_recipients = array();
+                foreach($post['or_recipients'] as $or_recipients){
+                    $insert_or_recipients[] = "(" . $id . ", '".$or_recipients."', '".date('Y-m-d H:i:s')."')";
+                }
+                
+                $result['or_recipients']  = self::addMasterlistPivot($id, $insert_or_recipients, 'soa_official_receipt_recipient', '(master_list_id, email, created_at)');
             }
             
         }else{
@@ -195,7 +224,7 @@ class Finance
     
     public static function getMasterlistById($id)
     {
-        $result = mysql::select('soa_masterlist sml 
+        $result = mysql::select('soa_master_list sml 
                                  INNER JOIN master_intermediaries mint ON mint.id = sml.intermediary_id
                                  INNER JOIN master_handler mha ON mha.id = sml.handler_id
                                  INNER JOIN master_team_leader mtl ON mtl.id = sml.team_leader_id
@@ -206,29 +235,22 @@ class Finance
         return $result;
     }
 
-    public static function addMasterlistPivot($post, $table){
-        $fields = mysql::buildFields($post, ", ");
-        if(mysql::insert($table, $fields)){
+    public static function addMasterlistPivot($master_list_id, $post, $table, $column){
+
+        $record = self::getMasterlistPivot($master_list_id, $table);
+
+        if(is_array($record)){
+            $reset = mysql::delete($table, 'master_list_id = '.$master_list_id);
+        }
+
+        if (mysql::query("INSERT INTO ".$table.$column." VALUES " . implode(",\n", $post), "insert")) {
             $result['status']  = 'success';
             $result['message'] = 'New Record Saved';
-        }else{
+        } else {
             $result['status']  = 'failed';
             $result['message'] = 'Encounter technical error. Pls try again';
         }
-        return $result;
-    }
 
-    public static function editMasterlistPivot($post, $table){
-
-        $reset = mysql::delete($table, 'master_list_id = '.$post['master_list_id']);
-        $fields = mysql::buildFields($post, ", ");
-        if(mysql::insert($table, $fields, '')){
-            $result['status']  = 'success';
-            $result['message'] = 'Reord Successfully Updated';
-        }else{
-            $result['status']  = 'failed';
-            $result['message'] = 'Encounter technical error. Pls try again';
-        }
         return $result;
     }
 
