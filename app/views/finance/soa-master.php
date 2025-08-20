@@ -175,16 +175,9 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="topro" class="form-label">TOPRO <span>(Optional)</span></label>
-              <select id="topro" name="topro" class="select2 form-select" data-allow-clear="true">
-                <option value=""></option>
-                <?php
-                    foreach($data['topros'] as $topro){
-                ?>
-                        <option value="<?=$topro['id']?>"><?=$topro['code']?></option>
-                <?php
-                    }
-                ?>
-              </select>
+                  <select name="topro" id="topro" class="form-select select2" data-allow-clear="true" multiple>
+                      <?php echo tool_dropdown_multiple($data['topros'], '', 'code'); ?>
+                  </select>
             </div>
           </div>
           <div class="row">
@@ -273,11 +266,6 @@
   </div>
 </div>
 
-<!-- <script src="/public/vendor/libs/select2/select2.js"></script>
-<script>
-    $(".select2").select2();
-</script> -->
-
 <script type="text/javascript">
     //DATATABLE FILTER
     $(document).ready(function(){
@@ -293,49 +281,49 @@
         });
     });
 
+    $(document).ready(function(){
+        $('.showModal').click(function(e){
+        
+          e.preventDefault();
+          $('#masterlistModal').find('form')[0].reset();
+          $('#masterlistModal').find('input').prop('readonly', false);
+          $('#masterlistModal').find('select').prop('disabled', false);
+          var action = $(this).attr('action');
+          $('[name="action"]').val(action);
+          $('.submit').css('display', 'block');
 
-    $('.showModal').click(function(e){
-    
-      e.preventDefault();
-      $('#masterlistModal').find('form')[0].reset();
-      $('#masterlistModal').find('input').prop('readonly', false);
-      $('#masterlistModal').find('select').prop('disabled', false);
-      var action = $(this).attr('action');
-      $('[name="action"]').val(action);
-      $('.submit').css('display', 'block');
+          if(action != 'add'){
+            $.ajax({
+              url: '/finance/soaMaster_json/',
+              method: 'POST',
+              data:{
+                id: $(this).data('id')
+              },
+              success: function(data){
+                  $('[name="id"]').val(data.id);
+                  $('#intermediary_id').val(data.intermediary_id);
+                  $('#handler_id').val(data.handler_id);
+                  $('#team_leader_id').val(data.team_leader_id);
+                  $('#branch').val(data.branch.branch_id);
+                  $('#topro').val(data.topro.topro_id);
+                  $('#sales_channel').val(data.sales_channel.sales_channel_id);
+                  $('#segment').val(data.segment.segment_id);
+                  $('#cob').val(data.class_of_business.class_of_business_id);
+                  $('#or_recipients').val(data.official_receipt.email);
+                  $('#soa_recipients').val(data.soa_recipients.email);
+                  $('#account_name').val(data.account_name);
+                  $('#email').val(data.email);
+                  $('#intermediary_code').val(data.intermediary_code);
+                  $('#is_active').val(data.is_active);
+              }
+            });
 
-      if(action != 'add'){
-        $.ajax({
-          url: '/finance/soaMaster_json/',
-          method: 'POST',
-          data:{
-            id: $(this).data('id')
-          },
-          success: function(data){
-              $('[name="id"]').val(data.id);
-              $('#intermediary_id').val(data.intermediary_id);
-              $('#handler_id').val(data.handler_id);
-              $('#team_leader_id').val(data.team_leader_id);
-              $('#branch').val(data.branch.branch_id);
-              $('#topro').val(data.topro.topro_id);
-              $('#sales_channel').val(data.sales_channel.sales_channel_id);
-              $('#segment').val(data.segment.segment_id);
-              $('#cob').val(data.class_of_business.class_of_business_id);
-              $('#or_recipients').val(data.official_receipt.email);
-              $('#soa_recipients').val(data.soa_recipients.email);
-              $('#account_name').val(data.account_name);
-              $('#email').val(data.email);
-              $('#intermediary_code').val(data.intermediary_code);
-              $('#is_active').val(data.is_active);
+            if(action == "show"){
+              $('#masterlistModal').find('input').prop('readonly', true);
+              $('#masterlistModal').find('select').prop('disabled', true);
+              $('.submit').css('display', 'none');
+            }
           }
         });
-
-        if(action == "show"){
-          $('#masterlistModal').find('input').prop('readonly', true);
-          $('#masterlistModal').find('select').prop('disabled', true);
-          $('.submit').css('display', 'none');
-        }
-      }
-  });
+    });
 </script>
-

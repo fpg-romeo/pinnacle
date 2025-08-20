@@ -1,6 +1,6 @@
     //PRE LOAD FUNCTION
-    $(window).load(function(){  
-            
+    //$(window).load(function(){  
+    $(window).on('load', function(){    
         //disabledControl();
 
         /* MONEY FORMAT ONLY */
@@ -480,6 +480,20 @@
         selectDropdown();
     });
 
+    $(document).ready(function(){
+        const select2 = $('.select2');
+
+        if (select2.length) {
+            select2.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    placeholder: 'Select value',
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
+    });
+
     //MODAL
     $(document).ready(function(){
         $(document).on('shown.bs.modal', '.modal', function (e){
@@ -487,6 +501,7 @@
             e.preventDefault();
             selectDropdown();
             
+            /*
             $('.calendar').datepicker({ 
                 dateFormat: 'dd-M-yy'
             });
@@ -494,7 +509,8 @@
             $('.calendar-option').datepicker({
                 dateFormat: 'dd-M-yy'
             });
-
+            */
+           
             setTimeout(function() {
                 $('body').addClass('modal-open');
             }, 500); //1000
@@ -554,22 +570,23 @@
     });
 
     $(document).ready(function(){
-        editor();
+        //editor();
     });
 
+    /*
     function editor(height=400, control=''){
         if(control == 'plain'){
             control = false;
         }else{
             control = [
                     ['style', ['bold', 'italic', 'underline']],
-                    /*['font', ['strikethrough']],*/
+                    ['font', ['strikethrough']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol']]
-                    /*
+                    
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['misc', ['undo', 'redo']]
-                    */
+          
                 ];
         }
 
@@ -585,6 +602,7 @@
             });
         //});
     }
+    */
 
     $(document).ready(function(){
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -601,7 +619,8 @@
         div.css('width', width+'px');        
     }
 
-    $(window).load(function(){  
+    //$(window).load(function(){  
+    $(window).on('load', function(){ 
         loadingData();
     });    
 
@@ -678,6 +697,7 @@
     });
 
     //DATE FROM and TO : no back date
+    /*
     $(document).ready(function(){
         $('.start_date').datepicker({
             onSelect: function(selected) {
@@ -690,8 +710,10 @@
             }
         }); 
     });
+    */
 
     //CALENDAR
+    /*
     $(document).ready(function() {
         $('.calendar').datepicker({
             dateFormat: 'dd-M-yy'
@@ -707,6 +729,7 @@
             monthNamesShort: $.datepicker.regional["en"].monthNames
         });
     });
+    */
 
     //ORDINAL : add st, nd, rd and th (ordinal) suffix to a number
     function convertOrdinal(n) {
