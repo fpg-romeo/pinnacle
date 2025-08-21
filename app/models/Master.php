@@ -1098,4 +1098,44 @@ class Master
             $result = mysql::select('master_team_leader', '*', "is_active = 1", '');
             return $result;
         }
-    }
+
+        public static function syncSoa(){
+
+            set_time_limit(0);
+            $result = SQLServer::select('soa_v3', 'top 2 *',);
+            return $result; 
+        }
+
+        public static function addSoa($fields){
+
+            set_time_limit(0);
+            $insert = mysql::buildfields($fields, ", ");
+            if(mysql::insert('soa_monthly_raw_data', $insert)){
+
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+                $result['A_POLICYNO']      =  $insert['A_POLICYNO'];
+            }
+            return $result;
+        }
+
+        public static function addJobQueue($fields){
+            
+            $insert = mysql::buildfields($fields, ", ");
+            if(mysql::insert('jobs', $insert)){
+                $result['status']  = 'success';
+                $result['message'] = 'New Record Saved';
+                $result['id']      = mysql::insertedId();
+            }
+            return $result;
+        
+        }
+}
+
+    
+      
