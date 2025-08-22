@@ -69,7 +69,7 @@ RewriteRule ^finance/soa-master/([0-9]+)/?$ index.php?controller=finance&view=so
 RewriteRule ^finance/soa-download/([0-9]+)/?$ index.php?controller=finance&view=soa-download&page=$1 [NC,L]
 RewriteRule ^finance/soa-email-template/([0-9]+)/?$ index.php?controller=finance&view=soa-email-template&page=$1 [NC,L]
 RewriteRule ^finance/soa-email-generic/([0-9]+)/?$ index.php?controller=finance&view=soa-email-generic&page=$1 [NC,L]
-RewriteRule ^finance/soa-letter/([0-9]+)/?$ index.php?controller=finance&view=soa-letter&page=$1 [NC,L]
+RewriteRule ^finance/soa-letter/([0-9]+)/?$ index.php?controller=finance&view=soa-letter&id=$1 [NC,L]
 
 ### COLLECTION
 RewriteRule ^collection/all/([0-9]+)/?$ index.php?controller=collection&view=all&page=$1 [NC,L]

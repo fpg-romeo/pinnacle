@@ -33,6 +33,12 @@
 		<link rel="stylesheet" href="/public/vendor/css/pages/page-faq.css" />
 		<link rel="stylesheet" href="/public/vendor/libs/notyf/notyf.css" />
 		<link rel="stylesheet" href="/public/vendor/libs/tagify/tagify.css " />
+		<link rel="stylesheet" href="/public/vendor/libs/flatpickr/flatpickr.css" />
+
+		<link rel="stylesheet" href="/public/vendor/libs/quill/typography.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/quill/katex.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/quill/editor.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/highlight/highlight.css" />
 
 		<!-- Added Core jQuery -->
 		<script src="/public/lib/jquery/jquery.js"></script>
@@ -46,6 +52,11 @@
 		<script src="/public/js/config.js"></script>
 		<script src="/public/vendor/libs/select2/select2.js"></script>
 		<script src="/public/vendor/libs/tagify/tagify.js"></script>
+		<script src="/public/vendor/libs/flatpickr/flatpickr.js"></script>
+
+		<script src="/public/vendor/libs/quill/katex.js"></script>
+		<script src="/public/vendor/libs/quill/quill.js"></script>
+		<script src="/public/vendor/libs/highlight/highlight.js"></script>
 		
 	</head>
 	<body id="<?php echo (getVar('controller') ? getVar('controller') : '') . '-' . (getVar('view') ? getVar('view') : ''); ?>">

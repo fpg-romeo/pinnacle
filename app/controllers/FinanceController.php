@@ -107,8 +107,30 @@
 
         public function soaLetter(){
             $data = array();
+            $id = getVar('id');
+            if($id > 0){
+                $data['letter'] = recastArray(Finance::getLetterTemplateById($id));
+               
+                $categoriesDecode = json_decode($data['letter']['categories'], true);
 
-            views('finance.soa-letter', $data);  
+                $categories = array_map(function($item) {
+                    return json_encode([$item]);
+                }, $categoriesDecode);
+
+                $data['source_name'] = Finance::getSourceNameByCategories("'" . implode("', '", $categories) . "'");
+
+                views('finance.soa-letter-setting', $data);
+            }
+            else{
+                $data['letter'] = Finance::getLetterTemplates();
+                views('finance.soa-letter', $data);
+            }
+
+        } 
+
+        public function soaLetter_json(){
+            $result = Finance::updateSoaLetter($_POST);
+            echo json_encode($result);
         } 
 
         public function soaLetterManage(){

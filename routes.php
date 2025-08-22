@@ -22,7 +22,7 @@
                             'finance'           => [
                                                     'soa-dashboard', 'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate' , 'soaEmailGeneric',
                                                     'soaLetter', 'soaLetterManage', 
-                                                    'importSoaDownload', 'importSoaDownloadJson'
+                                                    'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json'
                                                    ],
                             'collection'        => [
                                                     'all', 'manage'
