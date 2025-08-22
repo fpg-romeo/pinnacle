@@ -262,5 +262,41 @@ class Finance
                                 '');
         return $result;
     }
+
+    public static function getLetterTemplates()
+    {
+        $result = mysql::select('soa_letter_template',
+                                '*',
+                                '');
+        return $result;
+    }
+
+    public static function getLetterTemplateById($id)
+    {
+        $result = mysql::select('soa_letter_template',
+                                '*',
+                                'id='.$id);
+        return $result;
+    }
+
+    public static function updateSoaLetter($post)
+    {
+        $id = $post['id'];
+        $post['categories'] = json_encode($post['categories']);
+        $fields = mysql::buildFields($post, ", ");
+        if(mysql::update('soa_letter_template', $fields, 'id='.$id)){
+            $result['status']  = 'success';
+            $result['message'] = 'Record Successfully Updated';
+        }else{
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function getSourceNameByCategories($categories){
+        $result = mysql::select('soa_master_list sml INNER JOIN master_intermediaries min ON sml.intermediary_id = min.id', 'min.id, min.source_name', 'sml.categories IN('.$categories.')', '');
+        return $result;
+    }
 }
 ?>
