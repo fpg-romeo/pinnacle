@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <label for="frequency" class="form-label">Frequency</label>
-                                    <select class="form-select" name="frequency" id="frequency">
+                                    <select class="form-select select2" name="frequency" id="frequency">
                                         <option value="dailyOn" <?=$data['letter']['frequency'] == "dailyOn" ? "selected" : ""?>>Daily at <?=date("g:i A", strtotime($data['letter']['schedule']))?></option>
                                         <option value="monthlyOn" <?=$data['letter']['frequency'] == "monthlyOn" ? "selected" : ""?>><?=$data['letter']['frequency_label']?></option>
                                     </select>
@@ -163,7 +163,6 @@
     var category = <?=json_encode($data['letter']['categories'])?>;
     var arr = JSON.parse(category); 
 
-    $('#category').select2();
     $('#category').val(arr).trigger('change');
     $('#is_active').val(<?=json_encode($data['letter']['is_active'])?>)
 
@@ -183,6 +182,7 @@
 
         $('#frequency').find('[value="monthlyOn"]').text('Every '+dayFormatted+' of the month at '+formattedTime);
         $('#frequency').find('[value="dailyOn"]').text('Daily at '+formattedTime);
+        $('#frequency').select2('destroy').select2();
     });
 
     $('#save').click(function(e){
