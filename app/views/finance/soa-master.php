@@ -107,15 +107,8 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="intermediary_id" class="form-label">Source Name <span>*</span></label>
-              <select id="intermediary_id" name="intermediary_id" class="select2 form-select" data-allow-clear="true" required>
-                <option value=""></option>
-                <?php
-                    foreach($data['intermediaries'] as $intermediary){
-                ?>
-                        <option value="<?=$intermediary['id']?>"><?=$intermediary['source_name']?></option>
-                <?php
-                    }
-                ?>
+              <select id="intermediary_id" name="intermediary_id" class="select2 form-select" required>
+                <?= tool_dropdown_option($data['intermediaries'], '', 'source_name'); ?>
               </select>
             </div>
           </div>
@@ -123,15 +116,8 @@
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="branch" class="form-label">Branches <span>(Optional)</span></label>
               <div class="select2-primary">
-                <select id="branch" name="branch" class="select2 form-select" data-allow-clear="true">
-                  <option value=""></option>
-                    <?php
-                        foreach($data['branches'] as $branch){
-                    ?>
-                            <option value="<?=$branch['id']?>"><?=$branch['name']?></option>
-                    <?php
-                        }
-                    ?>
+                <select id="branch" name="branch[]" class="select2 form-select" multiple>
+                  <?= tool_dropdown_option($data['branches'], '', 'name'); ?>
                 </select>
               </div>
             </div>
@@ -139,15 +125,8 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="segment" class="form-label">Segments <span>(Optional)</span></label>
-              <select id="segment" name="segment" class="select2 form-select" data-allow-clear="true">
-                <option value=""></option>
-                <?php
-                    foreach($data['segments'] as $segment){
-                ?>
-                        <option value="<?=$segment['id']?>"><?=$segment['name']?></option>
-                <?php
-                    }
-                ?>
+              <select id="segment" name="segment[]" class="select2 form-select" multiple>
+                <?= tool_dropdown_option($data['segments'], '', 'name'); ?>
               </select>
             </div>
           </div>
@@ -160,38 +139,31 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="sales_channel" class="form-label">Sales Channel <span>(Optional)</span></label>
-              <select id="sales_channel" name="sales_channel" class="select2 form-select" data-allow-clear="true">
-                <option value=""></option>
-                <?php
-                    foreach($data['sales_channels'] as $sales_channel){
-                ?>
-                        <option value="<?=$sales_channel['id']?>"><?=$sales_channel['name']?></option>
-                <?php
-                    }
-                ?>
+              <select id="sales_channel" name="sales_channel[]" class="select2 form-select" multiple>
+                <?= tool_dropdown_option($data['sales_channels'], '', 'name'); ?>
               </select>
             </div>
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="topro" class="form-label">TOPRO <span>(Optional)</span></label>
+<<<<<<< HEAD
                   <select name="topro" id="topro" class="form-select select2" data-allow-clear="true" multiple>
                       <?php echo tool_dropdown_multiple($data['topros'], '', 'code'); ?>
                   </select>
+=======
+              <select id="topro" name="topro[]" class="select2 form-select" multiple>
+                <option value=""></option>
+                <?= tool_dropdown_option($data['topros'], '', 'code'); ?>
+              </select>
+>>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
             </div>
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
               <label for="class_of_business" class="form-label">COB Description <span>(Optional)</span></label>
-              <select id="class_of_business" name="class_of_business" class="select2 form-select" data-allow-clear="true">
-                <option value=""></option>
-                <?php
-                    foreach($data['cobs'] as $cob){
-                ?>
-                        <option value="<?=$cob['id']?>"><?=$cob['name']?></option>
-                <?php
-                    }
-                ?>
+              <select id="class_of_business" name="class_of_business[]" class="select2 form-select" multiple>
+                <?= tool_dropdown_option($data['cobs'], '', 'name'); ?>
               </select>
             </div>
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
@@ -202,7 +174,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="handler_id" class="form-label">Handler <span>*</span></label>
-              <select id="handler_id" name="handler_id" class="select2 form-select" data-allow-clear="true" required>
+              <select id="handler_id" name="handler_id" class="select2 form-select" required>
                 <option value=""></option>
                 <?php
                     foreach($data['handlers'] as $handler){
@@ -217,7 +189,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="team_leader_id" class="form-label">Team Leader <span>*</span></label>
-              <select id="team_leader_id" name="team_leader_id" class="select2 form-select" data-allow-clear="true" required>
+              <select id="team_leader_id" name="team_leader_id" class="select2 form-select" required>
                 <option value=""></option>
                 <?php
                     foreach($data['team_leaders'] as $team_leader){
@@ -232,13 +204,13 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="or_recipients" class="form-label">OR Recipients <span>(Optional)</span></label>
-              <input type="text" name="or_recipients" id="or_recipients" class="form-control">
+              <input id="or_recipients" class="form-control" name="or_recipients[]" value="" />
             </div>
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="soa_recipients" class="form-label">SOA Recipients <span>*</span></label>
-              <input type="text" class="form-control" name="soa_recipients" id="soa_recipients" required>
+              <input id="soa_recipients" class="form-control" name="soa_recipients[]" value="" />
             </div>
           </div>
           <div class="row">
@@ -248,7 +220,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
               <label for="is_active" class="form-label">Status</label>
-              <select id="is_active" name="is_active" class="select2 form-select" data-allow-clear="true">
+              <select id="is_active" name="is_active" class="select2 form-select">
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>
               </select>
@@ -266,6 +238,21 @@
   </div>
 </div>
 
+<<<<<<< HEAD
+=======
+<script>
+    $('#masterlistModal .select2').select2({
+        dropdownParent: $('#masterlistModal')
+    });
+
+    const tagifyBasicEl = document.querySelector("#or_recipients");
+    const TagifyBasicOr = new Tagify(tagifyBasicEl);
+    
+    const tagifyBasic = document.querySelector("#soa_recipients");
+    const TagifyBasicSoa = new Tagify(tagifyBasic);
+</script>
+
+>>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
 <script type="text/javascript">
     //DATATABLE FILTER
     $(document).ready(function(){
@@ -292,6 +279,7 @@
           $('[name="action"]').val(action);
           $('.submit').css('display', 'block');
 
+<<<<<<< HEAD
           if(action != 'add'){
             $.ajax({
               url: '/finance/soaMaster_json/',
@@ -327,3 +315,50 @@
         });
     });
 </script>
+=======
+    $('.showModal').click(function(e){
+      
+      e.preventDefault();
+      
+      $('#masterlistModal').find('input').prop('readonly', false);
+      $('#masterlistModal').find('select').prop('disabled', false);
+      var action = $(this).attr('action');
+      $('[name="action"]').val(action);
+      $('.submit').css('display', 'block');
+
+      if(action != 'add'){
+        $.ajax({
+          url: '/finance/soaMaster_json/',
+          method: 'POST',
+          data:{
+            id: $(this).data('id')
+          },
+          success: function(data){
+              $('[name="id"]').val(data.id);
+              $('#intermediary_id').val(data.intermediary_id).trigger("change");
+              $('#handler_id').val(data.handler_id).trigger("change");
+              $('#team_leader_id').val(data.team_leader_id).trigger("change");
+              $('#branch').val(data.branch.branch_id).trigger("change");
+              $('#topro').val(data.topro.topro_id).trigger("change");
+              $('#sales_channel').val(data.sales_channel.sales_channel_id).trigger("change");
+              $('#segment').val(data.segment.segment_id).trigger("change");
+              $('#class_of_business').val(data.class_of_business.class_of_business_id).trigger("change");
+              $('#or_recipients').val(data.official_receipt.email);
+              $('#soa_recipients').val(data.soa_recipients.email);
+              $('#account_name').val(data.account_name);
+              $('#email').val(data.email);
+              $('#intermediary_code').val(data.intermediary_code);
+              $('#is_active').val(data.is_active).trigger("change");
+          }
+        });
+
+        if(action == "show"){
+          $('#masterlistModal').find('input').prop('readonly', true);
+          $('#masterlistModal').find('select').prop('disabled', true);
+          $('.submit').css('display', 'none');
+        }
+      }
+  });
+
+</script>
+>>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07

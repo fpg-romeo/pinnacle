@@ -33,6 +33,7 @@
 		<!-- Page CSS -->
 		<link rel="stylesheet" href="/public/vendor/css/pages/page-faq.css" />
 		<link rel="stylesheet" href="/public/vendor/libs/notyf/notyf.css" />
+		<link rel="stylesheet" href="/public/vendor/libs/tagify/tagify.css " />
 
 		<!-- Added Core jQuery -->
 		<script src="/public/lib/jquery/jquery.js"></script>
@@ -44,9 +45,15 @@
 		<script src="/public/vendor/js/template-customizer.js"></script>
 		<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 		<script src="/public/js/config.js"></script>
+<<<<<<< HEAD
 
 		<!-- Default Javascript - customize script -->
 		<script src="/public/js/default.js?ver=<?php echo strtotime(date('Ymd')); ?>"></script>
+=======
+		<script src="/public/vendor/libs/select2/select2.js"></script>
+		<script src="/public/vendor/libs/tagify/tagify.js"></script>
+		
+>>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
 	</head>
 	<body id="<?php echo (getVar('controller') ? getVar('controller') : '') . '-' . (getVar('view') ? getVar('view') : ''); ?>">
 		<!-- Layout wrapper -->
@@ -407,6 +414,7 @@
 		<script src="/public/vendor/libs/hammer/hammer.js"></script>
 		<script src="/public/vendor/libs/i18n/i18n.js"></script>
 		<script src="/public/vendor/js/menu.js"></script>
+<<<<<<< HEAD
 
 		<!-- <script src="/public/vendor/libs/bootstrap-select/bootstrap-select.js"></script> -->
 
@@ -416,6 +424,10 @@
 		<script src="/public/vendor/libs/@form-validation/bootstrap5.js"></script>
 		<script src="/public/vendor/libs/@form-validation/auto-focus.js"></script>
 		<script src="/public/vendor/libs/bs-stepper/bs-stepper.js"></script>
+=======
+		<script src="/public/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+		
+>>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
 
 		<!-- endbuild -->
 		<!-- Vendors JS -->

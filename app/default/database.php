@@ -101,18 +101,17 @@ class MySql
 		return ($count);
 	}
 
-	public static function query($query, $type = 'select')
-	{
+	public static function query($query, $type='select'){
 		$row 	= NULL;
 		$result = mysqli_query(self::connect(), $query) or self::debug(mysqli_error(self::$connection));
 
-		if ($type == 'select') {
-			while ($fetchrow = mysqli_fetch_assoc($result)) $row[] = $fetchrow;
+		if($type == 'select'){
+			while($fetchrow = mysqli_fetch_assoc($result)) $row[] = $fetchrow;
 			mysqli_free_result($result);
-
+			
 			return $row;
-		} else {
-			if ($result) {
+		}else{
+			if($result){
 				return true;
 			}
 			return false;
