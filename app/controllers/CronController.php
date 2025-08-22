@@ -117,5 +117,9 @@
 
             exit();
         }
+
+        public function soaCollectionReminderLetterGeneration(){
+            Shortcode::soaCollectionReminderLetterGeneration(1, 'download');
+        }
     }
 ?>

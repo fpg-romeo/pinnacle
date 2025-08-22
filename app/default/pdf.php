@@ -1,7 +1,7 @@
 <?php 
 includeLibrary(['tcpdf/tcpdf.php']);
 
-class bookingForm extends TCPDF{
+class soaFile extends TCPDF{
     protected $last_page_flag = false;
 
     public function Header(){
@@ -16,7 +16,7 @@ class bookingForm extends TCPDF{
         $this->SetY(7);
         $this->SetX(13);
         $this->SetFont('helvetica', 'B',12);
-        $this->SetTextColor(128,24,61);
+        $this->SetTextColor(255,107,0);
         $this->Cell(0, 10, $CONFIGURATION['SYSTEM_COMPANY'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
 
         $this->SetY(7);
@@ -35,7 +35,7 @@ class bookingForm extends TCPDF{
 
         $this->SetY(7);
         $this->SetX(13);
-        $this->SetTextColor(128,24,61);
+        $this->SetTextColor(255,107,0);
         $this->Write(46, $CONFIGURATION['SYSTEM_COMPANY_URL'], $CONFIGURATION['SYSTEM_COMPANY_URL'], false, 'L', true);
 
         $this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(128, 24, 61)));
@@ -61,62 +61,13 @@ class bookingForm extends TCPDF{
     
 }
 
-class invoiceForm extends TCPDF{
-
-    public function Header(){
-
-        $CONFIGURATION = Configuration::general();
-
-        $image = getSiteUrl().'/template/image/logo.png';
-
-        if ($this->page == 1) {
-            $this->Image($image, 20, 11, 43, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-
-            $this->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => 'black'));
-            $this->Line(11.5, 31.5, 200, 31.5, '');
-
-            $this->SetY(6);
-            $this->SetX(132);
-            $this->SetFont('helvetica', '',7);
-            $this->Cell(0, 10, $CONFIGURATION['SYSTEM_COMPANY'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
-
-            $this->SetY(4);
-            $this->SetX(132);
-            $this->SetFont('helvetica', '',7);
-            $this->SetTextColor(0,0,0);
-            $this->Cell(0, 22, $CONFIGURATION['SYSTEM_COMPANY_ADDRESS'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
-
-            $this->SetY(4);
-            $this->SetX(132);
-            $this->Cell(0, 30, $CONFIGURATION['SYSTEM_COMPANY_CONTACT_NO'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
-
-            $this->SetY(0);
-            $this->SetX(132);
-            $this->Write(46, $CONFIGURATION['SYSTEM_COMPANY_URL'],$CONFIGURATION['SYSTEM_COMPANY_URL'], false, 'L', true);
-        }else{
-            $this->SetMargins(10, 10, 10);
-        }
-    }
-    
-    public function Footer(){
-
-    }
-    
-}
-
 class pdf{
     public static function generate($filename="", $body="", $template="", $option="", $filepath="", $watermark="",$other_header_details=""){
         
-        if($template == "invoice"){
-            $pdf = new invoiceForm(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->SetAutoPageBreak(FALSE);
-            $margin_top = 10;
-        }else{
-            $pdf = new bookingForm(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->SetAutoPageBreak(TRUE, 15);
-            $margin_top = 20;
-        }
-    
+        $pdf = new soaFile(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetAutoPageBreak(TRUE, 15);
+        $margin_top = 20;
+
         $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
         //$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -157,18 +108,18 @@ class pdf{
             $pdf->writeHTML($content.$body, true, false, true, false, '');
         }
 
-        if($watermark == "paid"){
+        if($watermark == True){
             $pageNo = 1;
             if(is_array($body)){
                 foreach($body as $page) {
                     $pdf->StartTransform();
                     $pdf->Rotate(45, 115, 115);
-                    $pdf->SetDrawColor(0,192,0);
-                    $pdf->SetFont("helvetica", "", 40);
+                    $pdf->SetDrawColor(255,107,0);
+                    $pdf->SetFont("helvetica", "", 45);
                     $pdf->setTextRenderingMode($stroke=0.2, $fill=false, $clip=false);
-                    $pdf->SetY(101);
-                    $pdf->SetX(97);
-                    $pdf->Write(0, 'PAID', '', 0, '', true, 0, false, false, 0);
+                    $pdf->SetY(120);
+                    $pdf->SetX(10);
+                    $pdf->Write(0, 'FPG Insurance Co. Inc.', '', 0, '', true, 0, false, false, 0);
                     $pdf->StopTransform();
                     $pdf->setPage($pageNo);
                     $pageNo++;
@@ -176,12 +127,12 @@ class pdf{
             }else{
                 $pdf->StartTransform();
                 $pdf->Rotate(45, 115, 115);
-                $pdf->SetDrawColor(0,192,0);
-                $pdf->SetFont("helvetica", "", 40);
+                $pdf->SetDrawColor(255,107,0);
+                $pdf->SetFont("helvetica", "", 45);
                 $pdf->setTextRenderingMode($stroke=0.2, $fill=false, $clip=false);
-                $pdf->SetY(101);
-                $pdf->SetX(97);
-                $pdf->Write(0, 'PAID', '', 0, '', true, 0, false, false, 0);
+                $pdf->SetY(120);
+                $pdf->SetX(10);
+                $pdf->Write(0, 'FPG Insurance Co. Inc.', '', 0, '', true, 0, false, false, 0);
                 $pdf->StopTransform();
                 $pdf->setPage($pageNo);
             }

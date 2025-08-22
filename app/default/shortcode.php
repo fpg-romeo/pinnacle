@@ -519,6 +519,29 @@
             // }
             
             return false; // invalid recipient
-        }      
+        } 
+        
+        public static function soaCollectionReminderLetterGeneration($transaction_id, $action=""){
+            includeDefault('pdf');
+
+            $body      = 'Test Body Content';
+            $document  = 'SOA-1234567890';
+            $watermark = True;
+            $folder    = '/upload/soa';
+
+            if (ob_get_contents()) ob_end_clean();
+            if($action == "attachment"){
+                $filename = $document.'.pdf';
+                pdf::generate($filename, $body, 'invoice','attachment',$folder, $watermark);
+                $file = array(
+                            'location' => $folder, 
+                            'file'     => $filename
+                            ); 
+                return $file;
+            }else{
+                pdf::generate($document, $body, 'invoice','download',$folder, $watermark);
+                exit;
+            }
+        }
 	}
 ?>

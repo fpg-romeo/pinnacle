@@ -51,7 +51,7 @@
                                                     'accountUnitRole', 'accountUnitRoleJson'
                                                    ],
                             'cron'              => [
-                                                    'testEmail', 'notificationEmail'
+                                                    'testEmail', 'notificationEmail', 'soaCollectionReminderLetterGeneration'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
