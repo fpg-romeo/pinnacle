@@ -185,5 +185,26 @@ class SqlServer{
 		
 		return $row;
 	}	
-				
+
+	public static function query($query, $type = 'select')
+	{
+
+		set_time_limit(0);
+		$row 	= NULL;
+		$result = sqlsrv_query(self::connect(), $query) or self::debug(sqlsrv_errors());
+
+
+		if ($type == 'select') {
+			
+			while ($fetchrow = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) $row[] = $fetchrow;
+			sqlsrv_free_stmt($result);
+
+			return $row;
+		} else {
+			if ($result) {
+				return true;
+			}
+			return false;
+		}
+	}
 }

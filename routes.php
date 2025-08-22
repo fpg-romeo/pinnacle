@@ -48,7 +48,8 @@
                                                     'accountCompany', 'accountCompanyJson',
                                                     'accountDepartment', 'accountDepartmentJson', 'perDepartmentJson',
                                                     'accountDesignation', 'accountDesignationJson',
-                                                    'accountUnitRole', 'accountUnitRoleJson'
+                                                    'accountUnitRole', 'accountUnitRoleJson',
+                                                    'syncSOA_json',
                                                    ],
                             'cron'              => [
                                                     'testEmail', 'notificationEmail', 'soaCollectionReminderLetterGeneration'
