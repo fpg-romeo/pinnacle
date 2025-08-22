@@ -28,7 +28,9 @@
                                                     'all', 'manage'
                                                    ],
                             'report'            => [
-                                                    'manual', 'automatic'
+                                                    'test',
+                                                    'manual', 'automatic',
+                                                    'account'
                                                    ],
                             'master'            => [
                                                     'topro', 'topro_json',

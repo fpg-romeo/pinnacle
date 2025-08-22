@@ -539,7 +539,7 @@
                             ); 
                 return $file;
             }else{
-                pdf::generate($document, $body, 'invoice','download',$folder, $watermark);
+                pdf::generate($document, $body, 'invoice','view',$folder, $watermark);
                 exit;
             }
         }
