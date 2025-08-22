@@ -112,19 +112,19 @@
 
             if($multipleSheets == false){
                     $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')->applyFromArray([
-                        'fill' => [
-                            'fillType' => Fill::FILL_SOLID,
-                            'color' => ['rgb' => '1d2939'],
+                        'fill'           => [
+                            'fillType'   => Fill::FILL_SOLID,
+                            'color'      => ['rgb' => '1d2939'],
                         ],
-                        'font' => [
-                            'bold' => true,
-                            'color' => ['rgb' => 'FFFFFF'],
-                            'size' => 11,
+                        'font'           => [
+                            'bold'       => true,
+                            'color'      => ['rgb' => 'FFFFFF'],
+                            'size'       => 11,
                             //'name' => 'Arial',
                         ],
-                        'alignment' => [
+                        'alignment'      => [
                             'horizontal' => Alignment::HORIZONTAL_CENTER,
-                            'vertical' => Alignment::VERTICAL_TOP,
+                            'vertical'   => Alignment::VERTICAL_TOP,
                         ],
                     ]);
 
