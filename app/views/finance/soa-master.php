@@ -147,16 +147,10 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="topro" class="form-label">TOPRO <span>(Optional)</span></label>
-<<<<<<< HEAD
-                  <select name="topro" id="topro" class="form-select select2" data-allow-clear="true" multiple>
-                      <?php echo tool_dropdown_multiple($data['topros'], '', 'code'); ?>
-                  </select>
-=======
               <select id="topro" name="topro[]" class="select2 form-select" multiple>
                 <option value=""></option>
                 <?= tool_dropdown_option($data['topros'], '', 'code'); ?>
               </select>
->>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
             </div>
           </div>
           <div class="row">
@@ -226,6 +220,17 @@
               </select>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12 mb-5">
+              <label for="categories" class="form-label">Category</label>
+              <select id="categories" name="categories" class="select2 form-select">
+                  <option value=""></option>
+                  <option value="Agent">Agent</option>
+                  <option value="Broker">Broker</option>
+                  <option value="Direct">Direct</option>
+              </select>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <input type="hidden" value="" name="action">
@@ -238,12 +243,10 @@
   </div>
 </div>
 
-<<<<<<< HEAD
-=======
 <script>
-    $('#masterlistModal .select2').select2({
-        dropdownParent: $('#masterlistModal')
-    });
+    // $('#masterlistModal .select2').select2({
+    //     dropdownParent: $('#masterlistModal')
+    // });
 
     const tagifyBasicEl = document.querySelector("#or_recipients");
     const TagifyBasicOr = new Tagify(tagifyBasicEl);
@@ -252,7 +255,6 @@
     const TagifyBasicSoa = new Tagify(tagifyBasic);
 </script>
 
->>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07
 <script type="text/javascript">
     //DATATABLE FILTER
     $(document).ready(function(){
@@ -279,7 +281,6 @@
           $('[name="action"]').val(action);
           $('.submit').css('display', 'block');
 
-<<<<<<< HEAD
           if(action != 'add'){
             $.ajax({
               url: '/finance/soaMaster_json/',
@@ -303,6 +304,7 @@
                   $('#email').val(data.email);
                   $('#intermediary_code').val(data.intermediary_code);
                   $('#is_active').val(data.is_active);
+                  $('#categories').val(data.categories);
               }
             });
 
@@ -315,50 +317,3 @@
         });
     });
 </script>
-=======
-    $('.showModal').click(function(e){
-      
-      e.preventDefault();
-      
-      $('#masterlistModal').find('input').prop('readonly', false);
-      $('#masterlistModal').find('select').prop('disabled', false);
-      var action = $(this).attr('action');
-      $('[name="action"]').val(action);
-      $('.submit').css('display', 'block');
-
-      if(action != 'add'){
-        $.ajax({
-          url: '/finance/soaMaster_json/',
-          method: 'POST',
-          data:{
-            id: $(this).data('id')
-          },
-          success: function(data){
-              $('[name="id"]').val(data.id);
-              $('#intermediary_id').val(data.intermediary_id).trigger("change");
-              $('#handler_id').val(data.handler_id).trigger("change");
-              $('#team_leader_id').val(data.team_leader_id).trigger("change");
-              $('#branch').val(data.branch.branch_id).trigger("change");
-              $('#topro').val(data.topro.topro_id).trigger("change");
-              $('#sales_channel').val(data.sales_channel.sales_channel_id).trigger("change");
-              $('#segment').val(data.segment.segment_id).trigger("change");
-              $('#class_of_business').val(data.class_of_business.class_of_business_id).trigger("change");
-              $('#or_recipients').val(data.official_receipt.email);
-              $('#soa_recipients').val(data.soa_recipients.email);
-              $('#account_name').val(data.account_name);
-              $('#email').val(data.email);
-              $('#intermediary_code').val(data.intermediary_code);
-              $('#is_active').val(data.is_active).trigger("change");
-          }
-        });
-
-        if(action == "show"){
-          $('#masterlistModal').find('input').prop('readonly', true);
-          $('#masterlistModal').find('select').prop('disabled', true);
-          $('.submit').css('display', 'none');
-        }
-      }
-  });
-
-</script>
->>>>>>> a42bfbe9f98aeb60efa9879c1c573c1e93a05e07

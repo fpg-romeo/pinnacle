@@ -77,6 +77,7 @@
                     'handler_id'           => postVar('handler_id'),
                     'team_leader_id'       => postVar('team_leader_id'),
                     'intermediary_code'    => postVar('intermediary_code'),
+                    'categories'           => $_POST['categories'] != "" ? '["'.$_POST['categories'].'"]' : "",
                     'account_name'         => postVar('account_name'),
                     'created_at'           => date('Y-m-d H:i:s'),
                     'is_active'            => $_POST['is_active'],
@@ -93,6 +94,7 @@
 
                 if($_POST['action'] == "add"){
                    $id = Finance::addMasterList($field);
+                   
                 }
 
                 if($_POST['action'] == "edit"){
