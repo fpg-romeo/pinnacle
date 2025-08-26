@@ -384,7 +384,7 @@ class Email{
         
                             .table              { border-collapse: separate; border-spacing: 5px; width: 480px; font-size: 10px; }
                             .table td           { padding: 5px; border: 1px solid #ccc; } 
-                            .table .header      { background: #ff6b00; color: #ffffff; font-weight: bold; }
+                            .table .header      { background: #ff6b00; color: white; font-weight: bold; }
                             
                             .width-10           { width: 10%; }
                             .width-20           { width: 20%; }
@@ -709,6 +709,573 @@ class Email{
                     <br>
                     <p>Thank you.</p>                    
                    ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function templateCollectionReminderLettertogetherwithSOA($post){
+
+        $message = '
+                    <p>Dear Ma\'am/Sir,</p>
+                    <br>
+                    <p>We are pleased to share your Statement of Account (SOA) as of <b>May 31, 2025</b>.</p>
+                    <br>
+                    <p>For your security, the file is password protected. You may open it by entering the last 7 digits of your Intermediary Code as your default password.</p>
+                    <br>
+                    <p>We would appreciate reminding our clients to pay their dues on or before the agreed term to keep the policies in full force and avoid any legal complications in case of a claim.</p>
+                    <br>
+                    <p>Please refer to the Summary below based on effectivity of the policies and number of days past due.</p>
+                    <br>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="2">COD POLICIES (DUE IMMEDIATELY)</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">NET PREMIUM DUE</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL COD ACCOUNTS</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="3">PREMIUM RECEIVABLE</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">NET PREMIUM DUE</td>
+                            <td>PAYMENT DUE DATE</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Current Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Overdue Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL PREMIUM RECEIVABLE</td>
+                            <td class="text-right">0.00</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table class="table">
+                        <tr class="header">
+                            <td colspan="3">TAXES RECEIVABLE</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>AGING DAYS</td>
+                            <td class="text-right">OUTSTANDING DST</td>
+                            <td class="text-right">OUTSTANDING CWT</td>
+                        </tr>
+                        <tr>
+                            <td>0 - 30 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>31 - 60 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>61 - 90 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Current Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>91 - 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Above 180 Days</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Overdue Accounts</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td>TOTAL TAXES RECEIVABLE</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                        <tr class="bold">
+                            <td colspan="2">GRAND TOTAL</td>
+                            <td class="text-right">0.00</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <p class="title-text">Overdue Accounts:</p>
+                    <br>
+                    <p> 
+                        Our records as of May 31, 2025 show that you have outstanding premiums amounting to <b>Php303,325.69</b> which is due immediately. 
+                        Failure to remit the payment will result in the cancellation of the policies by month end. 
+                    </p>
+                    <br>
+                    <br>
+                    <p class="title-text">Review SOA Details:</p>
+                    <br>
+                    <p>
+                        Due to timing difference, there may be policies wherein payments have been remitted to us but are still included in your SOA. Please review the attached Statement of Account and 
+                        advise us on or before the 15th of this month if there are discrepancies or concerns on your end. If we receive no response from you, we will assume that the outstanding balance 
+                        reflected in our Statement of Account is aligned with your records. 
+                    </p>
+                    <br>
+                    <br>
+                    <p class="title-text">Payments:</p>
+                    <br>
+                    <p>We\'ve attached our preferred payment channel together with the payment guidelines.</p>
+                    <br>
+                    <p>Should you have concerns, kindly reply to this email for us to assist you. We trust that you will give this matter your utmost attention and we look forward to hearing from you soon.</p>
+                    <br>
+                    <br>
+                    <p>Thank you.</p>                    
+                   ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function template3160CollectionReminder($post){
+
+        $message = '
+                    <div>
+                        <div>
+                            <span><strong>'.$post['source_name'].'</strong></span><br/>
+                            <span>
+                                '.$post['intermediary_address'].'
+                            </span>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div>
+                            <p style="text-align: center;">Subject: Reminder: Premium Payment Due for Accounts 31-60 Days</p>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>Dear '.$post['source_name'].',</p>
+                        <p>
+                            We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
+                            31-60 days past due, you may refer to the previously submitted SOA for the list. As we near the end of the month, we would like to emphasize the importance of settling these outstanding 
+                            premiums promptly to avoid any potential issues in the future. 
+                        </p>
+                        <p>
+                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of 
+                            the policy holder in the event that the premium will not be paid. Failure to settle these premiums within the agreed credit term 
+                            may result in policy cancellation. Our intention is to prevent such circumstances and maintain a strong and mutually beneficial 
+                            relationship going forward. 
+                        </p>
+                        <p>
+                            We appreciate your attention and your immediate action in remitting the outstanding payments for the mentioned accounts.
+                            If you have any inquiries or concerns, please do not hesitate to contact me directly at {{ $handler->contact_number }}.
+                        </p>
+                        <p>
+                            Thank you for your cooperation.
+                        </p>
+                        <p></p>
+                        <p>Sincerely Yours,</p>
+                        <div>
+                            <span><strong>'.$post['handler_name'].'</strong></span><br/>
+                            <span>'.$post['handler_contact_number'].'</span><br/>
+                            <span>'.$post['handler_email'].'</span>
+                        </div>
+                    </div>                  
+                   ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function templateCollectionReminderGeneric($post){
+
+        $message = '
+                    <p>Dear Valued Partner,</p>
+                    <p>
+                        We are writing to follow up on the premium payment for the accounts that are overdue. Despite our previous follow-up attempts these accounts remain unpaid.
+                    </p>
+                    <p>
+                        Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Failure to do so will compel us to cancel these policies by end of this month.
+                    </p>
+                    <p>
+                        If you have any questions or require further assistance, please do not hesitate to contact me at the details below.
+                    </p>
+                    <p>
+                        We trust that you will give this matter your immediate action.
+                    </p>
+                    <p></p>
+                    <p>Warm Regards,</p> 
+                    <div>
+                        <span><strong>'.$post['handler_name'].'</strong></span><br/>
+                        <span>'.$post['handler_contact_number'].'</span><br/>
+                        <span>'.$post['handler_email'].'</span>
+                    </div>                   
+                   ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function template6190CollectionReminder($post){
+
+        $message = '
+                    <div>
+                        <div>
+                            <span><strong>'.$post['source_name'].'</strong></span><br/>
+                            <span>
+                                '.$post['intermediary_address'].'
+                            </span>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div>
+                            <p style="text-align: center;">Subject: Reminder: Premium Payment Due for Accounts 61-90 Days</p>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>Dear '.$post['source_name'].',</p>
+                        <p>
+                            We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
+                            31-60 days past due, you may refer to the previously submitted SOA for the list. As we near the end of the month, we would like to emphasize the importance of settling these outstanding 
+                            premiums promptly to avoid any potential issues in the future. 
+                        </p>
+                        <p>
+                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of 
+                            the policy holder in the event that the premium will not be paid. Failure to settle these premiums within the agreed credit term 
+                            may result in policy cancellation. Our intention is to prevent such circumstances and maintain a strong and mutually beneficial 
+                            relationship going forward. 
+                        </p>
+                        <p>
+                            We appreciate your attention and your immediate action in remitting the outstanding payments for the mentioned accounts.
+                            If you have any inquiries or concerns, please do not hesitate to contact me directly at {{ $handler->contact_number }}.
+                        </p>
+                        <p>
+                            Thank you for your cooperation.
+                        </p>
+                        <p></p>
+                        <p>Sincerely Yours,</p>
+                        <div>
+                            <span><strong>'.$post['handler_name'].'</strong></span><br/>
+                            <span>'.$post['handler_contact_number'].'</span><br/>
+                            <span>'.$post['handler_email'].'</span>
+                        </div>
+                    </div>                  
+                   ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function templateFirstReminderwithNoticeofCancellation($post){
+
+        $message = '
+                    <div class="text-xs space-y-5 flex flex-col">
+                        <div class="flex items-center justify-center">
+                            <p class="font-bold underline">
+                                Above 90 Days Past Due Collection Reminder
+                            </p>
+                        </div>
+                        <div class="flex flex-col">
+                            <span><strong>'.$post['source_name'].'</strong></span><br/>
+                            <span>
+                                '.$post['intermediary_address'].'
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <p>
+                                Subject: Reminder: Payment Due for Outstanding Premiums
+                            </p>
+                        </div>
+                        <p></p>
+                        <p>Dear '.$post['source_name'].',</p>
+                        <p>
+                            We are writing to follow up on the premium payment for the accounts that are overdue already
+                            aging 91 days and above. Despite our previous follow-up attempts these accounts remain unpaid as of today.
+                            We would like to emphasize the importance of settling these outstanding premiums promptly.
+                            Below is the details of the said outstanding policies:
+                        </p>
+                        
+                        <table class="table" style="width: 100%;" cellpadding="3" cellspacing="0" role="presentation">
+                            <thead>
+                                <tr>';
+                                $headers = ['No. of OUTSTANDING', 'MONTH', 'TOTAL ? DUE', 'Payment Due Date'];
+
+                                foreach ($headers as $index => $header) {
+                                    $message .= "<th>";
+                                    if ($index === 2) {
+                                        $message .= str_replace('?', $post['isDirect'] ? 'GROSS' : 'NET', $header);
+                                    } else {
+                                        $message .= $header;
+                                    }
+                                    $message .= "</th>";
+                                }
+                                    
+                $message .=     '</tr>
+                            </thead>
+                            <tbody>';
+                                $counter = 0;
+                                $totalOverdue = 0;
+
+                                foreach ($post['summary']['outstandingOverdue'] as $aging => $overdue) {
+                                    foreach ($overdue as $monthYear => $item) {
+                                        $message .= "<tr>";
+
+                                        // First row per $overdue group → add aging cell
+                                        if ($monthYear === array_key_first($overdue)) {
+                                            $message .= '<td valign="middle" align="center" rowspan="' . (count($overdue) ?: 1) . '">';
+                                            $message .= htmlspecialchars($aging);
+                                            $message .= '</td>';
+                                        }
+
+                                        // Month-Year cell
+                                        $message .= "<td>" . htmlspecialchars($monthYear) . "</td>";
+
+                                        // Calculate sum
+                                        $sum = $item->sum($post['isDirect'] ? 'GROSS PREMIUM' : 'NET DUE');
+                                        $totalOverdue += $sum;
+
+                                        // Overdue amount cell
+                                        $message .= '<td style="text-align: right;">' . number_format($sum, 2) . '</td>';
+
+                                        // Add cancellation/payment note once only
+                                        if ($counter === 0) {
+                                            $counter++;
+
+                                            // Calculate rowspan (same as Blade logic)
+                                            $rowspan = $overdue->count()
+                                                ? array_sum(array_map('count', $post['summary']['outstandingOverdue']->toArray()))
+                                                : $post['summary']['outstandingOverdue']->count();
+
+                                            $message .= '<td style="font-weight: bold;" align="center" valign="middle" rowspan="' . $rowspan . '">';
+                                            $message .= "FOR CANCELLATION / FOR IMMEDIATE PAYMENT";
+                                            $message .= "</td>";
+                                        }
+
+                                        $message .= "</tr>";
+                                    }
+                                }
+                $message .='</tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        Total Overdue
+                                    </td>
+                                    <td>
+                                        00.00
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <p>
+                            We understand that unforeseen circumstances can sometimes affect payment timelines. However,
+                            it is essential to address these outstanding balances to ensure the continuity of coverage.
+                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can
+                            terminate the insurance coverage of the policy holder in the event that the premium will not be paid.
+                            Failure to do so will compel us to cancel these policies.
+                        </p>
+                        <p>
+                            We appreciate your immediate action in remitting the outstanding payments for the mentioned accounts.
+                        </p>
+                        <p>
+                            If you have any inquiries or concerns, please do not hesitate to contact me directly at
+                           '.$post['handler_contact_number'].' & '.$post['handler_email'].'.
+                        </p>
+                        <p>Thank you for your cooperation, and we eagerly anticipate your prompt response.</p>
+                        <p></p>
+                        <p><strong>Sincerely Yours,</strong></p>
+                        <div>
+                            <span><strong>'.$post['handler_full_name'].'</strong></span><br/>
+                            <span>'.$post['handler_contact_number'].'</span><br/>
+                            <span>'.$post['handler_email'].'</span>
+                        </div>
+                    </div>                
+                   ';
+
+        return self::templateSoa($message);
+    }
+
+    public static function templateFinalReminderwithNoticeofCancellation($post){
+        $message = '
+                        <div class="text-xs space-y-5 flex flex-col">
+                            <div class="flex flex-col">
+                                <span><strong>'.$post['source_name'].'</strong></span><br/>
+                                <span>
+                                    '.$post['intermediary_address'].'
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <p style="text-align: center;">
+                                    <strong>Final Collection Reminder with notice of cancellation</strong>
+                                </p>
+                            </div>
+                            <p></p>
+                            <p>Dear '.$post['source_name'].',</p>
+                            <p>
+                                This is to remind you of the unpaid premiums with FPG that are beyond the approved credit term.
+                                Below is the summary based on number of days past due:
+                            </p>
+
+                            <table class="table" style="width: 100%;" cellpadding="3" cellspacing="0" role="presentation">
+                            <thead>
+                                <tr>';
+                                    $headers = ['No. of OUTSTANDING', 'MONTH', 'TOTAL ? DUE', 'Payment Due Date'];
+
+                                    foreach ($headers as $index => $header) {
+                                        $message .= "<th>";
+                                        if ($index === 2) {
+                                            $message .= str_replace('?', $post['isDirect'] ? 'GROSS' : 'NET', $header);
+                                        } else {
+                                            $message .= $header;
+                                        }
+                                        $message .= "</th>";
+                                    }
+
+                    $message .= '</tr>
+                            </thead>
+                            <tbody>';
+                                $counter = 0;
+                                $totalOverdue = 0;
+
+                                foreach ($post['summary']['outstandingOverdue'] as $aging => $overdue) {
+                                    foreach ($overdue as $monthYear => $item) {
+                                        $message .= "<tr>";
+
+                                        // First row per $overdue group → add aging cell
+                                        if ($monthYear === array_key_first($overdue)) {
+                                            $message .= '<td valign="middle" align="center" rowspan="' . (count($overdue) ?: 1) . '">';
+                                            $message .= htmlspecialchars($aging);
+                                            $message .= '</td>';
+                                        }
+
+                                        // Month-Year cell
+                                        $message .= "<td>" . htmlspecialchars($monthYear) . "</td>";
+
+                                        // Calculate sum
+                                        $sum = $item->sum($post['intermediary']->isDirect() ? 'GROSS PREMIUM' : 'NET DUE');
+                                        $totalOverdue += $sum;
+
+                                        // Overdue amount cell
+                                        $message .= '<td style="text-align: right;">' . number_format($sum, 2) . '</td>';
+
+                                        // Add cancellation/payment note once only
+                                        if ($counter === 0) {
+                                            $counter++;
+
+                                            // Calculate rowspan (same as Blade logic)
+                                            $rowspan = $overdue->count()
+                                                ? array_sum(array_map('count', $post['summary']['outstandingOverdue']->toArray()))
+                                                : $post['summary']['outstandingOverdue']->count();
+
+                                            $message .= '<td style="font-weight: bold;" align="center" valign="middle" rowspan="' . $rowspan . '">';
+                                            $message .= "FOR CANCELLATION / FOR IMMEDIATE PAYMENT";
+                                            $message .= "</td>";
+                                        }
+
+                                        $message .= "</tr>";
+                                    }
+                                }
+
+                $message .= '</tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        Total Overdue
+                                    </td>
+                                    <td>
+                                        '.number_format($totalOverdue, 2).'
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                            </table>
+                            
+                            <p>
+                                We’ve attached the complete list in this email for your reference.
+                            </p>';
+                        if ($post['isBroker']()){
+                            $message .= '<p>
+                                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Since these policies are still outstanding, we are compelled to cancel these policies within the month.
+                                        </p>';
+                        }
+                        else{
+                            $message .= '<p>
+                                            Please note that Under Sec. 64 and 65 of the Insurance code (R.A. 10607), the Insurance Company can
+                                            terminate the insurance coverage of the policy holder in the event that the premium will not be paid.
+                                            Since these policies are still outstanding and beyond the agreed credit term, we are compelled to cancel
+                                            these policies within the month and copies of the cancellation notices as required by the Insurance
+                                            Commission will be sent directly to the assured.
+                                        </p>';
+                        }
+                $message .= '<p>
+                                We trust that you will give this matter your utmost attention.
+                            </p>
+                            <p class="font-bold">
+                            <strong>Sincerely Yours,</strong>
+                            </p>
+                            <p></p>
+                            <div>
+                                <span><strong>'.$post['handler_full_name'].'</strong></span><br/>
+                                <span>'.$post['handler_contact_number'].'</span><br/>
+                                <span>'.$post['handler_email'].'</span>
+                            </div>
+                        </div>
+                    ';
 
         return self::templateSoa($message);
     }
