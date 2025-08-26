@@ -25,6 +25,11 @@
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
                                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
+                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                                <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
+                                    <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -130,14 +135,14 @@
                             </div>
                         </div> -->
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         //DATATABLE FILTER
         $(document).ready(function() {
             $('.pagination').bind('blur change', function(e) {
@@ -146,39 +151,40 @@
                 var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
                 var limit = $('select[name=pagination_limit]').find(":selected").val();
                 var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
-                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
+                var status = $('select[name=pagination_status]').find(":selected").val();
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&status=' + status;
 
                 window.location.replace(link + parameter);
             });
         });
     </script>
 
-<script>
-    $('#syncBtn').on('click', function(e) {
-        e.preventDefault();
+    <script>
+        $('#syncBtn').on('click', function(e) {
+            e.preventDefault();
 
 
-        var action = $(this).attr('action');
+            var action = $(this).attr('action');
 
-        $.ajax({
-            url: '/master/topro_json',
-            type: 'POST',
-            dataType: 'json',
+            $.ajax({
+                url: '/master/topro_json',
+                type: 'POST',
+                dataType: 'json',
 
 
-            success: function(response) {
-                console.log(response);
-                if (response.status === 'success') {
-                    alert('Sync successful!');
-                    location.reload();
-                } else {
-                    alert('Sync failed: ' + response.message);
+                success: function(response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                        alert('Sync successful!');
+                        location.reload();
+                    } else {
+                        alert('Sync failed: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+
+                    alert('An error occurred: ' + error + ' - ' + xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-
-                alert('An error occurred: ' + error + ' - ' + xhr.responseText);
-            }
+            });
         });
-    });
-</script>
+    </script>

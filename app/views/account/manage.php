@@ -1,389 +1,73 @@
-    <div class="br-mainpanel">
-        <div class="br-pageheader justify-content-between">
-            <nav class="breadcrumb pd-0 mg-0 tx-12">
-                <a class="breadcrumb-item" href="/">User</a>
-                <a class="breadcrumb-item" href="/">Profile</a>
-                <span class="breadcrumb-item active">Records</span>
-            </nav>
-            <div class="w-300px mg-r-10">
-                <div class="input-group">
-                    <input type="text" name="keyword_user" type="text" class="form-control" placeholder="Search..." onkeyup="onSearch()">
-                    <div class="input-group-append">
-                        <button name="search_user" class="btn btn-info" type="button" disabled>
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
+<?php flash(promptMessage('message')); ?>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-between">
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
+                <h4 class="lh-lg mb-0 fw-bolder">Account <span class="text-primary">[ Register ]</span></h4>
+            </div>
+            <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+                <a href="/account/all/1" class="btn btn-primary text-white">
+                    <i class="icon-base ti tabler-arrow-left me-2"></i>
+                    <span class="align-middle">Back</span>
+                </a>
             </div>
         </div>
-        <div class="br-pagetitle pos-relative">
-            <i class="icon fa fa-user-circle"></i>
-            <div>
-                <h4>User Profile <b class="tx-primary"><?php managePageTitle('id'); ?></b></h4>
-                <p class="mg-b-0">System Access</p>
-                <div class="pagetitle-button">
-                    <a href="/account/all/1/" class="btn btn-info">
-                        <i class="fa fa-list-ul fa-lg"></i> <small>LIST</small>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="br-pagebody">
-            <?php flash(promptMessage('message')); ?>
-        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-6">
+                    <div class="card-body">
+                        <form id="form-1" method="POST">
+                            <div class="row g-6">
+                                <!-- First / Middle / Last Name in 1 row -->
+                                <div class="col-md-4">
+                                    <label class="form-label" for="multicol-first-name">First Name</label>
+                                    <input name="first_name" type="text" id="multicol-first-name" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="multicol-middle-name">Middle Name</label>
+                                    <input name="middle_name" type="text" id="multicol-middle-name" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="multicol-last-name">Last Name</label>
+                                    <input name="last_name" type="text" id="multicol-last-name" class="form-control" />
+                                </div>
 
-        <div class="br-pagebody">
-            <form id="account-form" role="form" method="post" enctype="multipart/form-data">
+                                <!-- Continue with 2-column layout -->
+                                <div class="col-md-6">
+                                    <label class="form-label" for="multicol-username">Username</label>
+                                    <input name="active_directory" type="text" id="multicol-username" class="form-control" placeholder="P65XXXXX" />
+                                </div>
 
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">System Account</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body show">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Active Directory<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="active_directory" type="text" class="form-control active_directory" value="" required>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="multicol-email">Email</label>
+                                    <input name="email" type="text" id="multicol-email" class="form-control" aria-describedby="multicol-email2" />
                                 </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Email Address<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="employee_email" type="text" class="form-control employee_email" value="" required>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Type<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_type_id" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_option($data['account_type'], null, 'name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Status<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_status_id" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-3 form-control-label">Role</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0 checkbox_role">
-                                    <select name="account_role_id" class="form-control select" data-width="100%" required>
+
+                                <div class="col-md-6">
+                                    <label class="form-label" for="multicol-birthdate">Role</label>
+                                    <select name="account_role_id" class="form-control select pagination" data-placeholder="Status">
                                         <?php echo tool_dropdown_option($data['account_role'], null, 'name'); ?>
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                    </div><!-- card-block -->
-                </div>
 
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">Employment Information</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body hidden">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Department<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_department_id" class="form-control select" data-width="100%" required>
-                                        <?php echo tool_dropdown_option($data['account_department'], null, 'name'); ?>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="multicol-status">Status</label>
+                                    <select name="account_status_id" class="form-control select pagination" data-placeholder="Status">
+                                        <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Team</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_team_id" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_option($data['account_team'], null, 'name'); ?>
-                                    </select>
+
+                                <div class="pt-12 text-center">
+                                    <button type="submit" class="btn btn-primary me-4">Submit</button>
+                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
                                 </div>
                             </div>
-                            <div class="row mg-b-20 account_designation">
-                                <label class="col-sm-3 form-control-label">Designation</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_designation_id" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_option($data['account_level'], null, 'name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Level<span class="tx-danger"></span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="account_level_id" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_option($data['account_designation'], null, 'name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Report To<span class="tx-danger"></span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <select name="report_to" class="form-control select" data-width="100%">
-                                        <?php echo tool_dropdown_option($data['account_all'], null, 'full_name'); ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+
+                        </form>
                     </div>
                 </div>
-
-                <div class="card card-collapsable shadow-base widget-11 mg-b-10">
-                    <div class="card-header card-sub-menu pd-20">
-                        <div class="card-title">
-                            <span class="tx-13">Personal Particulars</span>
-                        </div>
-                        <i class="fa fa-plus card-icon tx-primary"></i>
-                    </div><!-- card-header -->
-                    <div class="card-body hidden">
-                        <div class="form-layout-4 bd-0 pd-t-0 pd-b-0">
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Full name<span class="tx-danger">*</span></label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="first_name" type="text" class="form-control" placeholder="First Name" value="" required>
-                                </div>
-                                <div class="col-sm-3 mg-t-10 mg-sm-t-0">
-                                    <input name="last_name" type="text" class="form-control" placeholder="Last Name" value="" required>
-                                </div>
-                                <div class="col-sm-2 mg-t-10 mg-sm-t-0">
-                                    <input name="middle_name" type="text" class="form-control" placeholder="Middle Name (Optional)" value="">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Nickname</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <input name="alias" type="text" class="form-control" value="">
-                                </div>
-                            </div>
-                            <div class="row mg-b-20">
-                                <label class="col-sm-3 form-control-label">Contact Number</label>
-                                <div class="col-sm-4 mg-t-10 mg-sm-t-0">
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text">PH (+63)</span>
-                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="911 111 2222" value="" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- card-block -->
-                </div>
-                <div class="br-section-wrapper pd-15 mg-b-40">
-                    <div class="row mg-b-20">
-                        <div class="col-lg-12">
-                            <label class="ckbox">
-                                <input name="confirm_checkbox" type="checkbox">
-                                <span>By checking, you are confirming all information is correct and updated</span>
-
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row  tx-center">
-                        <div class="col-sm-12 mg-t-10 mg-b-10 mg-sm-t-0">
-                            <button name="submit" type="submit" class="btn btn-info w-200px confirm_button" disabled><small>SUBMIT</small></button>
-                        </div>
-                    </div>
-                </div>
-
-            </form>
+            </div>
         </div>
     </div>
-
-    <script type="text/javascript">
-        //CONFIRM
-        $(document).ready(function() {
-            $("input[name='confirm_checkbox']").prop("checked", false);
-            $("input[name='confirm_checkbox']").click(function() {
-                if ($(this).is(":checked")) {
-                    $(this).addClass("selected");
-                    $('.confirm_button').removeAttr("disabled");
-                } else {
-                    $(this).removeClass("selected");
-                    $('.confirm_button').attr('disabled', true);
-                }
-            });
-        });
-    </script>
-
-    <script type="text/javascript">
-        function onSearch() {
-            var searchBox = encodeURIComponent($('input[name="keyword_user"]').val());
-            if (searchBox == "") {
-                $('button[name=search_user]').attr('disabled', true);
-            } else {
-                $('button[name=search_user]').attr('disabled', false);
-            }
-        }
-
-        $(document).ready(function() {
-            onSearch();
-            $(document).on('click', 'button[name=search_user]', function(e) {
-                var searchBoxVal = encodeURIComponent($('input[name="keyword_user"]').val());
-                var redirect_url = '/account/all/?page=1&limit=10&keyword=' + searchBoxVal;
-                window.location.href = redirect_url;
-            })
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var role = '<?php echo $data['role_list']; ?>';
-            var user_role = '<?php echo multiArrayKeyExist($data, 'account_employment', 'account_role_id'); ?>';
-
-            checkboxRole(role, user_role);
-        });
-
-        function checkboxRole(list, row = '') {
-            var arr = list.split('+');
-
-            $('.checkbox_role').html('');
-            $.each(arr, function(index, value) {
-
-                var check = '';
-                var data = value.split('_');
-                var item = row.split('-');
-                var popover = '';
-
-                if ($.inArray(data[0], item) != '-1') {
-                    check = 'checked';
-                } else {
-                    check = '';
-                }
-
-                if (typeof data[2] != "undefined" && data[2] != null && data[2].length > 0 && data[2] != '') {
-                    popover = '<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-popover-color="default" data-placement="top" title="" data-content="' + data[2] + '">' +
-                        '<i class="fa fa-question-circle-o" aria-hidden="true"></i>' +
-                        '</button>';
-                }
-
-                $('.checkbox_role').append('<label class="ckbox mg-t-10 ckbox-inline">' +
-                    '<input name="account_role_id[]" type="checkbox" value="' + data[0] + '" ' + check + '>' +
-                    '<span>' + data[1] + ' </span>' +
-                    popover +
-                    '</label>'
-                );
-            });
-
-            $('[data-toggle="popover"]').popover();
-        }
-    </script>
-
-    <script type="text/javascript">
-        //DEPARTMENT
-        $(document).on('change', 'select[name=account_department_id]', function(e) {
-            var value = $(this).find(":selected").val();
-            var designation = "<?php echo multiArrayKeyExist($data, 'account_employment', 'account_designation_id'); ?>";
-            var departments = <?php echo json_encode($data['account_department'], JSON_INVALID_UTF8_SUBSTITUTE); ?>;
-            var role = '<?php echo $data['role_list']; ?>';
-            var user_role = '<?php echo multiArrayKeyExist($data, 'account_employment', 'account_role_id'); ?>';
-            var user_department = '<?php echo multiArrayKeyExist($data, 'account_employment', 'account_department_id'); ?>';
-
-            // console.log(departments);
-            dropdownDesignation(value, designation);
-        });
-
-        function dropdownDesignation(value, designation = '') {
-            var account_designation_id = $('select[name=account_designation_id]');
-            if (value == 0) {
-                account_designation_id.html('');
-                account_designation_id.attr('disabled', true);
-            } else {
-                $.ajax({
-                    url: '/master/per-department-json/',
-                    type: 'POST',
-                    data: {
-                        id: value
-                    },
-                    beforeSend: function() {
-                        account_designation_id.html('');
-                        account_designation_id.removeAttr('disabled');
-                    },
-                    success: function(data) {
-                        if (typeof data != "undefined" && data != null && data.length > 0) {
-                            var option = '';
-                            $.each(data, function(index, item) {
-                                if (item['id'] == designation) {
-                                    selected = ' selected ';
-                                } else {
-                                    selected = '';
-                                }
-                                option += '<option value="' + item['id'] + '" ' + selected + '>' + item['name'] + '</option>';
-                            });
-                            account_designation_id.attr('required', true);
-                            $('.account_designation .tx-danger').html('*');
-                        } else {
-                            account_designation_id.html('');
-                            account_designation_id.attr('disabled', true);
-                            account_designation_id.removeAttr('required');
-                            $('.account_designation .tx-danger').html('');
-                        }
-
-                        $(option).appendTo(account_designation_id);
-
-                        // console.log(data);
-                    },
-                    error: function(xhr, desc, err) {
-                        //console.log(xhr);
-                        console.warn(xhr.responseText);
-                    }
-                });
-            }
-        }
-
-        $(document).ready(function() {
-            $('select[name=account_department_id]').trigger("change");
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).on('click', '.card-sub-menu', function() {
-            var body = $(this).next();
-            var icon = $(this).find('.card-icon');
-
-            if (body.hasClass('show')) {
-                body.slideUp().removeClass('show');
-                icon.toggleClass("spin").removeClass('fa-minus');
-                icon.addClass('fa-plus');
-            } else {
-                body.slideDown().addClass('show');
-                icon.toggleClass("spin").removeClass('fa-plus');
-                icon.addClass('fa-minus');
-            }
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).on('click', 'button[name="submit"]', function(e) {
-            $('#account-form input[required]').each(function() {
-                var input = $(this).val();
-                if (input == '') {
-                    $(this).parents('.card').find('.card-body').removeClass('show');
-                    $(this).parents('.card').find('.card-sub-menu').click();
-                }
-            });
-
-            $('#account-form select[required]').each(function() {
-                var select = $(this).val();
-                if (select == '') {
-                    $(this).parents('.card').find('.card-body').removeClass('show');
-                    $(this).parents('.card').find('.card-sub-menu').click();
-                }
-            });
-        });
-    </script>
-
-    <script type="text/javascript">
-        //EMAIL
-        $(document).on('keypress change', '.employee_email', function() {
-            var email = $(this).val();
-            $('input[name=employee_email]').val(email);
-        });
-    </script>
+</div>

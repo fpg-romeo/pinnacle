@@ -26,6 +26,11 @@
               <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
               </div>
+              <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
+                  <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
+                </select>
+              </div>
             </div>
           </div>
           <div class="card-body">
@@ -208,7 +213,8 @@
         var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
         var limit = $('select[name=pagination_limit]').find(":selected").val();
         var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
-        var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
+        var status = $('select[name=pagination_status]').find(":selected").val();
+        var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&status=' + status;
 
         window.location.replace(link + parameter);
       });
@@ -291,6 +297,7 @@
             location.reload();
           },
           error: function(xhr, status, error) {
+            console.error('Error:', error, xhr.responseText);
             alert('Error: ' + error + ' - ' + xhr.responseText);
           }
         });

@@ -26,6 +26,11 @@
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
                                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
+                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                                <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
+                                    <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body pb-2">
@@ -188,54 +193,56 @@
             </form>
         </div>
     </div>
+</div>
 
-    <script type="text/javascript">
-        //DATATABLE FILTER
-        $(document).ready(function() {
-            $('.pagination').bind('blur change', function(e) {
-                e.preventDefault();
-
-                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
-                var limit = $('select[name=pagination_limit]').find(":selected").val();
-                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
-                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword;
-
-                window.location.replace(link + parameter);
-            });
-        });
-    </script>
-    
-    <script>
-        $('.showModal').click(function(e) {
-
+<script type="text/javascript">
+    //DATATABLE FILTER
+    $(document).ready(function() {
+        $('.pagination').bind('blur change', function(e) {
             e.preventDefault();
-            $('#branchModal').find('form')[0].reset();
-            $('#branchModal').find('input').prop('readonly', false);
-            $('#branchModal').find('select').prop('disabled', false);
-            var action = $(this).attr('action');
-            $('[name="action"]').val(action);
-            $('.submit').css('display', 'block');
 
-            if (action != 'add') {
-                $.ajax({
-                    url: '/master/branch_json/',
-                    method: 'POST',
-                    data: {
-                        id: $(this).data('id')
-                    },
-                    success: function(data) {
-                        $('[name="id"]').val(data.id);
-                        $('#code').val(data.code);
-                        $('#name').val(data.name);
-                        $('#is_active').val(data.is_active);
-                    }
-                });
+            var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+            var limit = $('select[name=pagination_limit]').find(":selected").val();
+            var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
+            var status = $('select[name=pagination_status]').find(":selected").val();
+            var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&status=' + status;
 
-                if (action == "show") {
-                    $('#branchModal').find('input').prop('readonly', true);
-                    $('#branchModal').find('select').prop('disabled', true);
-                    $('.submit').css('display', 'none');
-                }
-            }
+            window.location.replace(link + parameter);
         });
-    </script>
+    });
+</script>
+
+<script>
+    $('.showModal').click(function(e) {
+
+        e.preventDefault();
+        $('#branchModal').find('form')[0].reset();
+        $('#branchModal').find('input').prop('readonly', false);
+        $('#branchModal').find('select').prop('disabled', false);
+        var action = $(this).attr('action');
+        $('[name="action"]').val(action);
+        $('.submit').css('display', 'block');
+
+        if (action != 'add') {
+            $.ajax({
+                url: '/master/branch_json/',
+                method: 'POST',
+                data: {
+                    id: $(this).data('id')
+                },
+                success: function(data) {
+                    $('[name="id"]').val(data.id);
+                    $('#code').val(data.code);
+                    $('#name').val(data.name);
+                    $('#is_active').val(data.is_active);
+                }
+            });
+
+            if (action == "show") {
+                $('#branchModal').find('input').prop('readonly', true);
+                $('#branchModal').find('select').prop('disabled', true);
+                $('.submit').css('display', 'none');
+            }
+        }
+    });
+</script>
