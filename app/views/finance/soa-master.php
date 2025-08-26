@@ -130,12 +130,12 @@
               </select>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="insured_name" class="form-label">Insured Name <span>(Optional)</span></label>
               <input type="text" id="insured_name" class="form-control" name="insured_name">
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col-lg-12 col-md-12 col-xs-12 mb-5">
               <label for="sales_channel" class="form-label">Sales Channel <span>(Optional)</span></label>
@@ -270,6 +270,12 @@
         });
     });
 
+    function setIfNotNull(selector, value) {
+        if (value) {
+            $(selector).val(value);
+        }
+    }
+
     $(document).ready(function(){
         $('.showModal').click(function(e){
         
@@ -293,18 +299,20 @@
                   $('#intermediary_id').val(data.intermediary_id);
                   $('#handler_id').val(data.handler_id);
                   $('#team_leader_id').val(data.team_leader_id);
-                  $('#branch').val(data.branch.branch_id);
-                  $('#topro').val(data.topro.topro_id);
-                  $('#sales_channel').val(data.sales_channel.sales_channel_id);
-                  $('#segment').val(data.segment.segment_id);
-                  $('#cob').val(data.class_of_business.class_of_business_id);
+
+                  setIfNotNull('#branch', data.branch?.branch_id);
+                  setIfNotNull('#topro', data.topro?.topro_id);
+                  setIfNotNull('#sales_channel', data.sales_channel?.sales_channel_id);
+                  setIfNotNull('#segment', data.segment?.segment_id);
+                  setIfNotNull('#class_of_business', data.class_of_business?.class_of_business_id);
+                  
                   $('#or_recipients').val(data.official_receipt.email);
                   $('#soa_recipients').val(data.soa_recipients.email);
                   $('#account_name').val(data.account_name);
                   $('#email').val(data.email);
                   $('#intermediary_code').val(data.intermediary_code);
                   $('#is_active').val(data.is_active);
-                  $('#categories').val(data.categories);
+                  $('#categories').val(JSON.parse(data.categories));
               }
             });
 
