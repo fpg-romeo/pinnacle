@@ -21,11 +21,11 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Aging</th>
-                                        <th>Letter</th>
-                                        <th>Status</th>
-                                        <th>Date Created</th>
-                                        <th>Actions</th>
+                                        <th class="text-center">Aging</th>
+                                        <th class="text-center">Letter</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Date Created</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -39,9 +39,9 @@
                                                         <span><?=$letter['name']?></span><br>
                                                         <small><?=$letter['frequency_label']?></small>
                                                     </td>
-                                                    <td><?=$letter['is_active'] ? "Active" : "Inactive"?></td>
+                                                    <td class="text-center"><?=$letter['is_active'] ? "Active" : "Inactive"?></td>
                                                     <td><?=date("F d, Y", strtotime($letter['created_at']))?></td>
-                                                    <td>
+                                                    <td class="text-center">
                                                          <a class="showModal" href="/finance/soa-letter/<?=$letter['id'];?>"><i class="icon-base ti tabler-eye me-1"></i></a>
                                                     </td>
                                                 </tr>

@@ -136,7 +136,7 @@
 											</a>
 										</li>
 										<li class="menu-item <?php activeView(['finance'], ['soa-letter', 'soa-letter-manage'], 'active'); ?>">
-											<a href="/finance/soa-letter/1" class="menu-link">
+											<a href="/finance/soa-letter" class="menu-link">
 												<div data-i18n="Letters">Letters</div>
 											</a>
 										</li>
