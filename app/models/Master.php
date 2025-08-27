@@ -2,7 +2,9 @@
 class Master
 {
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public static function getDynamic($table, $sort = ' name ASC ')
     {
@@ -216,6 +218,17 @@ class Master
         return $result;
     }
 
+    public static function getMaintenanceStatus()
+    {
+        $result = mysql::select(
+            'master_maintenance_status',
+            '*',
+            "",
+            "id ASC"
+        );
+        return $result;
+    }
+
     public static function getAccountDesignation()
     {
         $result = mysql::select(
@@ -307,35 +320,56 @@ class Master
                 $result['status']  = 'failed';
                 $result['message'] = 'Name already used';
             }
-            return $result;        
+            return $result;
         }
     }
 
-        public static function getAccountRole($controller, $view){     
-            $result = mysql::select('master_account_role', '*', 
-                                    "controller = '{$controller}' AND FIND_IN_SET ('{$view}', view)", 
-                                    'name ASC');        
-            return $result;
+    public static function getAccountRole($controller, $view)
+    {
+        $result = mysql::select(
+            'master_account_role',
+            '*',
+            "controller = '{$controller}' AND FIND_IN_SET ('{$view}', view)",
+            'name ASC'
+        );
+        return $result;
+    }
+
+    public static function getTeamLeader()
+    {
+        $result = mysql::select(
+            'master_team_leader',
+            '*',
+            "",
+            ''
+        );
+        return $result;
+    }
+
+    public static function getTeamLeaderById($id)
+    {
+        $result = mysql::select(
+            'master_team_leader',
+            '*',
+            'id=' . $id,
+            ''
+        );
+        return $result;
+    }
+
+    public static function getAllTeamLeader($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function getTeamLeader(){
-            $result = mysql::select('master_team_leader', '*', 
-                                    "", 
-                                    '');        
-            return $result;
-        }
-
-        public static function getTeamLeaderById($id){
-            $result = mysql::select('master_team_leader', '*', 
-                                    'id='.$id, 
-                                    '');        
-            return $result;
-        }
-
-        public static function getAllTeamLeader($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  first_name LIKE {$keyword}
@@ -347,21 +381,25 @@ class Master
                                  contact_number LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_team_leader', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_team_leader',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-         public static function countAllTeamLeader($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllTeamLeader($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                 first_name LIKE {$keyword}
@@ -373,69 +411,90 @@ class Master
                                  contact_number LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_team_leader', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_team_leader',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addTeamLeader($field){
+    public static function addTeamLeader($field)
+    {
 
-            $fields = mysql::buildFields($field, ", ");
-            if(mysql::insert('master_team_leader', $fields)){
+        $fields = mysql::buildFields($field, ", ");
+        if (mysql::insert('master_team_leader', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function updateTeamLeader($id, $post)
+    {
+        $record = self::getTeamLeaderById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('master_team_leader', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
+        }
+        return $result;
+    }
+
+    public static function getHandler()
+    {
+        $result = mysql::select(
+            'master_handler',
+            '*',
+            "",
+            ''
+        );
+        return $result;
+    }
+
+    public static function getHandlerById($id)
+    {
+        $result = mysql::select(
+            'master_handler',
+            '*',
+            'id=' . $id,
+            ''
+        );
+        return $result;
+    }
+
+    public static function getAllHandler($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function updateTeamLeader($id, $post){
-            $record = self::getTeamLeaderById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update('master_team_leader', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-
-        public static function getHandler(){
-            $result = mysql::select('master_handler', '*', 
-                                    "", 
-                                    '');        
-            return $result;
-        }
-
-        public static function getHandlerById($id){
-            $result = mysql::select('master_handler', '*', 
-                                    'id='.$id, 
-                                    '');        
-            return $result;
-        }
-
-          public static function getAllHandler($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  first_name LIKE {$keyword}
@@ -447,21 +506,25 @@ class Master
                                  contact_number LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_handler', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_handler',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-         public static function countAllHandler($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllHandler($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                 first_name LIKE {$keyword}
@@ -473,165 +536,208 @@ class Master
                                  contact_number LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_handler', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_handler',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addHandler($field){
+    public static function addHandler($field)
+    {
 
-            $fields = mysql::buildFields($field, ", ");
-            if(mysql::insert('master_handler', $fields)){
+        $fields = mysql::buildFields($field, ", ");
+        if (mysql::insert('master_handler', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function updateHandler($id, $post)
+    {
+        $record = self::getHandlerById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('master_handler', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
+        }
+        return $result;
+    }
+
+    public static function getSegment()
+    {
+        $result = mysql::select(
+            'master_segment',
+            '*',
+            "",
+            ''
+        );
+        return $result;
+    }
+
+    public static function getSegmentById($id)
+    {
+        $result = mysql::select(
+            'master_segment',
+            '*',
+            'id=' . $id,
+            ''
+        );
+        return $result;
+    }
+
+    public static function getAllSegment($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function updateHandler($id, $post){
-            $record = self::getHandlerById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update('master_handler', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-
-        public static function getSegment(){
-            $result = mysql::select('master_segment', '*', 
-                                    "", 
-                                    '');        
-            return $result;
-        }
-
-        public static function getSegmentById($id){
-            $result = mysql::select('master_segment', '*', 
-                                    'id='.$id, 
-                                    '');        
-            return $result;
-        }
-
-         public static function getAllSegment($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  code LIKE {$keyword}
                                  OR
                                  name LIKE {$keyword}
-                                 OR
-                                 is_active LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_segment', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_segment',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-         public static function countAllSegment($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+
+    public static function countAllSegment($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                  code LIKE {$keyword}
                                  OR
                                  name LIKE {$keyword}
-                                 OR
-                                 is_active LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_segment', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_segment',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addSegment($field){
+    public static function addSegment($field)
+    {
 
-            $fields = mysql::buildFields($field, ", ");
-            if(mysql::insert('master_segment', $fields)){
+        $fields = mysql::buildFields($field, ", ");
+        if (mysql::insert('master_segment', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function updateSegment($id, $post)
+    {
+        $record = self::getSegmentById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('master_segment', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
+        }
+        return $result;
+    }
+
+    public static function getBranch()
+    {
+        $result = mysql::select(
+            'master_branch',
+            '*',
+            "",
+            ''
+        );
+        return $result;
+    }
+
+    public static function getBranchById($id)
+    {
+        $result = mysql::select(
+            'master_branch',
+            '*',
+            'id=' . $id,
+            ''
+        );
+        return $result;
+    }
+
+    public static function getAllBranch($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function updateSegment($id, $post){
-            $record = self::getSegmentById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update('master_segment', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-
-        public static function getBranch(){
-            $result = mysql::select('master_branch', '*', 
-                                    "", 
-                                    '');        
-            return $result;
-        }
-
-        public static function getBranchById($id){
-            $result = mysql::select('master_branch', '*', 
-                                    'id='.$id, 
-                                    '');        
-            return $result;
-        }
-
-        public static function getAllBranch($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  code LIKE {$keyword}
@@ -641,21 +747,25 @@ class Master
                                  is_active LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_branch', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_branch',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-        public static function countAllBranch($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllBranch($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                  code LIKE {$keyword}
@@ -665,152 +775,192 @@ class Master
                                  is_active LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_branch', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_branch',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addBranch($field){
+    public static function addBranch($field)
+    {
 
-            $fields = mysql::buildFields($field, ", ");
-            if(mysql::insert('master_branch', $fields)){
+        $fields = mysql::buildFields($field, ", ");
+        if (mysql::insert('master_branch', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function updateBranch($id, $post)
+    {
+        $record = self::getBranchById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('master_branch', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
+        }
+        return $result;
+    }
+    public static function getSalesChannel()
+    {
+        $result = mysql::select(
+            'master_sales_channel',
+            '*',
+            "",
+            ''
+        );
+        return $result;
+    }
+
+    public static function getSalesChannelById($id)
+    {
+        $result = mysql::select(
+            'master_sales_channel',
+            '*',
+            'id=' . $id,
+            ''
+        );
+        return $result;
+    }
+
+    public static function getAllSalesChannel($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function updateBranch($id, $post){
-            $record = self::getBranchById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update('master_branch', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-        public static function getSalesChannel(){
-            $result = mysql::select('master_sales_channel', '*', 
-                                    "", 
-                                    '');        
-            return $result;
-        }
-
-        public static function getSalesChannelById($id){
-            $result = mysql::select('master_sales_channel', '*', 
-                                    'id='.$id, 
-                                    '');        
-            return $result;
-        }
-
-        public static function getAllSalesChannel($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  name LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_sales_channel', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_sales_channel',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-         public static function countAllSalesChannel($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllSalesChannel($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                 name LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_sales_channel', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_sales_channel',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addSalesChannel($field){
+    public static function addSalesChannel($field)
+    {
 
-            $fields = mysql::buildFields($field, ", ");
-            if(mysql::insert('master_sales_channel', $fields)){
+        $fields = mysql::buildFields($field, ", ");
+        if (mysql::insert('master_sales_channel', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function updateSalesChannel($id, $post)
+    {
+        $record = self::getSalesChannelById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($post, ", ");
+            if (mysql::update('master_sales_channel', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
+        }
+        return $result;
+    }
+
+    public static function syncTopro()
+    {
+        $result = SqlServer::select('topro', 'topro as code,description,AllowedF as is_active', "AllowedF = 1", 'description ASC');
+        return $result;
+    }
+
+    public static function getTopro()
+    {
+        $result = mysql::select('master_topro', '*', "", 'description ASC');
+        return $result;
+    }
+
+    public static function getAllTopro($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function updateSalesChannel($id, $post){
-            $record = self::getSalesChannelById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update('master_sales_channel', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-
-        public static function syncTopro(){
-            $result = SqlServer::select('topro', 'topro as code,description,AllowedF as is_active', "AllowedF = 1", 'description ASC');
-            return $result;
-        }
-
-        public static function getTopro(){
-            $result = mysql::select('master_topro', '*', "", 'description ASC');
-            return $result;
-        }
-
-         public static function getAllTopro($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "AND
                               
                              (
                                  code LIKE {$keyword}
@@ -818,21 +968,25 @@ class Master
                                  description LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_topro', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_topro',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-        public static function countAllTopro($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllTopro($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                  code LIKE {$keyword}
@@ -840,59 +994,74 @@ class Master
                                  description LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_topro', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_topro',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addTopro($fields){
+    public static function addTopro($fields)
+    {
 
-            $fields = MySql::buildFields($fields, ", ");
-                if (MySql::insert('master_topro', $fields)) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                    $result['id']      = MySql::insertedId();
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
+        $fields = MySql::buildFields($fields, ", ");
+        if (MySql::insert('master_topro', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = MySql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function deleteTopro()
+    {
+
+        if (MySql::delete('master_topro')) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function syncCob()
+    {
+        $result = SqlServer::select('cob', 'cob as code,description', "", 'description ASC');
+        return $result;
+    }
+
+    public static function getCob()
+    {
+        $result = mysql::select('master_class_of_business', '*', "", 'description ASC');
+        return $result;
+    }
+
+    public static function getAllCob($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function deleteTopro(){
-
-                if (MySql::delete('master_topro')) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
-        }
-
-        public static function syncCob(){
-            $result = SqlServer::select('cob', 'cob as code,description', "", 'description ASC');
-            return $result;
-        }
-
-        public static function getCob(){
-            $result = mysql::select('master_class_of_business', '*', "", 'description ASC');
-            return $result;
-        }
-
-        public static function getAllCob($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  code LIKE {$keyword}
@@ -900,21 +1069,25 @@ class Master
                                  description LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-             $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_class_of_business', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_class_of_business',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-        public static function countAllCob($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllCob($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                  code LIKE {$keyword}
@@ -922,59 +1095,74 @@ class Master
                                  description LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_class_of_business', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_class_of_business',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addcob($fields){
+    public static function addcob($fields)
+    {
 
-            $fields = MySql::buildFields($fields, ", ");
-                if (MySql::insert('master_class_of_business', $fields)) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                    $result['id']      = MySql::insertedId();
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
+        $fields = MySql::buildFields($fields, ", ");
+        if (MySql::insert('master_class_of_business', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = MySql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function deletecob()
+    {
+
+        if (MySql::delete('master_class_of_business')) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+        }
+        return $result;
+    }
+
+    public static function getIntermediary()
+    {
+        $result = mysql::select('master_intermediaries', '*', "", 'source_name ASC');
+        return $result;
+    }
+
+    public static function getIntermediaryById($id)
+    {
+        $result = mysql::select('master_intermediaries', '*', 'id=' . $id, '');
+        return $result;
+    }
+
+    public static function getAllIntermediary($account_status_id, $keyword = '', $start = '', $limit = '')
+    {
+        if ($account_status_id === '2' || $account_status_id === 2) {
+            $account_status = " is_active = 1 "; // Active
+        } elseif ($account_status_id === '3' || $account_status_id === 3) {
+            $account_status = " is_active = 0 "; // All
+        } else {
+            $account_status = " is_active IN (0,1) ";
         }
 
-        public static function deletecob(){
-
-                if (MySql::delete('master_class_of_business')) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
-        }
-
-        public static function getIntermediary(){
-            $result = mysql::select('master_intermediaries', '*', "", 'source_name ASC');
-            return $result;
-        }
-        
-        public static function getIntermediaryById($id){
-            $result = mysql::select('master_intermediaries', '*', 'id='.$id, '');
-            return $result;
-        }
-
-        public static function getAllIntermediary($keyword='',$start='', $limit=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = " AND
                               
                              (
                                  source_name LIKE {$keyword}
@@ -982,21 +1170,25 @@ class Master
                                  created_at LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $startLimit = (trim($start) != "" && trim($limit) != "") ? $start.', '.$limit : ''; 
-            $result = mysql::select('master_intermediaries', 
-                                    '*',
-                                    $filter,
-                                    'id DESC',$startLimit);
-            return $result;
+        } else {
+            $filter = '';
         }
+        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
+        $result = mysql::select(
+            'master_intermediaries',
+            '*',
+            $account_status . $filter,
+            'id DESC',
+            $startLimit
+        );
+        return $result;
+    }
 
-         public static function countAllIntermediary($keyword=''){
-            if(!empty(trim($keyword))){
-                $keyword = " '%{$keyword}%' ";
-                $filter  = "
+    public static function countAllIntermediary($keyword = '')
+    {
+        if (!empty(trim($keyword))) {
+            $keyword = " '%{$keyword}%' ";
+            $filter  = "
                               
                              (
                                  source_name LIKE {$keyword}
@@ -1004,138 +1196,150 @@ class Master
                                  created_at LIKE {$keyword}
                              )
                           ";
-            }else{
-                $filter = '';
-            }
-            $result = mysql::select('master_intermediaries', 
-                                    'COUNT(*) as count',
-                                    $filter);
-            if(is_array($result)){
-                return recastArray($result)['count'];
-            }else{
-                return 0;
-            } 
-        } 
+        } else {
+            $filter = '';
+        }
+        $result = mysql::select(
+            'master_intermediaries',
+            'COUNT(*) as count',
+            $filter
+        );
+        if (is_array($result)) {
+            return recastArray($result)['count'];
+        } else {
+            return 0;
+        }
+    }
 
-        public static function addIntermediary($fields){
+    public static function addIntermediary($fields)
+    {
 
-            $fields = MySql::buildFields($fields, ", ");
-                if (MySql::insert('master_intermediaries', $fields)) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                    $result['id']      = MySql::insertedId();
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
+        $fields = MySql::buildFields($fields, ", ");
+        if (MySql::insert('master_intermediaries', $fields)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = MySql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
         }
+        return $result;
+    }
 
-        public static function deleteIntermediary(){
+    public static function deleteIntermediary()
+    {
 
-                if (MySql::delete('master_intermediaries')) {
-                    $result['status']  = 'success';
-                    $result['message'] = 'New Record Saved';
-                } else {
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-                return $result;
+        if (MySql::delete('master_intermediaries')) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
         }
+        return $result;
+    }
 
-        public static function syncIntermediary(){
-            $result = SqlServer::select('profile', "top 10  name as source_name,address_1 + ' ' + address_2 + ' ' + address_3 as ADDRESS", "ptype = 'M' and restrictedf = 0", 'name ASC');
-            return $result;
-        }
+    public static function syncIntermediary()
+    {
+        $result = SqlServer::select('profile', "top 10  name as source_name,address_1 + ' ' + address_2 + ' ' + address_3 as ADDRESS", "ptype = 'M' and restrictedf = 0", 'name ASC');
+        return $result;
+    }
 
-        public static function updateIntermediary($id,$fields){
-            $record = self::getIntermediaryById($id);
-            if(is_array($record)){  
-                $fields = mysql::buildFields($fields, ", ");
-                if(mysql::update('master_intermediaries', $fields, 'id='.$id)){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Record does not exist';
-            }
-            return $result;
-        }
-        
-        public static function getActiveIntermediary(){
-            $result = mysql::select('master_intermediaries', '*', "is_active = 1 AND categories != ''", 'source_name ASC');
-            return $result;
-        }
-        public static function getActiveBranches(){
-            $result = mysql::select('master_branch', '*', "is_active = 1", 'name ASC');
-            return $result;
-        }
-        public static function getActiveSegments(){
-            $result = mysql::select('master_segment', '*', "is_active = 1", '');
-            return $result;
-        }
-        public static function getActiveSalesChannels(){
-            $result = mysql::select('master_sales_channel', '*', "is_active = 1", '');
-            return $result;
-        }
-        public static function getActiveTOPROs(){
-            $result = mysql::select('master_topro', '*', "is_active = 1", '');
-            return $result;
-        }
-        public static function getActiveCOBs(){
-            $result = mysql::select('master_class_of_business', '*', "is_active = 1", '');
-            return $result;
-        }
-        public static function getActiveHandlers(){
-            $result = mysql::select('master_handler', '*', "is_active = 1", '');
-            return $result;
-        }
-        public static function getActiveTeamLeaders(){
-            $result = mysql::select('master_team_leader', '*', "is_active = 1", '');
-            return $result;
-        }
-
-        public static function syncSoa(){
-
-            set_time_limit(0);
-            $result = SQLServer::select('soa_v3', 'top 2 *',);
-            return $result; 
-        }
-
-        public static function addSoa($fields){
-
-            set_time_limit(0);
-            $insert = mysql::buildfields($fields, ", ");
-            if(mysql::insert('soa_monthly_raw_data', $insert)){
-
+    public static function updateIntermediary($id, $fields)
+    {
+        $record = self::getIntermediaryById($id);
+        if (is_array($record)) {
+            $fields = mysql::buildFields($fields, ", ");
+            if (mysql::update('master_intermediaries', $fields, 'id=' . $id)) {
                 $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            
-            }else{
+                $result['message'] = 'Record Successfully Updated';
+            } else {
                 $result['status']  = 'failed';
                 $result['message'] = 'Encounter technical error. Pls try again';
-                $result['A_POLICYNO']      =  $insert['A_POLICYNO'];
             }
-            return $result;
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Record does not exist';
         }
+        return $result;
+    }
 
-        public static function addJobQueue($fields){
-            
-            $insert = mysql::buildfields($fields, ", ");
-            if(mysql::insert('jobs', $insert)){
-                $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }
-            return $result;
-        
+    public static function getActiveIntermediary()
+    {
+        $result = mysql::select('master_intermediaries', '*', "is_active = 1 AND categories != ''", 'source_name ASC');
+        return $result;
+    }
+    public static function getActiveBranches()
+    {
+        $result = mysql::select('master_branch', '*', "is_active = 1", 'name ASC');
+        return $result;
+    }
+    public static function getActiveSegments()
+    {
+        $result = mysql::select('master_segment', '*', "is_active = 1", '');
+        return $result;
+    }
+    public static function getActiveSalesChannels()
+    {
+        $result = mysql::select('master_sales_channel', '*', "is_active = 1", '');
+        return $result;
+    }
+    public static function getActiveTOPROs()
+    {
+        $result = mysql::select('master_topro', '*', "is_active = 1", '');
+        return $result;
+    }
+    public static function getActiveCOBs()
+    {
+        $result = mysql::select('master_class_of_business', '*', "is_active = 1", '');
+        return $result;
+    }
+    public static function getActiveHandlers()
+    {
+        $result = mysql::select('master_handler', '*', "is_active = 1", '');
+        return $result;
+    }
+    public static function getActiveTeamLeaders()
+    {
+        $result = mysql::select('master_team_leader', '*', "is_active = 1", '');
+        return $result;
+    }
+
+    public static function syncSoa()
+    {
+
+        set_time_limit(0);
+        $result = SQLServer::select('soa_v3', 'top 2 *',);
+        return $result;
+    }
+
+    public static function addSoa($fields)
+    {
+
+        set_time_limit(0);
+        $insert = mysql::buildfields($fields, ", ");
+        if (mysql::insert('soa_monthly_raw_data', $insert)) {
+
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        } else {
+            $result['status']  = 'failed';
+            $result['message'] = 'Encounter technical error. Pls try again';
+            $result['A_POLICYNO']      =  $insert['A_POLICYNO'];
         }
+        return $result;
+    }
+
+    public static function addJobQueue($fields)
+    {
+
+        $insert = mysql::buildfields($fields, ", ");
+        if (mysql::insert('jobs', $insert)) {
+            $result['status']  = 'success';
+            $result['message'] = 'New Record Saved';
+            $result['id']      = mysql::insertedId();
+        }
+        return $result;
+    }
 }
-
-    
-      

@@ -433,7 +433,9 @@ class MasterController
     {
         // $data['team_leaders']   = Master::getTeamLeader();
         $keyword                    = urldecode(getVar('keyword'));
-        $data['team_leaders']       = Master::getallTeamLeader($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['team_leaders']       = Master::getallTeamLeader($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllTeamLeader($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -470,7 +472,9 @@ class MasterController
     {
         // $data['handlers']   = Master::getHandler();
         $keyword                    = urldecode(getVar('keyword'));
-        $data['handlers']           = Master::getAllHandler($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['handlers']           = Master::getAllHandler($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllHandler($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -505,9 +509,14 @@ class MasterController
     public function segment()
     {
         $keyword                    = urldecode(getVar('keyword'));
-        $data['segments']           = Master::getAllSegment($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['segments']           = Master::getAllSegment($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllSegment($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
+
+        pre($status);
+
 
 
         if (isset($_POST['action'])) {
@@ -538,7 +547,9 @@ class MasterController
     {
         // $data['branches']   = Master::getBranch();
         $keyword                    = urldecode(getVar('keyword'));
-        $data['branches']           = Master::getallBranch($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['branches']           = Master::getallBranch($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllBranch($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -570,7 +581,9 @@ class MasterController
     {
         // $data['salesChannels']   = Master::getsalesChannel();
         $keyword                    = urldecode(getVar('keyword'));
-        $data['sales_channel']      = Master::getallSalesChannel($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['sales_channel']      = Master::getallSalesChannel($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllSalesChannel($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -610,7 +623,9 @@ class MasterController
         // $data['record'] = is_array($data['record']) ? $data['record'] : array();
 
         $keyword                    = urldecode(getVar('keyword'));
-        $data['record']             = Master::getallTopro($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['record']             = Master::getallTopro($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllTopro($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -673,7 +688,9 @@ class MasterController
         // $data['record'] = is_array($data['record']) ? $data['record'] : array();
 
         $keyword                    = urldecode(getVar('keyword'));
-        $data['record']             = Master::getAllCob($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['record']             = Master::getAllCob($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllCob($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -733,7 +750,9 @@ class MasterController
 
         // $data['record'] = Master::getIntermediary();
         $keyword                    = urldecode(getVar('keyword'));
-        $data['record']           = Master::getallIntermediary($keyword, pagination('start'), pagination('limit')) ?: [];
+        $status                     = getVar('status');
+        $data['account_status']     = Master::getMaintenanceStatus();
+        $data['record']             = Master::getallIntermediary($status, $keyword, pagination('start'), pagination('limit')) ?: [];
         $data['total_record']       = Master::countAllIntermediary($keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
@@ -805,8 +824,8 @@ class MasterController
             $data['id'] = htmlEncode($_POST['id']);
             $data['source_name'] = htmlEncode($_POST['sourcename']);
             $data['address'] = htmlEncode($_POST['address']);
-            $data['categories'] = htmlEncode($_POST['category']);
-            $data['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+            $data['categories'] = isset($_POST['category']) && $_POST['category'] !== '' ? json_encode([htmlEncode($_POST['category'])])  : '[]';
+            $data['is_active'] = ($_POST['is_active'] === '1') ? 1 : 0;
             $data['updated_at'] = date('Y-m-d H:i:s');
 
             $result = Master::updateIntermediary($data['id'], $data);
@@ -822,69 +841,66 @@ class MasterController
 
     public function syncSOA_json()
     {
- 
-      $data = Master::syncSOA();
-      $datacount = count($data) > 0 ? $data : [];
 
-                if (!empty($data)) {
+        $data = Master::syncSOA();
+        $datacount = count($data) > 0 ? $data : [];
 
-                    foreach ($data as $record) {
-                        $cleanRecord = [];
+        if (!empty($data)) {
 
-                        foreach ($record as $key => $value) {
-                        
-                            $updatedKey = strtoupper($key);
-                            $updatedKey = str_replace([' ', '(', ')', '/', '>', '-'], ['_', '', '', '_', 'OVER_', '_'], $updatedKey);
-                            $updatedKey = preg_replace('/_{2,}/', '_', $updatedKey);
-                            $updatedKey = trim($updatedKey, '_');
+            foreach ($data as $record) {
+                $cleanRecord = [];
 
-                            // Format DateTime values
-                            if ($value instanceof DateTime) {
-                                $value = $value->format('Y-m-d');
-                            }
+                foreach ($record as $key => $value) {
 
-                          
-                        $cleanRecord[$updatedKey] = $value;
-                        }
-                        $cleanRecord['batch_number'] = date('YmdHis');
-                     
-                        $insertDB = Master::addSoa($cleanRecord);
+                    $updatedKey = strtoupper($key);
+                    $updatedKey = str_replace([' ', '(', ')', '/', '>', '-'], ['_', '', '', '_', 'OVER_', '_'], $updatedKey);
+                    $updatedKey = preg_replace('/_{2,}/', '_', $updatedKey);
+                    $updatedKey = trim($updatedKey, '_');
 
-                    
-                        if ($insertDB['status'] != 'success') {
-                            
-                            $errmessage = array();
-
-                            $errmessage['status'] = "Error inserting record: " . json_encode($insertDB);
-                            $errmessage['job_type'] = 'syncSOA';
-                            $errmessage['created_at'] = date('Y-m-d H:i:s');
-                            $errmessage['payload'] = json_encode($cleanRecord);
-
-                            $result = Master::addJobQueue($errmessage);
-                            break;
-                        }
+                    // Format DateTime values
+                    if ($value instanceof DateTime) {
+                        $value = $value->format('Y-m-d');
                     }
 
-                            $successmessage = array();
 
-                            $successmessage['status'] = "Successfully insert Care " . count($datacount) . " records.";
-                            $successmessage['job_type'] = 'syncSOA';
-                            $successmessage['created_at'] = date('Y-m-d H:i:s');
-                            $successmessage['payload'] = '';
-
-                            $result = Master::addJobQueue($successmessage);
-                    
-
-                } else {
-                            $errmessage = array();
-
-                            $errmessage['status'] = "No data found";
-                            $errmessage['job_type'] = 'syncSOA';
-                            $errmessage['created_at'] = date('Y-m-d H:i:s');
-                            $errmessage['payload'] = json_encode($cleanRecord) ? json_encode($cleanRecord) : '';
-
-                            $result = Master::addJobQueue($errmessage);
+                    $cleanRecord[$updatedKey] = $value;
                 }
-    }
+                $cleanRecord['batch_number'] = date('YmdHis');
 
+                $insertDB = Master::addSoa($cleanRecord);
+
+
+                if ($insertDB['status'] != 'success') {
+
+                    $errmessage = array();
+
+                    $errmessage['status'] = "Error inserting record: " . json_encode($insertDB);
+                    $errmessage['job_type'] = 'syncSOA';
+                    $errmessage['created_at'] = date('Y-m-d H:i:s');
+                    $errmessage['payload'] = json_encode($cleanRecord);
+
+                    $result = Master::addJobQueue($errmessage);
+                    break;
+                }
+            }
+
+            $successmessage = array();
+
+            $successmessage['status'] = "Successfully insert Care " . count($datacount) . " records.";
+            $successmessage['job_type'] = 'syncSOA';
+            $successmessage['created_at'] = date('Y-m-d H:i:s');
+            $successmessage['payload'] = '';
+
+            $result = Master::addJobQueue($successmessage);
+        } else {
+            $errmessage = array();
+
+            $errmessage['status'] = "No data found";
+            $errmessage['job_type'] = 'syncSOA';
+            $errmessage['created_at'] = date('Y-m-d H:i:s');
+            $errmessage['payload'] = json_encode($cleanRecord) ? json_encode($cleanRecord) : '';
+
+            $result = Master::addJobQueue($errmessage);
+        }
+    }
 }

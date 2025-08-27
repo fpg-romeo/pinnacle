@@ -42,7 +42,7 @@ if ($controller == 'page' && $view == 'errorModal') {
 
 $CONFIGURATION = Configuration::general();
 
-//$_SESSION['login_id'] = idEncrypt(1000);
+// $_SESSION['login_id'] = idEncrypt(1000);
 
 if (isset($_SESSION['login_id'])) {
 

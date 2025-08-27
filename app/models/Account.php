@@ -1394,7 +1394,7 @@ class Account
         return $result;
     }
 
-    public static function getAccount($account_department_ids, $account_status_id, $keyword = '', $start = '', $limit = '', $appointment = '', $auto_allocate = '')
+    public static function getAccount($account_department_ids, $account_status_id, $keyword = '', $start = '', $limit = '')
     {
         if(!empty($account_department_ids) && $account_department_ids != 'all') {
             if (is_array($account_department_ids)) {

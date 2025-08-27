@@ -463,27 +463,29 @@ class AccountController
             $field['created_by']                            = ACCOUNT_ID;
             $field['created_when']                          = dateTimeStamp();
 
-            $employment['email']                            = postvar('employee_email');
-            $employment['account_type_id']                  = postvar('account_type_id');
+            $employment['email']                            = postvar('email');
+            // $employment['account_type_id']                  = postvar('account_type_id');
             $employment['account_status_id']                = postvar('account_status_id');
             $employment['account_role_id']                  = postvar('account_role_id');
-            $employment['account_department_id']            = postvar('account_department_id');
-            $employment['account_team_id']                  = postvar('account_team_id');
-            $employment['account_designation_id']           = postvar('account_designation_id');
-            $employment['account_level_id']                 = postvar('account_level_id');
-            $employment['report_to']                        = postvar('report_to');
+            // $employment['account_department_id']            = postvar('account_department_id');
+            // $employment['account_team_id']                  = postvar('account_team_id');
+            // $employment['account_designation_id']           = postvar('account_designation_id');
+            // $employment['account_level_id']                 = postvar('account_level_id');
+            // $employment['report_to']                        = postvar('report_to');
             $employment['created_by']                            = ACCOUNT_ID;
             $employment['created_when']                          = dateTimeStamp();
 
             $personal['first_name']                         = postvar('first_name');
-            $personal['middle_name']                        = postvar('last_name');
-            $personal['last_name']                          = postvar('middle_name');
-            $personal['alias']                              = postvar('alias');
-            $personal['contact_no']                         = postvar('phoneNumber');
-            $personal['created_by']                         = ACCOUNT_ID;
-            $personal['created_when']                       = dateTimeStamp();
+            $personal['middle_name']                        = postvar('middle_name');
+            $personal['last_name']                          = postvar('last_name');
+            // $personal['active_directory']                   = postvar('active_directory');
 
-            $data = checkRequiredPost(array('active_directory', 'employee_email',));
+            // $personal['alias']                              = postvar('alias');
+            // $personal['contact_no']                         = postvar('phoneNumber');
+            // $personal['created_by']                         = ACCOUNT_ID;
+            // $personal['created_when']                       = dateTimeStamp();
+
+            $data = checkRequiredPost(array('active_directory', 'email',));
 
             if (!array_key_exists('error', $data)) {
                 if (!empty($account_id)) {
@@ -546,11 +548,9 @@ class AccountController
         $departments                = ACCOUNT_DEPARTMENT_ID;
         $status                     = '';
         $keyword                    = urldecode(getVar('keyword'));
-        $round_robin                = getVar('round_robin') === 'Yes' ? 'Yes' : '';
-        $auto_allocate              = getVar('auto_allocate') === 'Yes' ? 'Yes' : '';
 
-        $data['user']               = Account::getAccount($departments, $status, $keyword, pagination('start'), pagination('limit'), $round_robin, $auto_allocate);
-        $data['total_record']       = Account::countAccount($departments, $status, $keyword, $round_robin, $auto_allocate);
+        $data['user']               = Account::getAccount($departments, $status, $keyword, pagination('start'), pagination('limit'));
+        $data['total_record']       = Account::countAccount($departments, $status, $keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
         $data['account_all']        = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
