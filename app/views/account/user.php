@@ -27,8 +27,9 @@
                                     <tr>
                                         <th class="wd-5p tx-center">PHOTO</th>
                                         <th class="wd-20p">NAME</th>
+                                        <th class="wd-15p">ACTIVE DIRECTORY</th>
                                         <th class="wd-20p">EMAIL / CONTACT NO.</th>
-                                        <th class="wd-15p">DESIGNATION</th>
+                                        <!-- <th class="wd-15p">DESIGNATION</th> -->
                                         <th class="wd-20p">DEPARTMENT</th>
                                         <th class="wd-10p">TYPE</th>
                                         <th class="wd-5p tx-center">STATUS</th>
@@ -44,10 +45,11 @@
                                                 <td class="tx-center cursor-pointer view-image" data-photo="<?= htmlDecode($value['photo']) ?>" data-name="<?= htmlDecode($value['first_name']) . ' ' . htmlDecode($value['last_name']) ?>">
                                                     <img src="<?= displayImage(thumbnailName(htmlDecode($value['photo'])), 'account') ?>" class="img-fluid">
                                                 </td>
-                                                <td><?= $value['first_name'] . ' ' . $value['last_name'] ?></td>
-                                                <td><?= $value['email'] ?> <br><small class="text-muted"><?= $value['contact_no'] ?></small> </td>
-                                                <td><?= $value['account_designation_name'] ?> <br><small class="text-muted"><?= $value['account_level_name'] ?></small> </td>
-                                                <td><?= $value['account_department_name'] ?> <br><small class="text-muted"><?= $value['account_team_name'] ?></small> </td>
+                                                <td> <?= $value['first_name'] . ' ' . (!empty($value['middle_name']) ? $value['middle_name'] . ' ' : '') . $value['last_name'] ?> </td>
+                                                <td><?= $value['active_directory'] ?></td>
+                                                <td><?= $value['email'] ?></td>
+                                                <!-- <td><?= $value['account_designation_name'] ?></td> -->
+                                                <td><?= $value['account_department_name'] ?></td>
                                                 <td><?= $value['account_type_name'] ?> </td>
                                                 <td class="tx-center"><?= $value['account_status_name'] ?> </td>
                                                 <td>
@@ -56,7 +58,7 @@
                                                             <i class="icon-base ti tabler-settings"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?= $value['account_id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
+                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#accountModal" data-id="<?= $value['id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
                                                             <!-- <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?= $value['account_id'] ?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a> -->
                                                         </div>
                                                     </div>
@@ -94,7 +96,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="branchModal" tabindex="-1" aria-hidden="true">
+<!-- <div class="modal fade" id="branchModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
         <form id="form-user">
             <div class="modal-content bd-0">
@@ -236,6 +238,66 @@
                                 <button name="submit" type="button" class="btn btn-info btn-form" disabled><small>SUBMIT</small></button>
                                 <button type="button" class="btn btn-secondary btn-form modal-cancel-reload" data-modal="modal"><small>CANCEL</small></button>
                             </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div> -->
+
+<div class="modal fade" id="accountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <form method="post" id="branchForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel3">Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-6">
+                        <div class="col-md-4">
+                            <label class="form-label" for="multicol-first-name">First Name</label>
+                            <input name="first_name" type="text" id="first_name" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="multicol-middle-name">Middle Name</label>
+                            <input name="middle_name" type="text" id="middle_name" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="multicol-last-name">Last Name</label>
+                            <input name="last_name" type="text" id="last_name" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="multicol-username">Username</label>
+                            <input name="active_directory" type="text" id="active_directory" class="form-control" placeholder="P65XXXXX" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="multicol-email">Email</label>
+                            <input name="email" type="text" id="email" class="form-control" aria-describedby="multicol-email2" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="multicol-birthdate">Role</label>
+                            <select name="account_role_id" id="account_role_id" class="form-control select" data-placeholder="Status">
+                                <?php echo tool_dropdown_option($data['account_role'], null, 'name'); ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="multicol-status">Status</label>
+                            <select name="account_status_id" id="account_status_id" class="form-control select" data-placeholder="Status">
+                                <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <input type="hidden" value="" name="action">
+                            <input type="hidden" value="" name="id">
+                            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary submit">Save Changes</button>
                         </div>
                     </div>
                 </div>
@@ -561,6 +623,55 @@
                     console.warn(xhr.responseText);
                 }
             });
+        }
+    });
+</script>
+
+<script>
+    $('.showModal').click(function(e) {
+
+        e.preventDefault();
+        $('#accountModal').find('form')[0].reset();
+        $('#accountModal').find('input').prop('readonly', false);
+        $('#accountModal').find('select').prop('disabled', false);
+        var action = $(this).attr('action');
+        $('[name="action"]').val(action);
+        $('.submit').css('display', 'block');
+
+        if (action == "edit") {
+            var id = $(this).data('id');
+            console.log("📤 Sending to /account/add_json/:", {
+                id: id
+            });
+
+            $.ajax({
+                url: '/account/user_json/',
+                method: 'POST',
+                data: {
+                    id: $(this).data('id')
+                },
+                success: function(data) {
+                    console.log("✅ Response from server:", data);
+                    $('[name="id"]').val(data.id);
+                    $('#first_name').val(data.first_name);
+                    $('#middle_name').val(data.middle_name);
+                    $('#last_name').val(data.last_name);
+                    $('#active_directory').val(data.active_directory);
+                    $('#email').val(data.email);
+                    $('#account_role_id').val(data.account_role_id);
+                    $('#account_status_id').val(data.account_status_id);
+                },
+                error: function(xhr, status, error) {
+                    console.error("❌ AJAX Error:", error);
+                    console.log("Response Text:", xhr.responseText);
+                }
+            });
+
+            if (action == "show") {
+                $('#accountModal').find('input').prop('readonly', true);
+                $('#accountModal').find('select').prop('disabled', true);
+                $('.submit').css('display', 'none');
+            }
         }
     });
 </script>

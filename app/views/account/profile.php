@@ -35,87 +35,54 @@
                     <div class="card-body pt-4">
                         <form id="form" role="form" method="post" enctype="multipart/form-data">
                             <div class="row gy-4 gx-6 mb-6">
-                                <div class="col-md-6 form-control-validation">
+
+                                <div class="col-md-4 form-control-validation">
                                     <label for="firstName" class="form-label">First Name</label>
-                                    <input class="form-control" type="text" id="firstName" name="firstName" value="<?php echo multiArrayKeyExist($data, 'account', 'first_name'), ' ' .   multiArrayKeyExist($data, 'account', 'middle_name'); ?>" autofocus />
+                                    <input class="form-control" type="text" id="firstName" name="firstName" value="<?php echo multiArrayKeyExist($data, 'account', 'first_name') ?>" autofocus />
                                 </div>
-                                <div class="col-md-6 form-control-validation">
+                                <div class="col-md-4 form-control-validation">
+                                    <label for="middleName" class="form-label">Middle Name</label>
+                                    <input class="form-control" type="text" id="middleName" name="middleName" value="<?php echo multiArrayKeyExist($data, 'account', 'middle_name') ?>" />
+                                </div>
+                                <div class="col-md-4 form-control-validation">
                                     <label for="lastName" class="form-label">Last Name</label>
-                                    <input class="form-control" type="text" name="lastName" id="lastName" value="<?php echo multiArrayKeyExist($data, 'account', 'last_name') ?>" />
+                                    <input class="form-control" type="text" id="lastName" name="lastName" value="<?php echo multiArrayKeyExist($data, 'account', 'last_name') ?>" />
                                 </div>
+
+
+                                <!-- Rest of the form (still 2 columns) -->
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">E-mail</label>
                                     <input class="form-control" type="text" id="email" name="email" value="<?php echo multiArrayKeyExist($data, 'account', 'email') ?>" placeholder="email" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="organization" class="form-label">Organization</label>
-                                 
-                                        <select name="account_department_id" class="form-control select" style="width: 100%" data-placeholder="---" required>
-                                            <?php echo tool_dropdown_option(multiKeyExists($data, 'department'), multiArrayKeyExist($data, 'account', 'account_department_id'), 'name'); ?>
-                                        </select>
-                               
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label" for="phoneNumber">Phone Number</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text">PH (+63)</span>
-                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="911 111 2222" value="<?php echo multiArrayKeyExist($data, 'account', 'contact_no') ?>"/>
-                                    </div>
-                                </div>
-                                <!-- <div class="col-md-6">
-                                    <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="state" class="form-label">State</label>
-                                    <input class="form-control" type="text" id="state" name="state" placeholder="California" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="zipCode" class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="231465" maxlength="6" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label" for="country">Country</label>
-                                    <select id="country" class="select2 form-select">
-                                        <option value="">Select</option>
-                                        <option value="Australia">Australia</option>
-                                        <option value="Bangladesh">Bangladesh</option>
-                                        <option value="Belarus">Belarus</option>
+                                    <select name="account_department_id" class="form-control select" style="width: 100%" data-placeholder="---" required>
+                                        <?php echo tool_dropdown_option(multiKeyExists($data, 'department'), multiArrayKeyExist($data, 'account', 'account_department_id'), 'name'); ?>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="language" class="form-label">Language</label>
-                                    <select id="language" class="select2 form-select">
-                                        <option value="">Select Language</option>
-                                        <option value="en">English</option>
-                                        <option value="fr">French</option>
-                                        <option value="de">German</option>
+                                    <label class="form-label" for="multicol-birthdate">Role</label>
+                                    <select name="account_role_id" id="account_role_id" class="form-control select" data-placeholder="Status">
+                                        <?php echo tool_dropdown_option(multiKeyExists($data, 'account_role'), multiArrayKeyExist($data, 'account', 'account_role_id'), 'name'); ?>
                                     </select>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <label for="timeZones" class="form-label">Timezone</label>
-                                    <select id="timeZones" class="select2 form-select">
-                                        <option value="">Select Timezone</option>
-                                        <option value="-12">(GMT-12:00) International Date Line West</option>
-                                        <option value="-11">(GMT-11:00) Midway Island, Samoa</option>
-                                        <option value="-10">(GMT-10:00) Hawaii</option>
+                                    <label class="form-label" for="multicol-status">Status</label>
+                                    <select name="account_status_id" id="account_status_id" class="form-control select" data-placeholder="Status">
+                                        <?php echo tool_dropdown_option(multiKeyExists($data, 'account_status'), multiArrayKeyExist($data, 'account', 'account_status_id'), 'name'); ?>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="currency" class="form-label">Currency</label>
-                                    <select id="currency" class="select2 form-select">
-                                        <option value="">Select Currency</option>
-                                        <option value="usd">USD</option>
-                                        <option value="euro">Euro</option>
-                                        <option value="pound">Pound</option>
-                                    </select>
-                                </div>
-                            </div> -->
-                                <div class="mt-2">
-                                    <button type="submit" class="btn btn-primary me-3">Save changes</button>
-                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                </div>
+
+                            </div>
+
+                            <div class="mt-2">
+                                <button type="submit" class="btn btn-primary me-3">Save changes</button>
+                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                            </div>
                         </form>
+
                     </div>
                     <!-- /Account -->
                 </div>

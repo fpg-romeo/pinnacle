@@ -5,7 +5,7 @@
                 <h4 class="lh-lg mb-0 fw-bolder">Records <span class="text-primary">[ List ]</span></h4>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
-                <a href="/account/manage/" class="btn btn-info">
+                <a class="btn btn-primary text-white showModal" action="add" data-bs-toggle="modal" data-bs-target="#accountModal">
                     <i class="icon-base ti tabler-plus me-2"></i>
                     <span class="align-middle">Add Record</span>
                 </a>
@@ -27,12 +27,13 @@
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
                                 <select name="pagination_department" class="form-control select pagination" data-placeholder="Department">
                                     <option value="all">All</option>
-                                    <?php echo tool_dropdown_option($data['account_department'], getVar('department'), 'name'); ?>
+                                    <?php echo tool_dropdown_option($data['account_department'], (getVar('department') ? getVar('department') : 1), 'name'); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
                                 <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
-                                    <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
+                                    <option value="all">All</option>
+                                    <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 0), 'name'); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
@@ -66,11 +67,11 @@
                                                 <td class="tx-center cursor-pointer view-image" data-photo="<?= htmlDecode($value['photo']) ?>" data-name="<?= htmlDecode($value['first_name']) . ' ' . htmlDecode($value['last_name']) ?>">
                                                     <img src="<?= displayImage(thumbnailName(htmlDecode($value['photo'])), 'account') ?>" class="img-fluid">
                                                 </td>
-                                                <td><?= $value['first_name'] . ' ' . $value['last_name'] ?></td>
+                                                <td> <?= $value['first_name'] . ' ' . (!empty($value['middle_name']) ? $value['middle_name'] . ' ' : '') . $value['last_name'] ?> </td>
                                                 <td><?= $value['active_directory'] ?></td>
-                                                <td><?= $value['email'] ?> <br><small class="text-muted"><?= $value['contact_no'] ?></small> </td>
-                                                <td><?= $value['account_department_name'] ?> <br><small class="text-muted"><?= $value['account_team_name'] ?></small> </td>
-                                                <td><?= $value['account_type_name'] ?> </td>
+                                                <td><?= $value['email'] ?></td>
+                                                <td><?= $value['account_department_name'] ?></td>
+                                                <td><?= $value['account_role_name'] ?> </td>
                                                 <td class="tx-center"><?= $value['account_status_name'] ?> </td>
                                                 <td>
                                                     <div class="dropdown">
@@ -78,8 +79,7 @@
                                                             <i class="icon-base ti tabler-settings"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?= $value['account_id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
-                                                            <!-- <a class="dropdown-item showModal" action="show" data-bs-toggle="modal" data-bs-target="#branchModal" data-id="<?= $value['account_id'] ?>"><i class="icon-base ti tabler-eye me-1"></i> Show</a> -->
+                                                            <a class="dropdown-item showModal" action="edit" data-bs-toggle="modal" data-bs-target="#accountModal" data-id="<?= $value['id'] ?>"><i class="icon-base ti tabler-pencil me-1"></i> Edit</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -110,223 +110,152 @@
                 </div>
             </div>
 
-            <div id="modal_view" class="modal fade">
-                <div class="modal-dialog modal-dialog-vertical-center modal-xl" role="document">
-                    <div class="modal-content bd-0">
-                        <div class="modal-body pd-25">
+            <div class="modal fade" id="accountModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <form method="post" id="branchForm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel3">Record</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-6">
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="multicol-first-name">First Name</label>
+                                        <input name="first_name" type="text" id="first_name" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="multicol-middle-name">Middle Name</label>
+                                        <input name="middle_name" type="text" id="middle_name" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label" for="multicol-last-name">Last Name</label>
+                                        <input name="last_name" type="text" id="last_name" class="form-control" />
+                                    </div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="multicol-username">Username</label>
+                                        <input name="active_directory" type="text" id="active_directory" class="form-control" placeholder="P65XXXXX" />
+                                    </div>
 
-            <div id="modal-relogin" class="modal fade">
-                <div class="modal-dialog modal-dialog-vertical-center modal-md" role="document">
-                    <div class="modal-content bd-0">
-                        <form id="account-relogin" role="form" method="post">
-                            <div class="modal-header pd-y-20 pd-x-25">
-                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title"><span></span> User Accounts Relogin</h6>
-                            </div>
-                            <div class="modal-body pd-25 pd-y-40 text-center">
-                                <p class="text-muted">Are you sure you want to relogin all accounts?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <center>
-                                    <button name="submit-relogin" type="submit" class="btn btn-primary btn-form"><small>SUBMIT</small></button>
-                                    <button class="btn btn-secondary btn-form modal-cancel" data-dismiss="modal"><small>CANCEL</small></button>
-                                </center>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="multicol-email">Email</label>
+                                        <input name="email" type="text" id="email" class="form-control" aria-describedby="multicol-email2" />
+                                    </div>
 
-            <div id="modal-view-image" class="modal fade">
-                <div class="modal-dialog modal-dialog-vertical-center modal-sm" role="document">
-                    <form id="form">
-                        <div class="modal-content bd-0">
-                            <div class="modal-header pd-y-20 pd-x-25">
-                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-primary tx-bold modal-title"><span></span> </h6>
-                                <button type="button" class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body pd-25">
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="multicol-birthdate">Role</label>
+                                        <select name="account_role_id" id="account_role_id" class="form-control select" data-placeholder="Status">
+                                            <?php echo tool_dropdown_option($data['account_role'], null, 'name'); ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="multicol-status">Status</label>
+                                        <select name="account_status_id" id="account_status_id" class="form-control select" data-placeholder="Status">
+                                            <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <input type="hidden" value="" name="action">
+                                        <input type="hidden" value="" name="id">
+                                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary submit">Save Changes</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //DATATABLE FILTER
+        $(document).ready(function() {
+            $('.pagination').bind('blur change', function(e) {
+                e.preventDefault();
 
-            <script src="/public/lib/datatables.net/js/jquery.dataTables.min.js"></script>
-            <script src="/public/lib/datatables.net-dt/js/dataTables.dataTables.min.js"></script>
-            <script src="/public/lib/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-            <script src="/public/lib/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
-            <script type="text/javascript">
-                //DATATABLE FILTER
-                $(document).ready(function() {
-                    $('.pagination').bind('blur change', function(e) {
-                        e.preventDefault();
+                var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
+                var limit = $('select[name=pagination_limit]').find(":selected").val();
+                var status = $('select[name=pagination_status]').find(":selected").val();
+                var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
+                var department = $('select[name=pagination_department]').find(":selected").val();
 
-                        var link = "/<?php echo getVar('controller') . '/' . getVar('view'); ?>/";
-                        var limit = $('select[name=pagination_limit]').find(":selected").val();
-                        var status = $('select[name=pagination_status]').find(":selected").val();
-                        var keyword = encodeURIComponent($('input[name=pagination_keyword]').val());
-                        var department = $('select[name=pagination_department]').find(":selected").val();
+                var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&department=' + department + '&status=' + status;
 
-                        var parameter = '?page=1&limit=' + limit + '&keyword=' + keyword + '&department=' + department + '&status=' + status;
+                window.location.replace(link + parameter);
+            });
+        });
+    </script>
 
-                        window.location.replace(link + parameter);
-                    });
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on('click', '.view-image', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+                var photo = $(this).data('photo');
+                var name = $(this).data('name');
+                var display = $('#modal-view-image .modal-body');
+                display.html('');
+                if (photo == '') {
+                    $('<img src="' + photo + '" class="img-fluid">').appendTo(display);
+                } else {
+                    $('<img src="' + photo + '" class="img-fluid">').appendTo(display);
+                }
+                $('#modal-view-image .modal-title span').html(name);
+                $('#modal-view-image').modal('show');
+            });
+        });
+    </script>
+
+    <script>
+        $('.showModal').click(function(e) {
+
+            e.preventDefault();
+            $('#accountModal').find('form')[0].reset();
+            $('#accountModal').find('input').prop('readonly', false);
+            $('#accountModal').find('select').prop('disabled', false);
+            var action = $(this).attr('action');
+            $('[name="action"]').val(action);
+            $('.submit').css('display', 'block');
+
+            if (action == "edit") {
+                var id = $(this).data('id');
+                console.log("📤 Sending to /account/add_json/:", {
+                    id: id
                 });
-            </script>
 
-            <script type="text/javascript">
-                // $(function(){
-                //     'use strict';
-                //     $('.table_default').DataTable({
-                //         autoWidth: false,
-                //         responsive: {
-                //             breakpoints: [
-                //                 { name: 'desktop',  width: Infinity },
-                //                 { name: 'tablet-l', width: 1024 },
-                //                 { name: 'tablet-p', width: 768 },
-                //                 { name: 'mobile-l', width: 480 },
-                //                 { name: 'mobile-p', width: 320 }
-                //             ]
-                //         },
-                //         bSort: false,
-                //         language: {
-                //             searchPlaceholder: 'Search...',
-                //             sSearch: '',
-                //             lengthMenu: '_MENU_ items/page',
-                //         }
-                //     });  
-
-                //     $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });           
-                // });
-            </script>
-
-            <script type="text/javascript">
-                //DELETE
-                $(document).on('click', '.delete', function(e) {
-                    e.preventDefault();
-                    var id = $(this).attr('id');
-                    var action = $(this).data('action');
-                    var title = $(this).data('title');
-
-                    var check = confirm("Are you sure you want to delete?\n\n" + title);
-                    if (check == true) {
-                        $.ajax({
-                            url: '/account/delete-json/',
-                            type: 'POST',
-                            data: {
-                                id: id,
-                                action: action
-                            },
-                            success: function(data) {
-                                console.log(data);
-                                alert(data.message);
-                                //location.reload();
-                                window.location = document.URL;
-                            },
-                            error: function(xhr, desc, err) {
-                                //console.log(xhr);
-                                console.warn(xhr.responseText);
-                            }
-                        });
+                $.ajax({
+                    url: '/account/all_json/',
+                    method: 'POST',
+                    data: {
+                        id: $(this).data('id')
+                    },
+                    success: function(data) {
+                        console.log("✅ Response from server:", data);
+                        $('[name="id"]').val(data.id);
+                        $('#first_name').val(data.first_name);
+                        $('#middle_name').val(data.middle_name);
+                        $('#last_name').val(data.last_name);
+                        $('#active_directory').val(data.active_directory);
+                        $('#email').val(data.email);
+                        $('#account_role_id').val(data.account_role_id);
+                        $('#account_status_id').val(data.account_status_id);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("❌ AJAX Error:", error);
+                        console.log("Response Text:", xhr.responseText);
                     }
                 });
 
-                //VIEW
-
-                $(document).ready(function() {
-                    $(document).on('click', '.view', function(e) {
-                        e.preventDefault();
-                        var id = $(this).data('id');
-                        var display = $('#modal_view .modal-body');
-                        // console.log(pipeline_id);
-                        $.ajax({
-                            url: '/account/import-view/',
-                            type: 'GET',
-                            data: {
-                                account_id: id
-                            },
-                            beforeSend: function() {
-                                display.html('');
-                            },
-                            success: function(data) {
-                                // console.log('success');
-                                $(data).appendTo(display);
-
-                                $('#modal_view').modal('show');
-                            },
-                            error: function(xhr, desc, err) {
-                                //console.log(xhr);
-                                console.warn(xhr.responseText);
-                            }
-                        });
-                    });
-                });
-
-                // $("#modal_view").on("hidden.bs.modal", function(){
-                //     $(".modal-body").html("");
-                //     console.log('closed');
-                // });
-
-                // $(document).on('click', '.view', function(e){
-                //     e.preventDefault();
-                //     var id      = $(this).attr('id');
-                //     var action  = $(this).data('action');
-
-                //     // var business_id = $(this).data('business')
-                //     //         pipeline_id = $(this).data('pipeline')
-                //     //         column = $(this).data('column');
-
-
-
-                //     console.log( id );
-
-                //     $('#modal_view').modal('show');
-
-                //     $.ajax({
-                //         url: '/account/view-json/',
-                //         type: 'POST',
-                //         data: {id:id, action:action},
-                //         dataType: 'json',
-                //         success: function(data){
-                //             $('#account_type_name').html(data['account_type_name']);
-                //             $('#active_directory').html(data['email']);
-                //             $('#name').html(data['full_name']);
-                //             $('#email').html(data['email']);
-                //             $('#account_unit_name').html(data['account_unit_team']);
-                //             $('#role').html(data['account_role_name']);
-                //             $('#account_status_name').html(data['account_status_name']);
-                //         },
-                //         error: function(xhr, desc, err){ 
-                //             //console.log(xhr);
-                //             console.warn(xhr.responseText);
-                //         }
-                //     });
-                // });
-            </script>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $(document).on('click', '.view-image', function(e) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        e.stopPropagation();
-                        var photo = $(this).data('photo');
-                        var name = $(this).data('name');
-                        var display = $('#modal-view-image .modal-body');
-                        display.html('');
-                        if (photo == '') {
-                            $('<img src="' + photo + '" class="img-fluid">').appendTo(display);
-                        } else {
-                            $('<img src="' + photo + '" class="img-fluid">').appendTo(display);
-                        }
-                        $('#modal-view-image .modal-title span').html(name);
-                        $('#modal-view-image').modal('show');
-                    });
-                });
-            </script>
+                if (action == "show") {
+                    $('#accountModal').find('input').prop('readonly', true);
+                    $('#accountModal').find('select').prop('disabled', true);
+                    $('.submit').css('display', 'none');
+                }
+            }
+        });
+    </script>

@@ -1400,18 +1400,18 @@ class Account
             if (is_array($account_department_ids)) {
                 $account_department_ids = implode("','", $account_department_ids);
             }
-            $filter_department = " AND aem.account_department_id IN ('$account_department_ids')"; 
+            $filter_department = "AND aem.account_department_id IN ('$account_department_ids')"; 
         }else{
             $filter_department = "";
         }
 
-        if (!empty($account_status_id)) {
+        if (!empty($account_status_id) && $account_status_id != 'all') {
             if (is_array($account_status_id)) {
                 $account_status_id = implode("','", $account_status_id);
             }
-            $account_status = " aem.account_status_id IN ('{$account_status_id}') ";
+            $account_status = "AND aem.account_status_id IN ('{$account_status_id}') ";
         } else {
-            $account_status = " aem.account_status_id = 1 "; // 1 = ACTIVE
+            $account_status = " "; // 1 = ACTIVE
         }
 
         if (!empty(trim($keyword))) {
@@ -1466,6 +1466,8 @@ class Account
                                      ON aem.account_level_id = mal.id 
                                      LEFT JOIN master_account_designation mai
                                      ON aem.account_designation_id = mai.id 
+                                     LEFT JOIN master_account_role mar
+                                     ON aem.account_role_id = mar.id
                                      LEFT JOIN account acc 
                                      ON aem.account_id = acc.id
                                      ',
@@ -1487,9 +1489,10 @@ class Account
                                      mad.name AS account_department_name,
                                      mae.name AS account_team_name,
                                      mal.name AS account_level_name,
-                                     mai.name AS account_designation_name
+                                     mai.name AS account_designation_name,
+                                     mar.name AS account_role_name
                                     ',
-            $account_status . $filter_department . $filter,
+            '1=1 ' . $account_status . $filter_department . $filter,
             'full_name ASC',
             $startLimit
         );
