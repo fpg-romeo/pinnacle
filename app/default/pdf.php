@@ -154,9 +154,12 @@ class pdf{
             if(!file_exists($filepath)){
                 mkdir($filepath, 0777, true);
             }
+
             $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $filename = !empty($file_ext) && $file_ext == "pdf" ? $filename : $filename.'.pdf';
+
             $pdf->Output($filepath."/".$filename, "F"); //save pdf to folder as attachment
+            //$pdf->Output($fullPath, 'F');
         }else{
             $pdf->Output($filename.'.pdf', "I"); //view pdf
         }

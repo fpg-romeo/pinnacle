@@ -2483,19 +2483,19 @@ function cURLApiRestPostFile($url, $fields = array())
 }
 
 // REMOVE ALL FILES FROM DIR AND THE FOLDER ITSELF
-function rrmdir($dir)
+function removeFolder($directory)
 {
-	if (is_dir($dir)) {
-		$objects = scandir($dir);
+	if (is_dir($directory)) {
+		$objects = scandir($directory);
 		foreach ($objects as $object) {
 			if ($object != "." && $object != "..") {
-				if (filetype($dir . "/" . $object) == "dir")
-					rrmdir($dir . "/" . $object);
-				else unlink($dir . "/" . $object);
+				if (filetype($directory . "/" . $object) == "dir")
+					rrmdir($directory . "/" . $object);
+				else unlink($directory . "/" . $object);
 			}
 		}
 		reset($objects);
-		rmdir($dir);
+		rmdir($directory);
 	}
 }
 
@@ -2819,8 +2819,7 @@ function getUrlBeforeQuery($url)
 	return $url_before_query; // Return the full URL without the query string if no query is present
 }
 
-function getQueryString($url)
-{
+function getQueryString($url){
 	// Parse the URL and retrieve the query string
 	$parsed_url = parse_url($url);
 
@@ -2833,8 +2832,7 @@ function getQueryString($url)
 	}
 }
 
-function parsePrefixString($prefix)
-{
+function parsePrefixString($prefix){
 	// Check if the prefix contains a hyphen (-), indicating a range
 	if (strpos($prefix, '-') !== false) {
 		// Split the string into two parts using the hyphen as the delimiter
@@ -2865,16 +2863,96 @@ function parsePrefixString($prefix)
 	return [(int)$prefix];
 }
 
-function extractUrlParameters($url)
-{
+function extractUrlParameters($url){
 	// Parse the URL
 	$parsedUrl = parse_url($url);
 
 	// Check if the URL has a query string
-	if (isset($parsedUrl['query']) && !empty($parsedUrl['query'])) {
+	if(isset($parsedUrl['query']) && !empty($parsedUrl['query'])) {
 		return htmlDecode($parsedUrl['query']);
 	}
 
 	// If no query string, return the original URL
 	return '';
+}
+
+function createFolder($destination, $folderName) {
+    $fullPath = rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+
+    if (!file_exists($fullPath)) {
+        if (mkdir($fullPath, 0777, true)) {
+            return $fullPath;
+        } else {
+            return false;
+        }
+    }
+    return $fullPath;
+}
+
+function copyFolderContents($source, $destination, $exclude = []) {
+    $source = realpath($source);
+    $destination = realpath($destination) ?: $destination;
+
+    if (!is_dir($source)) {
+        return false;
+    }
+
+    $dir = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+
+    foreach ($dir as $file) {
+        $src = $file->getPathname();
+        $relativePath = substr($src, strlen($source) + 1);
+        $dest = $destination . DIRECTORY_SEPARATOR . $relativePath;
+
+        // Skip excluded files
+        foreach ($exclude as $item) {
+            // Exact match or wildcard by extension
+            if ($item === $relativePath || fnmatch($item, basename($src))) {
+                continue 2; // Skip this file or folder
+            }
+        }
+
+        if ($file->isDir()) {
+            if (!file_exists($dest)) {
+                mkdir($dest, 0777, true);
+				chmod($dest, 0777); // Explicitly set permissions
+            }
+        } else {
+            copy($src, $dest);
+        }
+    }
+
+    return true;
+}
+
+function zipFolder($sourceFolder, $zipFilePath) {
+    $zip = new ZipArchive();
+
+    if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+        return false;
+    }
+
+    $sourceFolder = realpath($sourceFolder);
+    if (!is_dir($sourceFolder)) return false;
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($sourceFolder, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+
+    foreach ($files as $file) {
+        $file = realpath($file);
+        $relativePath = str_replace($sourceFolder . DIRECTORY_SEPARATOR, '', $file);
+
+        if (is_dir($file)) {
+            $zip->addEmptyDir($relativePath);
+        } else {
+            $zip->addFile($file, $relativePath);
+        }
+    }
+
+    return $zip->close();
 }

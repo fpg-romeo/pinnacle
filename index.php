@@ -111,7 +111,6 @@ require_once('app/views/layout/' . $template . '.php');
 ?>
 
 <?php
-// TEST EMAIL BODY
-// $data['content'] = 'woot woot';
-// echo  safe_b64encode(serialize($data));
+//TEST
+//Shortcode::soaDownload(date('YmdHis'));
 ?>

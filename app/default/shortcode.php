@@ -521,27 +521,71 @@
             return false; // invalid recipient
         } 
         
-        public static function soaCollectionReminderLetterGeneration($transaction_id, $action=""){
+        public static function soaCollectionReminderLetterGeneration($id, $folder, $action=""){
             includeDefault('pdf');
 
+            $directory = realpath(__DIR__ . '/../../../'); // goes up 3 levels to pinnacle root
+            
+            $file_path = $directory . DIRECTORY_SEPARATOR . 'pinnacle' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'soa' . DIRECTORY_SEPARATOR . $folder; //pinnacle - update with correct project folder name
+
             $body      = 'Test Body Content';
-            $document  = 'SOA-1234567890';
+            $document  = 'SOA-'.$id;
             $watermark = True;
-            $folder    = '/upload/soa';
+            //$folder    = './upload/soa';
 
             if (ob_get_contents()) ob_end_clean();
             if($action == "attachment"){
                 $filename = $document.'.pdf';
-                pdf::generate($filename, $body, 'invoice','attachment',$folder, $watermark);
+                pdf::generate($filename, $body, 'invoice', 'attachment', $file_path, $watermark);
                 $file = array(
                             'location' => $folder, 
                             'file'     => $filename
                             ); 
                 return $file;
             }else{
-                pdf::generate($document, $body, 'invoice','view',$folder, $watermark);
+                pdf::generate($document, $body, 'invoice', 'download', $folder, $watermark);
                 exit;
             }
+        }
+
+        public static function soaStatementOfAccountGeneration($id){
+            
+        }
+
+        public static function soaDownload($intermediary_id){
+            $result = array();
+
+            $base_path 			    = './upload/soa';
+            $source_file_folder 	= $base_path.'/default';
+            $folder_name 		    = 'SOA-'.$intermediary_id.'-'.date('YmdHis');
+            $exclude_file 		    = ['index.php'];
+
+            //FOLDER
+            $new_folder = createFolder($base_path, $folder_name);
+            if(!$new_folder){
+                $result['error'] = "Failed to create folder";
+            }
+
+            //COPY FILES
+            if(!copyFolderContents($source_file_folder, $new_folder, $exclude_file)){
+                $result['error'] = "Failed to copy files from source";
+            }
+
+            //GENERATE PDF
+            self::soaCollectionReminderLetterGeneration($intermediary_id, $folder_name, 'attachment');
+
+            //ZIP
+            $zip_file_path = $base_path . '/' . $folder_name . '.zip';
+            if(!zipFolder($new_folder, $zip_file_path)){
+                $result['error'] = "Zipping failed";
+            }
+
+            $result['base_path']          = $base_path;
+            $result['folder_name']        = $folder_name;
+            $result['source_file_folder'] = $source_file_folder;
+            $result['exclude_file']       = $exclude_file;
+        
+            return $result;
         }
 	}
 ?>
