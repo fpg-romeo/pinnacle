@@ -257,7 +257,6 @@ class AccountController
         accessRole(['10']);
 
         includeModel(['Master', 'Account']);
-
         $CONFIGURATION              = Configuration::general();
 
         $department                 = getVar('department');
@@ -273,22 +272,62 @@ class AccountController
         $data['account_department'] = Master::getDynamic('master_account_department');
         $data['account_role']       = Master::getDynamic('master_account_role');
 
-        if (isset($_POST['submit-relogin'])) {
+        if (isset($_POST['action'])) {
+            $field['active_directory']     = postVar('active_directory');
 
-            $exclude = array($CONFIGURATION['ACCOUNT_ID_IT']);
-            $users   = Account::getActive($exclude);
-            if (is_array($users)) {
-                foreach ($users as $key => $value) {
-                    $field['id']           = $value['account_id'];
-                    $field['relogin']      = 'Yes';
-                    $field['updated_when'] = dateTimeStamp();
-                    $field['updated_by']   = ACCOUNT_ID;
-                    Account::editRecord($field);
+            $employment['account_status_id'] = postVar('account_status_id');
+            $employment['account_role_id']   = postVar('account_role_id');
+            $employment['created_by']        = ACCOUNT_ID;
+            $employment['created_when']      = dateTimeStamp();
+
+            $personal['first_name']        = postVar('first_name');
+            $personal['middle_name']       = postVar('middle_name');
+            $personal['last_name']         = postVar('last_name');
+
+            if ($_POST['action'] == 'add') {
+                $field['email']                = postVar('email');
+                $field['active_directory'] = postVar('active_directory');
+                $field['created_by']       = ACCOUNT_ID;
+                $field['created_when']     = dateTimeStamp();
+                $result = Account::addRecord($field);
+
+                if ($result['status'] == 'success') {
+                    $employment['email']        = postVar('email');
+                    $employment['account_id']   = $result['id'];
+                    $employment['created_by']   = ACCOUNT_ID;
+                    $employment['created_when'] = dateTimeStamp();
+                    Account::addDynamic('account_employment', $employment);
+
+                    $personal['account_id']     = $result['id'];
+                    $personal['created_by']     = ACCOUNT_ID;
+                    $personal['created_when']   = dateTimeStamp();
+                    Account::addDynamic('account_personal', $personal);
+                }
+            } else if ($_POST['action'] == 'edit') {
+                $account_id = $_POST['id'];  // use "id" since that's what the form sends
+                $field['id'] = $account_id;
+                $field['updated_by']   = ACCOUNT_ID;
+                $field['updated_when'] = dateTimeStamp();
+                $result = Account::editRecord($field);
+
+                if ($result['status'] == 'success') {
+                    $employment['account_id']   = $account_id;
+                    $employment['updated_by']   = ACCOUNT_ID;
+                    $employment['updated_when'] = dateTimeStamp();
+                    Account::editDynamic('account_employment', $employment);
+
+                    $personal['account_id']     = $account_id;
+                    $personal['updated_by']     = ACCOUNT_ID;
+                    $personal['updated_when']   = dateTimeStamp();
+                    Account::editDynamic('account_personal', $personal);
                 }
             }
 
-            header('location: /');
+            alertAndRedirect($result['message'], '/account/all/' . idEncrypt($_POST['id']));
+            exit;
         }
+
+        // Handle photo defaults
         if (!empty($data['user'])) {
             foreach ($data['user'] as $key => $user) {
                 if (empty($user['user_photo'])) {
@@ -298,6 +337,13 @@ class AccountController
         }
 
         views('account.all', $data);
+    }
+
+
+    public function all_json()
+    {
+        $result = recastArray(Account::getRecordById($_POST['id']));
+        echo json_encode($result);
     }
 
     // public function manage()
@@ -517,6 +563,8 @@ class AccountController
         views('account.manage', $data);
     }
 
+
+
     public function deleteJson()
     {
         checkLoggedIn('true');
@@ -543,24 +591,84 @@ class AccountController
         $data = array();
         $CONFIGURATION = Configuration::general();
 
-        includeModel(['Master']);
+        includeModel(['Master', 'Account']);
+        $CONFIGURATION              = Configuration::general();
 
-        $departments                = ACCOUNT_DEPARTMENT_ID;
-        $status                     = '';
+        $department                 = getVar('department');
+        $status                     = getVar('status');
         $keyword                    = urldecode(getVar('keyword'));
 
-        $data['user']               = Account::getAccount($departments, $status, $keyword, pagination('start'), pagination('limit'));
-        $data['total_record']       = Account::countAccount($departments, $status, $keyword);
+        $data['user']               = Account::getAccount($department, $status, $keyword, pagination('start'), pagination('limit'));
+        $data['total_record']       = Account::countAccount($department, $status, $keyword);
         $data['total_page']         = pagination('total', $data['total_record']);
 
-        $data['account_all']        = Account::getByStatusId($CONFIGURATION['ACCOUNT_STATUS_ACTIVE']);
-        $data['account_department'] = Master::getDynamic('master_account_department');
-        $data['account_level']      = Master::getDynamic('master_account_level');
         $data['account_type']       = Master::getDynamic('master_account_type');
-        // $data['employment_type']    = Master::getDynamic('master_employment_type');
-        // $data['account_team']       = Master::getDynamicNotIn('master_account_team', 'id', $CONFIGURATION['ACCOUNT_TEAM_HOUSE']);
+        $data['account_status']     = Master::getDynamic('master_account_status');
+        $data['account_department'] = Master::getDynamic('master_account_department');
+        $data['account_role']       = Master::getDynamic('master_account_role');
+
+        if (isset($_POST['action'])) {
+            $field['active_directory']     = postVar('active_directory');
+
+            $employment['account_status_id'] = postVar('account_status_id');
+            $employment['account_role_id']   = postVar('account_role_id');
+            $employment['created_by']        = ACCOUNT_ID;
+            $employment['created_when']      = dateTimeStamp();
+
+            $personal['first_name']        = postVar('first_name');
+            $personal['middle_name']       = postVar('middle_name');
+            $personal['last_name']         = postVar('last_name');
+
+            if ($_POST['action'] == 'add') {
+                $field['email']                = postVar('email');
+                $field['active_directory'] = postVar('active_directory');
+                $field['created_by']       = ACCOUNT_ID;
+                $field['created_when']     = dateTimeStamp();
+                $result = Account::addRecord($field);
+
+                if ($result['status'] == 'success') {
+                    $employment['email']        = postVar('email');
+                    $employment['account_id']   = $result['id'];
+                    $employment['created_by']   = ACCOUNT_ID;
+                    $employment['created_when'] = dateTimeStamp();
+                    Account::addDynamic('account_employment', $employment);
+
+                    $personal['account_id']     = $result['id'];
+                    $personal['created_by']     = ACCOUNT_ID;
+                    $personal['created_when']   = dateTimeStamp();
+                    Account::addDynamic('account_personal', $personal);
+                }
+            } else if ($_POST['action'] == 'edit') {
+                $account_id = $_POST['id'];  // use "id" since that's what the form sends
+                $field['id'] = $account_id;
+                $field['updated_by']   = ACCOUNT_ID;
+                $field['updated_when'] = dateTimeStamp();
+                $result = Account::editRecord($field);
+
+                if ($result['status'] == 'success') {
+                    $employment['account_id']   = $account_id;
+                    $employment['updated_by']   = ACCOUNT_ID;
+                    $employment['updated_when'] = dateTimeStamp();
+                    Account::editDynamic('account_employment', $employment);
+
+                    $personal['account_id']     = $account_id;
+                    $personal['updated_by']     = ACCOUNT_ID;
+                    $personal['updated_when']   = dateTimeStamp();
+                    Account::editDynamic('account_personal', $personal);
+                }
+            }
+
+            alertAndRedirect($result['message'], '/account/user/');
+            exit;
+        }
 
         views('account.user', $data);
+    }
+
+    public function user_json()
+    {
+        $result = recastArray(Account::getRecordById($_POST['id']));
+        echo json_encode($result);
     }
 
     public function userJson()
@@ -843,101 +951,39 @@ class AccountController
         $id           = ACCOUNT_ID;
 
         if (isset($_POST) && !empty($_POST)) {
-            $field['id']                            = $id;
-            $employment['account_id']               = $id;
-            $personal['account_id']                 = $id;
-            $personal['first_name']                 = postVar('firstName');
-            $personal['last_name']                  = postVar('lastName');
-            $employment['email']                    = postVar('email');
-            $employment['account_department_id']    = postVar('account_department_id');
-            $personal['contact_no']                 = postVar('phoneNumber');
 
+            $field['id']                = $id;
+            $field['updated_by']        = ACCOUNT_ID;
+            $field['updated_when']      = dateTimeStamp();
+            $result = Account::editRecord($field);
 
+            if ($result['status'] == 'success') {
+                $employment['email']                    = postVar('email');
+                $employment['account_department_id']    = postVar('account_department_id');
+                $employment['account_role_id']          = postVar('account_role_id');
+                $employment['account_status_id']        = postVar('account_status_id');
+                $employment['account_id']               = $id;
+                $employment['updated_by']               = ACCOUNT_ID;
+                $employment['updated_when']             = dateTimeStamp();
+                Account::editDynamic('account_employment', $employment);
 
-            $result2 = Account::editRecordEmployment($employment);
-            $result3 = Account::editRecordPersonal($personal);
-
-            if ($result2['status'] == 'success' || $result3['status'] == 'success') {
-                promptMessage('message', $result2['message'], 'success');
-                alertAndRedirect($result2['message'], '/account/profile');
-            } else {
-                //                 echo '<pre>';
-                //                 print_r($result);
-                // print_r($result2);
-                // print_r($result3);
-                // print_r($id);
-                //  exit;
+                $personal['account_id']                 = $id;
+                $personal['first_name']                 = postVar('firstName');
+                $personal['middle_name']                = postVar('middleName');
+                $personal['last_name']                  = postVar('lastName');
+                $personal['account_id']                 = $id;
+                $personal['updated_by']                 = ACCOUNT_ID;
+                $personal['updated_when']               = dateTimeStamp();
+                Account::editDynamic('account_personal', $personal);
             }
+            alertAndRedirect($result['message'], '/account/profile/');
+            exit;
         }
-        // if (isset($_POST) && !empty($_POST)) {
-        //     $field['password']          = passwordEncode(postVar('password', ''));
-        //     $field['new_password']      = passwordEncode(postVar('new_password', ''));
-        //     $field['confirm_password']  = passwordEncode(postVar('confirm_password', ''));
-        //     $personal['alias']          = postVar('alias', '');
-
-        //     if (isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['new_password']) && !empty($_POST['new_password'])) {
-        //         $record = Account::getRecordByIdAndPassword(ACCOUNT_ID, $field['password']);
-        //         if (is_array($record) && !empty($record)) {
-        //             if (empty($field['confirm_password'])) {
-        //                 $data['error']['confirm_password'] = requiredPrompt('This field is required.');
-        //             } else {
-        //                 if ($field['new_password'] != $field['confirm_password']) {
-        //                     $data['error']['confirm_password'] = requiredPrompt('Password mismatch.');
-        //                 } else {
-        //                     $field['password'] = $field['new_password'];
-        //                     unset($field['confirm_password']);
-        //                     unset($field['new_password']);
-        //                 }
-        //             }
-        //         } else {
-        //             $data['error']['password'] = requiredPrompt('Account verification failed');
-        //         }
-        //     } else {
-        //         unset($field['password']);
-        //         unset($field['confirm_password']);
-        //         unset($field['new_password']);
-        //     }
-        //     if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
-        //         $file_name          = $_FILES['file']['name'];
-        //         $file_size          = $_FILES['file']['size'];
-        //         $file_tmp           = $_FILES['file']['tmp_name'];
-        //         $file_type          = $_FILES['file']['type'];
-        //         $file_ext           = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        //         $file_new_name      = ACCOUNT_ID . '.' . $file_ext;
-        //         $extensions         = $CONFIGURATION['ALLOWED_PHOTO'];
-        //         if (!in_array($file_ext, $extensions)) {
-        //             $data['error']['file'] = requiredPrompt('File format is not allowed');
-        //         } else {
-        //             if (move_uploaded_file($file_tmp, uploadFile('account', $file_new_name))) {
-        //                 $personal['photo'] = $file_new_name;
-
-        //                 thumbnailGenerate(fileUrl($file_new_name, '/file/account/'), uploadFile('account', thumbnailName($file_new_name)), "200");
-        //             } else {
-        //                 promptMessage('message', 'Encounter technical error. Pls try again', 'danger');
-        //             }
-        //         }
-        //     }
-
-        //     if (isset($_POST['file_delete'])) {
-        //         $personal['photo'] = '';
-        //         deleteFile('account', postVar('file_hidden'));
-        //         deleteFile('account', thumbnailName(postVar('file_hidden')));
-        //     }
-
-        //     if (!array_key_exists('error', $data)) {
-        //         $field['id']              = $id;
-        //         $personal['account_id']   = $id;
-        //         $employment['account_id'] = $id;
-        //         $result                   = Account::editRecord($field);
-        //         $personal                 = Account::manageDynamic('account_personal', $personal);
-        //         $employment               = Account::manageDynamic('account_employment', $employment);
-
-        //         alertAndRedirect($result['message'], '/account/profile/' . idEncrypt($id) . '/');
-        //     }
-        // }
 
         $data['account'] = recastArray(Account::getRecordById($id));
         $data['department'] = recastArray(Master::getAccountDepartment());
+        $data['account_status']     = Master::getDynamic('master_account_status');
+        $data['account_role']       = Master::getDynamic('master_account_role');
 
         views('account.profile', $data);
     }

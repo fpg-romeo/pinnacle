@@ -14,7 +14,7 @@
 
     $controllers = array(
                             'account'           => [
-                                                    'login', 'logout', 'all', 'user', 'profile', 'manage', 'security', 'deleteJson', 'importView',
+                                                    'login', 'logout', 'all', 'all_json' , 'user', 'user_json', 'profile', 'manage', 'security', 'deleteJson', 'importView',
                                                     'forgotPassword', 'resetPassword', 'changePassword', 'verify', 'newPassword', 'resendValidation',
                                                     'attachmentJson','removeAttachmentJson',
                                                     'googleSigninCallback'

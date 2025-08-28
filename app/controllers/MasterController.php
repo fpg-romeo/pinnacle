@@ -545,6 +545,7 @@ class MasterController
 
     public function branch()
     {
+        
         // $data['branches']   = Master::getBranch();
         $keyword                    = urldecode(getVar('keyword'));
         $status                     = getVar('status');
@@ -564,6 +565,9 @@ class MasterController
                 $id = $_POST['id'];
                 $update = Master::updateBranch($id, $field);
             }
+            $id = $_POST['id'];
+        pre($id);
+        die;
 
             header('Location: /master/branch');
         }
