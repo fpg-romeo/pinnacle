@@ -22,7 +22,7 @@
                             'finance'           => [
                                                     'soa-dashboard', 'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate' , 'soaEmailGeneric',
                                                     'soaLetter', 'soaLetterManage', 
-                                                    'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json'
+                                                    'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json', 'soaLetterDownload_json'
                                                    ],
                             'collection'        => [
                                                     'all', 'manage'
@@ -65,6 +65,9 @@
                             'page'              => [
                                                     'error400', 'error401', 'error403', 'error404', 'error500', 'errorModal', 'dashboard', 
                                                     'manual', 'comingSoon', 'underMaintenance'
+                                                    ],
+                            'email'             => [
+                                                    'generateAttachment'
                                                    ]
                         );
 

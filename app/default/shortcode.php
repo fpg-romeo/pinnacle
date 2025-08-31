@@ -521,14 +521,13 @@
             return false; // invalid recipient
         } 
         
-        public static function soaCollectionReminderLetterGeneration($id, $folder, $action=""){
+        public static function soaCollectionReminderLetterGeneration($id, $folder, $action="", $body = ''){
             includeDefault('pdf');
 
             $directory = realpath(__DIR__ . '/../../../'); // goes up 3 levels to pinnacle root
             
             $file_path = $directory . DIRECTORY_SEPARATOR . 'pinnacle' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'soa' . DIRECTORY_SEPARATOR . $folder; //pinnacle - update with correct project folder name
 
-            $body      = 'Test Body Content';
             $document  = 'SOA-'.$id;
             $watermark = True;
             //$folder    = './upload/soa';
