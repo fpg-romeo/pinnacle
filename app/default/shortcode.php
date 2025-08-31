@@ -158,7 +158,8 @@
             $field['attachment']    = safe_b64encode($attachment);
             $field['body']          = safe_b64encode($body);
             $field['template']      = $template;
-            $field['created_by']    = $created_by;
+            $field['status_id']     = $CONFIGURATION['NOTIFICATION_STATUS_UNPROCESSED']; 
+            $field['created_by']    = (isset($created_by) && !empty($created_by) ? $created_by : $CONFIGURATION['ENGINE_CRON_JOB']); 
             $field['created_when']  = dateTimeStamp();
 
             return Notification::addEmail($field);

@@ -54,7 +54,8 @@
                                                     'syncSOA_json',
                                                    ],
                             'cron'              => [
-                                                    'testEmail', 'notificationEmail', 'soaCollectionReminderLetterGeneration'
+                                                    'testEmail', 'notificationEmail', 
+                                                    'soaCollectionReminder'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
