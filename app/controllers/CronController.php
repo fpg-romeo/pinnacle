@@ -122,7 +122,7 @@
         //     Shortcode::soaCollectionReminderLetterGeneration(1);
         // }
 
-
+        //RUN THIS EVERY 7AM DAILY
         public function soaCollectionReminder(){
             #get the list from monthly raw na blank pa ung mga pdf and excel, then make sure ung attemps is not more than 3 times
             #1unang checking kung nasend na ung email via status
@@ -132,6 +132,53 @@
 
             #then magstore n sa notification email table ng record n iprocess for sending
 
+            includeModel(['Soa', 'Notification']);
+            $CONFIGURATION  = Configuration::general();
+
+            $date_start     = '2025-08-01';
+            $date_end       = '2025-08-31';
+            $data           = Soa::getCollectionReminder($date_start, $date_end);
+            if(!empty($data)){
+                foreach($data as $key => $value){
+
+                    $recipient_to                       = $CONFIGURATION['IT_TEAM_EMAIL'];
+                    $recipient_cc                       = $CONFIGURATION['IT_TEAM_EMAIL'];
+                    $recipient_bcc                      = $CONFIGURATION['IT_TEAM_EMAIL'];
+                    $reply_to                           = $CONFIGURATION['IT_TEAM_EMAIL'];
+
+                    $field['name']                      = $CONFIGURATION['NOTIFICATION_NAME_SOA_COLLECTION_REMINDER']; 
+                    $field['subject']                   = $CONFIGURATION['NOTIFICATION_SUBJECT_SOA_COLLECTION_REMINDER']; 
+                    $field['recipient_to']              = is_array($recipient_to) ? implode(',', $recipient_to) : $recipient_to;  
+                    $field['recipient_cc']              = is_array($recipient_cc) ? implode(',', $recipient_cc) : $recipient_cc;
+                    $field['recipient_bcc']             = is_array($recipient_bcc) ? implode(',', $recipient_bcc) : $recipient_bcc;
+                    $field['reply_to']                  = is_array($reply_to) ? implode(',', $reply_to) : $reply_to;
+                    $field['template']                  = 'soa'; 
+                    $field['status_id']                 = $CONFIGURATION['NOTIFICATION_STATUS_UNPROCESSED']; 
+                    $field['attempt']                   = 0; //DEFAULT  
+                    $field['batch_number']              = $value['batch_number'];  
+                    $field['soa_monthly_raw_data_id']   = $value['id'];  
+                    $field['created_by']                = (defined(ACCOUNT_ID) && !empty(ACCOUNT_ID) ? ACCOUNT_ID : $CONFIGURATION['ENGINE_CRON_JOB']);  
+                    $field['created_when']              = dateTimeStamp();   
+                    
+                    $attachment[$key]['file_pdf']       = getDocumentRoot().'/upload/soa/'.htmlDecode($value['batch_number']).'-'.htmlDecode($value['id']).'/'.htmlDecode($value['file_pdf']);
+                    $attachment[$key]['file_excel']     = getDocumentRoot().'/upload/soa/'.htmlDecode($value['batch_number']).'-'.htmlDecode($value['id']).'/'.htmlDecode($value['file_excel']);
+                    
+                    $soa_default_file_counter = 1;
+                    foreach($CONFIGURATION['SOA_EMAIL_ATTACHMENT_DEFAULT'] as $soa_default_file){
+                        $attachment[$key]['file_default_'.$soa_default_file_counter] = getDocumentRoot().'/upload/soa/default/'.$soa_default_file;
+                        $soa_default_file_counter++;
+                    }
+                    $field['attachment']                = safe_b64encode(serialize($attachment)); 
+                    $field['body']                      = safe_b64encode(serialize($value)); 
+
+                    Notification::addEmail($field);
+                }
+            }
+        }
+
+
+        //RUN THIS EVERY 5AM DAILY
+        public function soaCollectionReminderGenerationPdf(){
             includeModel(['Soa', 'Notification']);
             $CONFIGURATION  = Configuration::general();
 

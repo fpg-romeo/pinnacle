@@ -1,13 +1,11 @@
 <?php
-class Soa
-{
+class Soa{
 
     public function __construct() {
 
     }
 
-    public static function getCollectionReminder($date_start, $date_end)
-    {
+    public static function getCollectionReminder($date_start, $date_end){
         $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
                                 ',
                                 'smr.* 
@@ -25,6 +23,42 @@ class Soa
                                 "smr.id ASC");
         return $result;
     }
+
+    public static function getCollectionReminderFilePdf($date_start, $date_end){
+        $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
+                                ',
+                                'smr.* 
+                                ',
+                                "smr.email_status_id NOT IN (3, 4, 5) AND
+                                 smr.file_pdf_attempt < 3 AND
+                                 (smr.file_pdf = '' OR smr.file_pdf IS NULL) AND
+                                 smr.created_when >= '".$date_start."' AND smr.created_when <= '".$date_end."'
+                                ",
+                                "smr.id ASC");
+        return $result;
+    }
+
+    public static function getCollectionReminderFileExcel($date_start, $date_end){
+        $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
+                                ',
+                                'smr.* 
+                                ',
+                                "smr.email_status_id NOT IN (3, 4, 5) AND
+                                 smr.file_excel_attempt < 3 AND
+                                 (smr.file_excel = '' OR smr.file_excel IS NULL) AND
+                                 smr.created_when >= '".$date_start."' AND smr.created_when <= '".$date_end."'
+                                ",
+                                "smr.id ASC");
+        return $result;
+    }
+
+
+
+
+
+
+    
+
 
     public static function getPolicyByPolicyId($policy_id)
     {
