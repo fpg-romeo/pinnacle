@@ -55,7 +55,7 @@
                                                    ],
                             'cron'              => [
                                                     'testEmail', 'notificationEmail', 
-                                                    'soaCollectionReminder','syncSOA_json'
+                                                    'soaCollectionReminder','soaCare'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
