@@ -36,20 +36,30 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
             $premiumreceivable = array();
+            $record = array();
             //get the record for processing using policynumber and batchnumber
-            $record = mysql::query("select batch_number,source_name as SOURCE_NAME from soa_monthly_raw_data where is_processed is null  group by  batch_number,source_name");
+            $record = Email::getRecord();
             
-            if(!empty($record) && is_array($record)){
+            if(!empty($record) && is_array($record) && $record['message'] == 'success'){
+                
+         
                 foreach($record as $value){
+
+                    if (!is_array($value)) {
+                        error_log("Invalid entry at indexi: " . print_r($value, true));
+                        continue;
+                    }
+                 
                     $workbook = IOFactory::load('upload/soa/default/soa.xlsx');
                     $worksheet = $workbook->getSheetByName('SUMMARY');
                     
-
+                 
                     $zero = 0; 
                     $thirty = 0;
                     $sixty = 0;
                     $ninety = 0;
                     $over = 0;
+                    $totalcod = 0;
                     $totalcurrent = 0;
                     $totaloverdue = 0;   
                     $source_name = '';
@@ -62,38 +72,45 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                     $source_name = $value['SOURCE_NAME'];
                     $worksheet->setCellValue('B4', $source_name); //source name
                     $worksheet->setCellValue('B3', 'For the month of '.$cutoffdate); //cutoff date
-
+                    
                     $premiumData = array();
-                    $premiumreceivable = Master::getDetailed('', $value['batch_number'], '*', $value['SOURCE_NAME']);
-
+                    $premiumreceivable = Master::getDetailed('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
+                   
                     if(!empty($premiumreceivable) && is_array($premiumreceivable)){
 
                         //for the figures in summary
-                        foreach($premiumreceivable as $premval){
-                            $premiumData = array(
-                                    '0_30_DAYS' => $premval['0_30_DAYS'],
-                                    '31_60_DAYS' => $premval['31_60_DAYS'],
-                                    '61_90_DAYS' => $premval['61_90_DAYS'],
-                                    '91_120_DAYS' => $premval['91_120_DAYS'],
-                                    'SOURCE_NAME' => $premval['SOURCE_NAME']
-                            );
+                        foreach ($premiumreceivable as $prem) {
+                                $over120 = 0;
+                                if (
+                                    $prem['121_150_DAYS'] != 0 || 
+                                    $prem['151_180_DAYS'] != 0 || 
+                                    $prem['181_210_DAYS'] != 0 || 
+                                    $prem['211_360_DAYS'] != 0 || 
+                                    $prem['DAYS_OVER_361'] != 0
+                                ) {
+                                    $over120 = 
+                                        (double)$prem['121_150_DAYS'] + 
+                                        (double)$prem['151_180_DAYS'] + 
+                                        (double)$prem['181_210_DAYS'] + 
+                                        (double)$prem['211_360_DAYS'] + 
+                                        (double)$prem['DAYS_OVER_361'];
+                                }
 
-                            if($premval['121_150_DAYS'] != 0 || $premval['151_180_DAYS'] != 0 || $premval['181_210_DAYS'] != 0 || $premval['211_360_DAYS'] != 0 || $premval['DAYS_OVER_361'] != 0){
-                                $over120 = $premval['121_150_DAYS'] + $premval['151_180_DAYS'] + $premval['181_210_DAYS'] + $premval['211_360_DAYS'] + $premval['DAYS_OVER_361'];
-                                $premiumData['OVER_180_DAYS'] = $over120;
+                                $premData =  array(
+                                    '0_30_DAYS' => (double)$prem['0_30_DAYS'],
+                                    '31_60_DAYS' => (double)$prem['31_60_DAYS'],
+                                    '61_90_DAYS' => (double)$prem['61_90_DAYS'],
+                                    '91_120_DAYS' => (double)$prem['91_120_DAYS'],
+                                    'OVER_180_DAYS' => $over120,
+                                    'totalreceivable' => (double)$prem['0_30_DAYS'] + (double)$prem['31_60_DAYS'] + (double)$prem['61_90_DAYS'] + (double)$prem['91_120_DAYS'] + $over120,
+                                );
+
+                                        $zero += $premData['0_30_DAYS'] ? $premData['0_30_DAYS'] : 0;
+                                        $thirty += $premData['31_60_DAYS'] ? $premData['31_60_DAYS'] : 0;
+                                        $sixty += $premData['61_90_DAYS'] ? $premData['61_90_DAYS'] : 0;
+                                        $ninety += $premData['91_120_DAYS'] ? $premData['91_120_DAYS'] : 0;
+                                        $over += $premData['OVER_180_DAYS'] ? $premData['OVER_180_DAYS'] : 0;
                             }
-
-                            //Total Taxes Receivable    
-                            $premiumData['totalreceivable'] = $premiumData['0_30_DAYS'] + $premiumData['31_60_DAYS'] + $premiumData['61_90_DAYS'] + $premiumData['91_120_DAYS'] + $over120;
-                        
-                            //compute the values
-                                    $zero += $premiumData['0_30_DAYS'] ? $premiumData['0_30_DAYS'] : 0;
-                                    $thirty += $premiumData['31_60_DAYS'] ? $premiumData['31_60_DAYS'] : 0;
-                                    $sixty += $premiumData['61_90_DAYS'] ? $premiumData['61_90_DAYS'] : 0;
-                                    $ninety += $premiumData['91_120_DAYS'] ? $premiumData['91_120_DAYS'] : 0;
-                                    $over += $premiumData['OVER_180_DAYS'] ? $premiumData['OVER_180_DAYS'] : 0;
-                                    $with_detailed = true;
-                        }
                        
 
                             //initialize the worksheet fields
@@ -184,15 +201,15 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
                     //DST
                     $taxreceivable = array();
-                    $taxreceivable = Master::getDst('', $value['batch_number'], '*', $value['SOURCE_NAME']); 
-                    
+                    $taxreceivable = Master::getDst('', $value['as_of_date'], '*', $value['SOURCE_NAME']); 
+                
                     if (isset($taxreceivable) && is_array($taxreceivable)) {
                         
                                         $zero = 0;
                                         $thirty = 0;
                                         $sixty = 0;
                                         $ninety = 0;
-                                        $overd = 0;
+                                        $over = 0;
                                         $totalcurrent = 0;
                                         $totaloverdue = 0;   
                                         $source_named = '';
@@ -309,7 +326,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                     }
 
                     $taxreceivablecwt = array();
-                    $taxreceivablecwt =Master::getCWT('', $value['batch_number'], '*', $value['SOURCE_NAME']);
+                    $taxreceivablecwt = Master::getCWT('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
 
                      if (isset($taxreceivablecwt)) {
 
@@ -426,15 +443,132 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                           
                     }
 
+                    $codreceivable = array();
+                    $codreceivable =  Master::getCOD('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
+                    
+                    if (isset($codreceivable)) {
+                      
+                        $zero = 0;
+                        $thirty = 0;
+                        $sixty = 0;
+                        $ninety = 0;
+                        $over = 0;
+                        $totalcurrent = 0;
+                        $totaloverdue = 0;
+
+                                    $worksheet->setCellValue('C8', '0');
+                                    $worksheet->setCellValue('C9', '0');
+                                    $worksheet->setCellValue('C10', '0');
+                                    $worksheet->setCellValue('C11', '0');
+                                    $worksheet->setCellValue('C12', '0');
+                                    $worksheet->setCellValue('C13', '0');
+
+
+                            foreach ($codreceivable as $cod) {
+                                $over120 = 0;
+                                if (
+                                    $cod['121_150_DAYS'] != 0 || 
+                                    $cod['151_180_DAYS'] != 0 || 
+                                    $cod['181_210_DAYS'] != 0 || 
+                                    $cod['211_360_DAYS'] != 0 || 
+                                    $cod['DAYS_OVER_361'] != 0
+                                ) {
+                                    $over120 = 
+                                        (double)$cod['121_150_DAYS'] + 
+                                        (double)$cod['151_180_DAYS'] + 
+                                        (double)$cod['181_210_DAYS'] + 
+                                        (double)$cod['211_360_DAYS'] + 
+                                        (double)$cod['DAYS_OVER_361'];
+                                }
+
+                                $cwtData = array(
+                                    '0_30_DAYS' => (double)$cod['0_30_DAYS'],
+                                    '31_60_DAYS' => (double)$cod['31_60_DAYS'],
+                                    '61_90_DAYS' => (double)$cod['61_90_DAYS'],
+                                    '91_120_DAYS' => (double)$cod['91_120_DAYS'],
+                                    'OVER_180_DAYS' => $over120,
+                                    'totalreceivable' => (double)$cod['0_30_DAYS'] + (double)$cod['31_60_DAYS'] + (double)$cod['61_90_DAYS'] + (double)$cod['91_120_DAYS'] + $over120,
+                                );
+
+                                        $zero += $cwtData['0_30_DAYS'] ? $cwtData['0_30_DAYS'] : 0;
+                                        $thirty += $cwtData['31_60_DAYS'] ? $cwtData['31_60_DAYS'] : 0;
+                                        $sixty += $cwtData['61_90_DAYS'] ? $cwtData['61_90_DAYS'] : 0;
+                                        $ninety += $cwtData['91_120_DAYS'] ? $cwtData['91_120_DAYS'] : 0;
+                                        $over += $cwtData['OVER_180_DAYS'] ? $cwtData['OVER_180_DAYS'] : 0;
+                            }
+  
+                            $worksheet->setCellValue('C8', $zero); 
+                            $worksheet->setCellValue('C9', $thirty); 
+                            $worksheet->setCellValue('C10', $sixty); 
+                            $worksheet->setCellValue('C11', $ninety);
+                            $worksheet->setCellValue('C12', $over);
+
+                            $totalcod = $ninety + $over + $zero + $thirty + $sixty;
+                            $worksheet->setCellValue('C13', $totalcod ? $totalcod : 0);
+                        
+                            $codlist = $workbook->getSheetByName('COD POLICIES');
+
+                                $startRow = 2;
+                                $endRow = 10000;
+                                $currentrow = $startRow;
+                                
+                                $columns = range('A', 'AD');
+
+                                for ($row = $startRow; $row <= $endRow; $row++) {
+                                    foreach ($columns as $col) {
+                                               $codlist->setCellValue($col.$row, '');
+                                    }
+                                }
+
+
+                                foreach($codreceivable as $detailcod){
+                                    
+                                    $codlist->setCellValue('A'.$currentrow, $detailcod['BOOKING_DATE']);
+                                    $codlist->setCellValue('B'.$currentrow, $detailcod['INCEPTION_DATE']);
+                                    $codlist->setCellValue('C'.$currentrow, $detailcod['EXPIRY_DATE']);
+                                    $codlist->setCellValue('D'.$currentrow, $detailcod['EFFECTIVE_DATE']);
+                                    $codlist->setCellValue('E'.$currentrow, $detailcod['VOUCHER_DEBIT_CREDIT_PREMIUM']);
+                                    $codlist->setCellValue('F'.$currentrow, $detailcod['VOUCHER_DEBIT_CREDIT_COMMISSION']);
+                                    $codlist->setCellValue('G'.$currentrow, $detailcod['OVERIDING_VOUCHER_DEBIT_CREDIT']);
+                                    $codlist->setCellValue('H'.$currentrow, $detailcod['REFNO']);
+                                    $codlist->setCellValue('I'.$currentrow, $detailcod['DOCNO']);
+                                    $codlist->setCellValue('J'.$currentrow, $detailcod['A_POLICYNO']);
+                                    $codlist->setCellValue('K'.$currentrow, $detailcod['INSURED_NAME']);
+                                    $codlist->setCellValue('L'.$currentrow, $detailcod['POSTED_PAYMENT']);
+                                    $codlist->setCellValue('M'.$currentrow, $detailcod['ORIGINAL_BASIC_PREMIUM']);
+                                    $codlist->setCellValue('N'.$currentrow, $detailcod['PREMIUM']);
+                                    $codlist->setCellValue('O'.$currentrow, $detailcod['STAMPDUTY']);
+                                    $codlist->setCellValue('P'.$currentrow, $detailcod['LTO']);
+                                    $codlist->setCellValue('Q'.$currentrow, $detailcod['LGT']);
+                                    $codlist->setCellValue('R'.$currentrow, $detailcod['FST']);
+                                    $codlist->setCellValue('S'.$currentrow, $detailcod['PREMIUMTAX']);
+                                    $codlist->setCellValue('T'.$currentrow, $detailcod['VAT']); 
+                                    $codlist->setCellValue('U'.$currentrow, $detailcod['GROSS_PREMIUM']);
+                                    $codlist->setCellValue('V'.$currentrow, $detailcod['OVERRIDING_DISCOUNT']);
+                                    $codlist->setCellValue('W'.$currentrow, $detailcod['COMMISSION']);
+                                    $codlist->setCellValue('X'.$currentrow, $detailcod['INPUT_VAT']);
+                                    $codlist->setCellValue('Y'.$currentrow, $detailcod['TAXRATE']);
+                                    $codlist->setCellValue('Z'.$currentrow, $detailcod['TAX_AMOUNT']);
+                                    $codlist->setCellValue('AA'.$currentrow, $detailcod['GROSS_COMMISSION']);
+                                    $codlist->setCellValue('AB'.$currentrow, $detailcod['NET_DUE']); 
+                                    $codlist->setCellValue('AC'.$currentrow, $detailcod['AGING_DAYS']);
+                                    $codlist->setCellValue('AD'.$currentrow, $detailcod['AGING_BUCKET']);
+                                    
+                                    $currentrow++;
+                                }
+                          
+                    }
+
+
+
                     $grandtotal = 0;
-                    $grandtotal = $totalPremium + $totaldst + $totalcwt;
+                    $grandtotal = $totalPremium + $totaldst + $totalcwt +  $totalcod;
                     $worksheet->setCellValue('D39',$grandtotal);
 
                     $filename = $value['SOURCE_NAME'].'- Statement of Account as of '.$cutoffdate.'.xlsx';
                     $writer = new Xlsx($workbook);
                     $writer->save($folderpath.'/'.$filename );
                 }
-                
             }
         }
     }

@@ -50,12 +50,12 @@
                                                     'accountCompany', 'accountCompanyJson',
                                                     'accountDepartment', 'accountDepartmentJson', 'perDepartmentJson',
                                                     'accountDesignation', 'accountDesignationJson',
-                                                    'accountUnitRole', 'accountUnitRoleJson',
-                                                    'syncSOA_json',
+                                                    'accountUnitRole', 'accountUnitRoleJson'
+                                                    
                                                    ],
                             'cron'              => [
                                                     'testEmail', 'notificationEmail', 
-                                                    'soaCollectionReminder'
+                                                    'soaCollectionReminder','syncSOA_json'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
