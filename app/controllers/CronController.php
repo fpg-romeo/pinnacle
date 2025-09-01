@@ -175,5 +175,123 @@
                 }
             }
         }
+
+        public function syncSOA_json()
+        {
+      
+        $cutoffmonth = date('m', strtotime('first day of last month'));
+        $processingmonth = date('m');
+        $cutoffdate  = strtoupper(date('Y-m-d', strtotime('last day of previous month'))); 
+        $data = Master::syncSOA();
+
+        $datacount = count($data) > 0 ? $data : [];
+
+
+            
+
+                    if (!empty($data)) {
+
+                            // get the cutoff date, if processing date is within the current month , replenish the previous month's data 
+                            
+                            if(date('m') == $processingmonth){
+
+                                $deleteDB = Master::deleteSoa($cutoffmonth);
+                                
+                                if($deleteDB['status'] != 'success'){
+
+                                    $errmessage = array();
+
+                                        $errmessage['status'] = "Insertion of new cutoff date: " . $cutoffmonth;
+                                        $errmessage['job_type'] = 'syncSOA';
+                                        $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                        $errmessage['payload'] = '';
+                                        Master::addJobQueue($errmessage);
+                                        $batchnumber = ''; // Reset batch number on error
+                                    
+                                } else {
+                                    $errmessage = array();
+
+                                        $errmessage['status'] = "replenish of cutoff date: " . $cutoffmonth;
+                                        $errmessage['job_type'] = 'syncSOA';
+                                        $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                        $errmessage['payload'] = '';
+                                        Master::addJobQueue($errmessage);
+                                        $batchnumber = ''; // Reset batch number on error
+                                    
+                                }
+
+                            }
+
+
+                        foreach ($data as $record) {
+                            $cleanRecord = [];
+
+                            foreach ($record as $key => $value) {
+                            
+                                $updatedKey = strtoupper($key);
+                                $updatedKey = str_replace([' ', '(', ')', '/', '>', '-'], ['_', '', '', '_', 'OVER_', '_'], $updatedKey);
+                                $updatedKey = preg_replace('/_{2,}/', '_', $updatedKey);
+                                $updatedKey = trim($updatedKey, '_');
+
+                                // Format DateTime values
+                                if ($value instanceof DateTime) {
+                                    $value = $value->format('Y-m-d');
+                                }
+
+                            
+                            $cleanRecord[$updatedKey] = $value;
+                            }
+                            //$cleanRecord['batch_number'] = date('YmdHis');
+                            $cleanRecord['as_of_date']   = strtoupper(date('Y-m-d', strtotime('last day of previous month')));
+
+                            //perform the zero effect already. those policies with zero gross premium in total will not be included in the insert
+                            $zeroeffect = Master::checkZeroEffect($cleanRecord['A_POLICYNO']);
+                            if ($zeroeffect) {
+                                continue; // Skip this record and move to the next one
+                            }
+                            
+
+                    
+                                $insertDB = Master::addSoa($cleanRecord);
+                                if ($insertDB['status'] != 'success') {
+                                    
+                                    $errmessage = array();
+
+                                    $errmessage['status'] = "Error inserting record: " . json_encode($insertDB);
+                                    $errmessage['job_type'] = 'syncSOA';
+                                    $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                    $errmessage['payload'] = json_encode($cleanRecord);
+
+                                    $result = Master::addJobQueue($errmessage);
+                                    $batchnumber = ''; // Reset batch number on error
+                                    break;
+                                } 
+                        }
+
+                                $successmessage = array();
+
+                                $successmessage['status'] = "Successfully insert Care " . count($datacount) . " records.";
+                                $successmessage['job_type'] = 'syncSOA';
+                                $successmessage['created_at'] = date('Y-m-d H:i:s');
+                                $successmessage['payload'] = '';
+
+                                $result = Master::addJobQueue($successmessage);
+
+                                //after getting the raw data, scan the fetched records then do the distribution
+                                $record = Master::checkDistribution($cutoffdate);
+                                
+
+                    } else {
+                                $errmessage = array();
+
+                                $errmessage['status'] = "No data found";
+                                $errmessage['job_type'] = 'syncSOA';
+                                $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                $errmessage['payload'] = json_encode($cleanRecord) ? json_encode($cleanRecord) : '';
+
+                                $result = Master::addJobQueue($errmessage);
+                    }
+
+        }
     }
 ?>
