@@ -1342,4 +1342,316 @@ class Master
         }
         return $result;
     }
+    
+    public static function checkZeroEffect($policyno){
+
+            $record = array();
+            $record = SqlServer::query("SELECT A_POLICYNO,sum([GROSS PREMIUM]) AS GROSSPREMIUM FROM soa_v3 WHERE A_POLICYNO = '{$policyno}' GROUP BY A_POLICYNO", 'select');
+            
+            if($record[0]['GROSSPREMIUM'] == 0){
+                
+                return true;
+            }
+            return false;
+    }
+
+
+    public static function checkDistribution(){
+
+        $result = array();
+        $batch_number = "";
+        $headers = array(
+                        'BOOKING_DATE', 'INCEPTION_DATE', 'EXPIRY_DATE', 'EFFECTIVE_DATE', 'VOUCHER_DEBIT_CREDIT_PREMIUM',
+                        'VOUCHER_DEBIT_CREDIT_COMMISSION', 'OVERIDING_VOUCHER_DEBIT_CREDIT', 'REFNO', 'DOCNO', 'INSURED_NAME',
+                        'POSTED_PAYMENT', 'ORIGINAL_BASIC_PREMIUM', 'PREMIUM', 'STAMPDUTY', 'LTO', 'LGT', 'FST', 'PREMIUMTAX', 'VAT', 'GROSS_PREMIUM',
+                        'OVERRIDING_DISCOUNT', 'COMMISSION', 'INPUT_VAT', 'TAXRATE', 'TAX_AMOUNT', 'GROSS_COMMISSION', 'NET_DUE', 'AGING_DAYS', 'AGING_BUCKET'
+                    );
+
+
+        
+        //get records in soa_monthly_raw_data table
+        $query = mysql::query("SELECT A_POLICYNO,batch_number,sum(GROSS_PREMIUM) as GROSSPREMIUM,sum(ORIGINAL_BASIC_PREMIUM) as ORIGPREM,sum(stampduty) as DST FROM pinaccle.soa_monthly_raw_data
+                                group by A_POLICYNO,batch_number");
+
+        
+
+        foreach($query as $key => $value){
+        
+                
+                $searchRecord = mysql::query("SELECT 
+                            BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET,batch_number
+                            FROM soa_monthly_raw_data where A_POLICYNO = '{$value['A_POLICYNO']}' AND batch_number = '{$value['batch_number']}'");
+
+            
+            if($value['ORIGPREM'] == 0 && ($value['GROSSPREMIUM'] == $value['DST'])){
+                $updatefield = array(
+                    'is_dst' => '1',
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                
+                $updateDB = mysql::buildFields($updatefield, ", ");
+                
+                if(mysql::update('soa_monthly_raw_data', $updateDB, "A_POLICYNO = '{$value['A_POLICYNO']}' AND batch_number = '{$value['batch_number']}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = mysql::insertedId();
+                }
+                
+                continue;
+            }
+            elseif ($value['ORIGPREM'] > 0) {
+
+                if (round(($value['GROSSPREMIUM'] / $value['ORIGPREM']) * 100 === 2.0)){
+
+                    $updatefield = array(
+                    'is_cwt' => '1',
+                    'updated_at' => date('Y-m-d H:i:s')
+                    );
+
+                    $updateDB = mysql::buildFields($updatefield, ", ");
+                
+                    if(mysql::update('soa_monthly_raw_data', $updateDB, "A_POLICYNO = '{$value['A_POLICYNO']}' AND batch_number = '{$value['batch_number']}'")){
+                        $result['status']  = 'success';
+                        $result['message'] = 'New Record Saved';
+                        $result['id']      = mysql::insertedId();
+                    }
+                    continue;
+                    
+                }else{
+
+                    $updatefield = array(
+                    'is_detailed' => '1',
+                    'updated_at' => date('Y-m-d H:i:s')
+                    );
+
+                    $updateDB = mysql::buildFields($updatefield, ", ");
+
+                    if(mysql::update('soa_monthly_raw_data', $updateDB, "A_POLICYNO = '{$value['A_POLICYNO']}' AND batch_number = '{$value['batch_number']}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = mysql::insertedId();
+                    }
+                    continue;
+                }
+            
+                
+
+            }else{
+
+                    $updatefield = array(
+                    'is_detailed' => '1',
+                    'updated_at' => date('Y-m-d H:i:s')
+                    );
+
+                    $updateDB = mysql::buildFields($updatefield, ", ");
+
+                    if(mysql::update('soa_monthly_raw_data', $updateDB, "A_POLICYNO = '{$value['A_POLICYNO']}' AND batch_number = '{$value['batch_number']}'")){
+                    $result['status']  = 'success';
+                    $result['message'] = 'New Record Saved';
+                    $result['id']      = mysql::insertedId();
+                    }
+                continue;
+            }
+                    
+        }
+        
+        return $result;
+    }
+
+    public static function getDST($policyno='',$batch_number,$fields='',$source_name=''){
+            // For sheets
+        $result = array();
+        if($source_name != '' and $fields = ''){
+            $fields = 'BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET';
+        }else  {
+            $fields = '*';
+        }
+        $result = mysql::select('soa_monthly_raw_data', $fields, "batch_number = '{$batch_number}' and source_name = '{$source_name}' and is_dst = 1");
+        return $result;
+    }
+
+    public static function getCWT($policyno='',$batch_number,$fields='',$source_name=''){
+            // For sheets
+    
+        $result = array();
+            if($source_name != '' and $fields = ''){
+            $fields = 'BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET';
+        }else  {
+            $fields = '*';
+        }
+        $result = mysql::select('soa_monthly_raw_data', $fields, "batch_number = '{$batch_number}' and A_policyno = '{$policyno}' and is_cwt = 1");
+        return $result;
+    }
+
+    public static function getDetailed($policyno='',$batch_number,$fields='',$source_name=''){
+        $result = array();
+            // For sheets
+        
+        if($source_name != '' and $fields = ''){
+            $fields = 'BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET';
+        }else{
+            
+            $fields = '*';
+        }
+        $result = mysql::select('soa_monthly_raw_data', $fields, "batch_number = '{$batch_number}' and source_name = '{$source_name}' and is_dst is null and is_cwt is null");
+        return $result;
+        
+    }
+
+
+        public static function getCOD($policyno='',$batch_number,$fields='',$source_name=''){
+        $result = array();
+            // For sheets
+        $CODlist = array('CTPL-0201','CTPL-0202','CTPL-0203');   
+
+        if($source_name != '' and $fields = ''){
+            $fields = 'BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET';
+        }else{
+            
+            $fields = '*';
+        }
+        $result = mysql::select('soa_monthly_raw_data', $fields, "batch_number = '{$batch_number}' and source_name = '{$source_name}' and is_dst is null and is_cwt is null");
+        return $result;
+        
+    }
 }
