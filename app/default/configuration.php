@@ -74,6 +74,17 @@ class Configuration{
 
 		$value['ACCOUNT_TYPE_ADMINISTRATOR'] 								= '1';
 
+		//master_notification_email_status
+		$value['NOTIFICATION_STATUS_UNPROCESSED'] 							= 1; //UNPROCESSED
+		$value['NOTIFICATION_STATUS_QUEUE'] 								= 2; //QUEUE
+		$value['NOTIFICATION_STATUS_SENT'] 									= 3; //SENT
+		$value['NOTIFICATION_STATUS_FAILED'] 								= 4; //FAILED
+		$value['NOTIFICATION_STATUS_ERROR'] 								= 5; //ERROR
+
+		$value['NOTIFICATION_SUBJECT_SOA_COLLECTION_REMINDER'] 				= 'Statement of Account'; //DYNAMIC PREFIX AND SUFFIX
+
+		$value['NOTIFICATION_NAME_SOA_COLLECTION_REMINDER'] 				= 'SOA Collection Reminder';
+
 		$value['SOA_EMAIL_ATTACHMENT_DEFAULT'] 								= array('How to Pay Guide.jpg', 'How to Pay in GCash App.jpg', 'BDO Bills Payment Online Banking.jpg'); //FILENAME, FOLDER LOCATION > /upload/soa/"default"
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

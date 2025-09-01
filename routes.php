@@ -20,8 +20,8 @@
                                                     'googleSigninCallback'
                                                    ],
                             'finance'           => [
-                                                    'soa-dashboard', 'soaImmediate', 'soaScheduled', 'soaSetting', 'soaDownload', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate' , 'soaEmailGeneric',
-                                                    'soaLetter', 'soaLetterManage', 
+                                                    'soa-dashboard', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate',
+                                                    'soaLetter', 'soaLetterManage', 'soaLogsEmail',
                                                     'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json', 'soaLetterDownload_json'
                                                    ],
                             'collection'        => [
@@ -54,7 +54,8 @@
                                                     'syncSOA_json',
                                                    ],
                             'cron'              => [
-                                                    'testEmail', 'notificationEmail', 'soaCollectionReminderLetterGeneration'
+                                                    'testEmail', 'notificationEmail', 
+                                                    'soaCollectionReminder'
                                                    ],
                             'miscellaneous'     => [
                                                     'cronJob', 'faq'
