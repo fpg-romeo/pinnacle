@@ -1567,7 +1567,7 @@ class Master
         return $result;
     }
 
-    public static function getDetailed($policyno='',$batch_number,$fields='',$source_name=''){
+    public static function getDetailed($policyno='',$batch_number='',$fields='',$source_name=''){
         $result = array();
             // For sheets
         

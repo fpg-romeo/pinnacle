@@ -4,29 +4,11 @@
         public function __construct() {
             checkLoggedIn('true');
         }
-
-        public function soaImmediate(){
+        
+        public function soaLogsEmail(){
             $data = array();
 
-            views('finance.soa-immediate', $data);  
-        } 
-
-        public function soaScheduled(){
-            $data = array();
-
-            views('finance.soa-scheduled', $data);  
-        } 
-
-        public function soaSetting(){
-            $data = array();
-
-            views('finance.soa-setting', $data);  
-        } 
-
-        public function soaDownload(){
-            $data = array();
-
-            views('finance.soa-download', $data);  
+            views('finance.soa-logs-email', $data);  
         } 
 
         public function importSoaDownload(){
@@ -45,12 +27,6 @@
             $data = array();
 
             views('finance.soa-email-template', $data);  
-        } 
-
-        public function soaEmailGeneric(){
-            $data = array();
-
-            views('finance.soa-email-generic', $data);  
         } 
 
         public function soaMaster(){
