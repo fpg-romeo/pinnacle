@@ -137,7 +137,8 @@
 
             $date_start     = '2025-08-01';
             $date_end       = '2025-08-31';
-            $data           = Soa::getCollectionReminder($date_start, $date_end);
+            $limit          = 3;
+            $data           = Soa::getCollectionReminder($date_start, $date_end, $limit);
             if(!empty($data)){
                 foreach($data as $key => $value){
 
@@ -178,46 +179,58 @@
 
         //RUN THIS EVERY 5AM DAILY
         public function soaCollectionReminderGenerationPdf(){
-            includeModel(['Soa', 'Notification']);
+            includeModel(['Soa']);
             $CONFIGURATION  = Configuration::general();
 
             $date_start     = '2025-08-01';
             $date_end       = '2025-08-31';
-            $data           = Soa::getCollectionReminderFilePdf($date_start, $date_end);
+            $limit          = 3;
+            $data           = Soa::getCollectionReminderFilePdf($date_start, $date_end, $limit);
             if(!empty($data)){
                 foreach($data as $key => $value){
 
-                    $recipient_to                       = $CONFIGURATION['IT_TEAM_EMAIL'];
-                    $recipient_cc                       = $CONFIGURATION['IT_TEAM_EMAIL'];
-                    $recipient_bcc                      = $CONFIGURATION['IT_TEAM_EMAIL'];
-                    $reply_to                           = $CONFIGURATION['IT_TEAM_EMAIL'];
+                    $pdf = Shortcode::soaCollectionReminderLetterGeneration($value['ld']);
 
-                    $field['name']                      = $CONFIGURATION['NOTIFICATION_NAME_SOA_COLLECTION_REMINDER']; 
-                    $field['subject']                   = $CONFIGURATION['NOTIFICATION_SUBJECT_SOA_COLLECTION_REMINDER']; 
-                    $field['recipient_to']              = is_array($recipient_to) ? implode(',', $recipient_to) : $recipient_to;  
-                    $field['recipient_cc']              = is_array($recipient_cc) ? implode(',', $recipient_cc) : $recipient_cc;
-                    $field['recipient_bcc']             = is_array($recipient_bcc) ? implode(',', $recipient_bcc) : $recipient_bcc;
-                    $field['reply_to']                  = is_array($reply_to) ? implode(',', $reply_to) : $reply_to;
-                    $field['template']                  = 'soa'; 
-                    $field['status_id']                 = $CONFIGURATION['NOTIFICATION_STATUS_UNPROCESSED']; 
-                    $field['attempt']                   = 0; //DEFAULT  
-                    $field['batch_number']              = $value['batch_number'];  
-                    $field['soa_monthly_raw_data_id']   = $value['id'];  
-                    $field['created_by']                = (defined(ACCOUNT_ID) && !empty(ACCOUNT_ID) ? ACCOUNT_ID : $CONFIGURATION['ENGINE_CRON_JOB']);  
-                    $field['created_when']              = dateTimeStamp();   
-                    
-                    $attachment[$key]['file_pdf']       = getDocumentRoot().'/upload/soa/'.htmlDecode($value['batch_number']).'-'.htmlDecode($value['id']).'/'.htmlDecode($value['file_pdf']);
-                    $attachment[$key]['file_excel']     = getDocumentRoot().'/upload/soa/'.htmlDecode($value['batch_number']).'-'.htmlDecode($value['id']).'/'.htmlDecode($value['file_excel']);
-                    
-                    $soa_default_file_counter = 1;
-                    foreach($CONFIGURATION['SOA_EMAIL_ATTACHMENT_DEFAULT'] as $soa_default_file){
-                        $attachment[$key]['file_default_'.$soa_default_file_counter] = getDocumentRoot().'/upload/soa/default/'.$soa_default_file;
-                        $soa_default_file_counter++;
+                    if(!empty($pdf['file_name'])){
+                        $field['id']                        = $value['id'];  
+                        $field['file_pdf']                  = $pdf['file_name'];  
+                        $field['file_pdf_timestamp']        = dateTimeStamp();   
+                        $field['file_pdf_attempt']          = $value['file_pdf_attempt']+1; //COUNT from existing record, +1 every cycle 
+                        $field['updated_by']                = (defined(ACCOUNT_ID) && !empty(ACCOUNT_ID) ? ACCOUNT_ID : $CONFIGURATION['ENGINE_CRON_JOB']);  
+                        $field['updated_when']              = dateTimeStamp();   
+
+                        Soa::editRecord($field);
                     }
-                    $field['attachment']                = safe_b64encode(serialize($attachment)); 
-                    $field['body']                      = safe_b64encode(serialize($value)); 
 
-                    Notification::addEmail($field);
+                }
+            }
+        }
+
+        //RUN THIS EVERY 6AM DAILY
+        public function soaCollectionReminderGenerationExcel(){
+            includeModel(['Soa']);
+            $CONFIGURATION  = Configuration::general();
+
+            $date_start     = '2025-08-01';
+            $date_end       = '2025-08-31';
+            $limit          = 3;
+            $data           = Soa::getCollectionReminderFileExcel($date_start, $date_end, $limit);
+            if(!empty($data)){
+                foreach($data as $key => $value){
+
+                    $excel = Shortcode::soaGeneration($value['ld']);
+
+                    if(!empty($excel['file_name'])){
+                        $field['id']                        = $value['id'];  
+                        $field['file_excel']                = $excel['file_name'];  
+                        $field['file_excel_timestamp']      = dateTimeStamp();   
+                        $field['file_excel_attempt']        = $value['file_excel_attempt']+1; //COUNT from existing record, +1 every cycle 
+                        $field['updated_by']                = (defined(ACCOUNT_ID) && !empty(ACCOUNT_ID) ? ACCOUNT_ID : $CONFIGURATION['ENGINE_CRON_JOB']);  
+                        $field['updated_when']              = dateTimeStamp();   
+
+                        Soa::editRecord($field);
+                    }
+
                 }
             }
         }

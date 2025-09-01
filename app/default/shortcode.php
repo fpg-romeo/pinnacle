@@ -522,7 +522,7 @@
             return false; // invalid recipient
         } 
         
-        public static function soaCollectionReminderLetterGeneration($id, $folder, $action="", $body = ''){
+        public static function soaCollectionReminderLetterGeneration($id, $folder, $action="", $body=""){
             includeDefault('pdf');
 
             $directory = realpath(__DIR__ . '/../../../'); // goes up 3 levels to pinnacle root
@@ -538,8 +538,8 @@
                 $filename = $document.'.pdf';
                 pdf::generate($filename, $body, 'invoice', 'attachment', $file_path, $watermark);
                 $file = array(
-                            'location' => $folder, 
-                            'file'     => $filename
+                            'location'  => $file_path, 
+                            'file_name' => $filename
                             ); 
                 return $file;
             }else{
