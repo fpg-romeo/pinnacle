@@ -1266,7 +1266,7 @@ class Master
 
     public static function getActiveIntermediary()
     {
-        $result = mysql::select('master_intermediaries', '*', "is_active = 1 AND categories != ''", 'source_name ASC');
+        $result = mysql::select('master_intermediaries', '*', "is_active = 1", 'source_name ASC');
         return $result;
     }
     public static function getActiveBranches()
@@ -1486,7 +1486,7 @@ class Master
         return $result;
     }
 
-    public static function getDST($policyno='',$batch_number,$fields='',$source_name=''){
+    public static function getDST($policyno='',$batch_number='',$fields='',$source_name=''){
             // For sheets
         $result = array();
         if($source_name != '' and $fields = ''){
@@ -1526,7 +1526,7 @@ class Master
         return $result;
     }
 
-    public static function getCWT($policyno='',$batch_number,$fields='',$source_name=''){
+    public static function getCWT($policyno='',$batch_number='',$fields='',$source_name=''){
             // For sheets
     
         $result = array();
@@ -1611,7 +1611,7 @@ class Master
     }
 
 
-        public static function getCOD($policyno='',$batch_number,$fields='',$source_name=''){
+        public static function getCOD($policyno='',$batch_number='',$fields='',$source_name=''){
         $result = array();
             // For sheets
         $CODlist = array('CTPL-0201','CTPL-0202','CTPL-0203');   
