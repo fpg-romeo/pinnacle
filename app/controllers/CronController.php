@@ -183,7 +183,7 @@
 
             $date_start     = '2025-08-01';
             $date_end       = '2025-08-31';
-            $data           = Soa::getCollectionReminder($date_start, $date_end);
+            $data           = Soa::getCollectionReminderFilePdf($date_start, $date_end);
             if(!empty($data)){
                 foreach($data as $key => $value){
 
@@ -225,7 +225,7 @@
         public function soaCare(){
       
             includeModel(['Master']);
-            
+
             $cutoffmonth        = date('m', strtotime('first day of last month'));
             $processingmonth    = date('m');
             $cutoffdate         = strtoupper(date('Y-m-d', strtotime('last day of previous month'))); 
