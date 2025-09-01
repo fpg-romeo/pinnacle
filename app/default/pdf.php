@@ -10,36 +10,36 @@ class soaFile extends TCPDF{
 
         $image = getSiteUrl().'/template/image/logo.png';
 
-        $this->Rect(11.5, 8, 188.5, 25,'F',array(),array(247, 245, 244));
-        $this->Image($image, 179, 11, 18, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // $this->Rect(11.5, 8, 188.5, 25,'F',array(),array(247, 245, 244));
+        $this->Image($image, 140, 11, 60, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
-        $this->SetY(7);
-        $this->SetX(13);
-        $this->SetFont('helvetica', 'B',12);
-        $this->SetTextColor(255,107,0);
-        $this->Cell(0, 10, $CONFIGURATION['SYSTEM_COMPANY'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        // $this->SetY(7);
+        // $this->SetX(13);
+        // $this->SetFont('helvetica', 'B',12);
+        // $this->SetTextColor(255,107,0);
+        // $this->Cell(0, 10, $CONFIGURATION['SYSTEM_COMPANY'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
 
-        $this->SetY(7);
-        $this->SetX(13);
-        $this->SetFont('helvetica', '',8);
-        $this->SetTextColor(0,0,0);
-        $this->Cell(0, 22, $CONFIGURATION['SYSTEM_COMPANY_ADDRESS'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        // $this->SetY(7);
+        // $this->SetX(13);
+        // $this->SetFont('helvetica', '',8);
+        // $this->SetTextColor(0,0,0);
+        // $this->Cell(0, 22, $CONFIGURATION['SYSTEM_COMPANY_ADDRESS'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
 
-        $this->SetY(7);
-        $this->SetX(13);
-        $this->Cell(0, 30, 'Tel: '.$CONFIGURATION['SYSTEM_COMPANY_CONTACT_NO'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        // $this->SetY(7);
+        // $this->SetX(13);
+        // $this->Cell(0, 30, 'Tel: '.$CONFIGURATION['SYSTEM_COMPANY_CONTACT_NO'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
 
-        $this->SetY(7);
-        $this->SetX(13);
-        $this->Cell(0, 38, 'Email: '.$CONFIGURATION['SYSTEM_EMAIL'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        // $this->SetY(7);
+        // $this->SetX(13);
+        // $this->Cell(0, 38, 'Email: '.$CONFIGURATION['SYSTEM_EMAIL'], 0, false, 'L', 0, '', 0, false, 'T', 'M');
 
-        $this->SetY(7);
-        $this->SetX(13);
-        $this->SetTextColor(255,107,0);
-        $this->Write(46, $CONFIGURATION['SYSTEM_COMPANY_URL'], $CONFIGURATION['SYSTEM_COMPANY_URL'], false, 'L', true);
+        // $this->SetY(7);
+        // $this->SetX(13);
+        // $this->SetTextColor(255,107,0);
+        // $this->Write(46, $CONFIGURATION['SYSTEM_COMPANY_URL'], $CONFIGURATION['SYSTEM_COMPANY_URL'], false, 'L', true);
 
-        $this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(128, 24, 61)));
-        $this->Line(11.5, 33, 200, 33, '');
+        // $this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(128, 24, 61)));
+        // $this->Line(11.5, 33, 200, 33, '');
     }
 
     public function Close() {
@@ -48,15 +48,18 @@ class soaFile extends TCPDF{
     }
     
     public function Footer(){
-        $this->SetY(-15);
-        $this->SetFont('helvetica', 'I', 8);
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        
+        $CONFIGURATION = Configuration::general();
 
-        if( !$this->last_page_flag ){
-            $this->SetY(-5);
-            $this->SetFont('helvetica', 'I', 8);
-            $this->Cell(0, 10, 'Please refer to page '.$this->getAliasNbPages().' for Terms & Conditions', 0, false, 'L', 0, '', 0, false, 'B', 'M');
-        }
+        $image = getSiteUrl().'/template/image/soa_footer.jpg';
+
+        $this->Image($image, 10, -10, 30, 15, 'JPG', '', 'N', false, 300, '', false, false, 0, false, false, false);
+
+        // if( !$this->last_page_flag ){
+        //     $this->SetY(-5);
+        //     $this->SetFont('helvetica', 'I', 8);
+        //     $this->Cell(0, 10, 'Please refer to page '.$this->getAliasNbPages().' for Terms & Conditions', 0, false, 'L', 0, '', 0, false, 'B', 'M');
+        // }
     }
     
 }

@@ -521,28 +521,29 @@
             return false; // invalid recipient
         } 
         
-        public static function soaCollectionReminderLetterGeneration($id, $folder, $action="", $body = ''){
+        public static function soaCollectionReminderLetterGeneration($file_name, $folder = '', $action="", $body = ''){
             includeDefault('pdf');
 
             $directory = realpath(__DIR__ . '/../../../'); // goes up 3 levels to pinnacle root
             
             $file_path = $directory . DIRECTORY_SEPARATOR . 'pinnacle' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'soa' . DIRECTORY_SEPARATOR . $folder; //pinnacle - update with correct project folder name
 
-            $document  = 'SOA-'.$id;
+            $document  = $file_name;
             $watermark = True;
             //$folder    = './upload/soa';
 
             if (ob_get_contents()) ob_end_clean();
             if($action == "attachment"){
                 $filename = $document.'.pdf';
-                pdf::generate($filename, $body, 'invoice', 'attachment', $file_path, $watermark);
+                pdf::generate($filename, $body, 'invoice', 'attachment', $file_path, '');
                 $file = array(
                             'location' => $folder, 
                             'file'     => $filename
                             ); 
                 return $file;
-            }else{
-                pdf::generate($document, $body, 'invoice', 'download', $folder, $watermark);
+            }
+            else{
+                pdf::generate($document, $body, 'invoice', $action, $folder, '');
                 exit;
             }
         }

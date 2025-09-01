@@ -157,26 +157,33 @@
 
         public function soaLetterDownload_json(){
             includeModel('Master');
+
+
+            $message = self::generateCollectionReminderLettertogetherwithSOA(8);
+
+            Shortcode::soaCollectionReminderLetterGeneration(1, '/upload/soa/', 'view', $message);
+
+        }
+
+        public function generateCollectionReminderLettertogetherwithSOA($master_list_id){
             includeDefault('shortcode');
-            $premium_receivable = Master::getDetailed('', '202508290912', '*', 'CCFM INSURANCE AGENCY CORP. DBA. ASSURANCE');
-            $tax_receivable_dst = Master::getDST('', '202508290912', '*', 'CCFM INSURANCE AGENCY CORP. DBA. ASSURANCE');
-            $tax_receivable_cwt = Master::getCWT('', '202508290912', '*', 'CCFM INSURANCE AGENCY CORP. DBA. ASSURANCE');
-
-        
-
+            $master_list        = recastArray(Finance::getMasterlistById($master_list_id));
+            $premium_receivable = Master::getDetailed('', '202508290912', '*', $master_list['source_name']);
+            $tax_receivable_dst = Master::getDST('', '202508290912', '*', $master_list['source_name']);
+            $tax_receivable_cwt = Master::getCWT('', '202508290912', '*', $master_list['source_name']);
             $current_accounts = [
-                                    '0_30'   => array_sum(array_column($premium_receivable, '0_30_DAYS')),
-                                    '31_60'  => array_sum(array_column($premium_receivable, '31_60_DAYS')),
-                                    '61_90'  => array_sum(array_column($premium_receivable, '61_90_DAYS')),
+                                    '0_30'   => array_sum(array_column($premium_receivable ?? [], '0_30_DAYS')),
+                                    '31_60'  => array_sum(array_column($premium_receivable ?? [], '31_60_DAYS')),
+                                    '61_90'  => array_sum(array_column($premium_receivable ?? [], '61_90_DAYS')),
                                 ];
             $overdue_accounts = [
                                     '91_180'    => array_reduce(
-                                                        $premium_receivable,
+                                                        $premium_receivable ?? [],
                                                         fn($total, $row) => $total + $row['91_120_DAYS'] + $row['121_150_DAYS'] + $row['151_180_DAYS'],
                                                         0
                                                     ),
                                     '180_ABOVE' => array_reduce(
-                                                        $premium_receivable,
+                                                        $premium_receivable ?? [],
                                                         fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'],
                                                         0
                                                     ),
@@ -227,18 +234,43 @@
                                 ]
             ];
 
+            $total_premium  = $total_current+$total_overdue;
+
+            $total_tax_current = array();
+            $tax_message = '';
+            foreach($tax_current as $key=>$current){
+                $tax_message .= '<tr>
+                                <td>'.str_replace('_', ' - ', $key).' Days</td>';
+                foreach($current as $tax_key=>$tax){
+                    $tax_message .= '<td class="text-right">'.$tax.'</td>';
+                    $total_tax_current[$tax_key] = ($total_tax_current[$tax_key] ?? 0) + $tax;
+                }
+                $tax_message .= '</tr>';
+            }
+            $total_tax['dst'] = $tax_overdue['91_180']['dst'] + $tax_overdue['180_ABOVE']['dst'];
+            $total_tax['cwt'] = $tax_overdue['91_180']['cwt'] + $tax_overdue['180_ABOVE']['cwt'];
+            $grand_total = $total_current+$total_overdue+$total_tax['cwt']+$total_tax_current['cwt']+$total_tax['dst']+$total_tax_current['dst'];
+
+            $total_dst      = $total_tax['dst']+$total_tax_current['dst'];
+            $total_cwt      = $total_tax['cwt']+$total_tax_current['cwt'];
 
             $message = '
+                        <style>
+                            table td{
+                                border: 1px solid black;
+                                text-align: center;
+                            }
+                            
+                        </style>
                         <p>Dear Ma\'am/Sir,</p>
-                        <br>
-                        <p>Our records as of July 31, 2025 show that you have outstanding premiums of <b>PHP{{ PREMIUM }}</b>.</p>
-                        <br>
+                        <p>Our records as of July 31, 2025 show that you have outstanding premiums of <b>PHP '.$grand_total.'</b>.</p>
+                        
                         <p>For your ready reference, we have provided you with the details, as per attached Statement of Account (SOA) which is password-protected.
                         Your default password is the last 7 digits of your Intermediary Code.</p>
-                        <br>
+                        
                         <p>We wish to remind you of our agreed credit terms. In view thereof, we would appreciate receiving your payment on or before the specified <b>Due Dates below</b> to keep the policies in full force and effect and to avoid any legal complication in case of a claim. Please refer to the Aging Summary below based on effectivity of the policies.</p>
-                        <br>
-                        <table class="table">
+                        
+                        <table class="table" cellpadding="5">
                             <tr class="header">
                                 <td colspan="2">COD POLICIES (DUE IMMEDIATELY)</td>
                             </tr>
@@ -271,8 +303,7 @@
                                 <td class="text-right">0.00</td>
                             </tr>
                         </table>
-                        <br>
-                        <table class="table">
+                        <table class="table" cellpadding="5">
                             <tr class="header">
                                 <td colspan="3">PREMIUM RECEIVABLE</td>
                             </tr>
@@ -312,12 +343,11 @@
                             </tr>
                             <tr class="bold">
                                 <td>TOTAL PREMIUM RECEIVABLE</td>
-                                <td class="text-right">'.$total_current+$total_overdue.'</td>
+                                <td class="text-right">'.$total_premium.'</td>
                                 <td></td>
                             </tr>
                         </table>
-                        <br>
-                        <table class="table">
+                        <table class="table" cellpadding="5">
                             <tr class="header">
                                 <td colspan="3">TAXES RECEIVABLE</td>
                             </tr>
@@ -327,20 +357,9 @@
                                 <td class="text-right">OUTSTANDING CWT</td>
                             </tr>';
 
-                            $total_tax_current = array();
-                            foreach($tax_current as $key=>$current){
-                                $message .= '<tr>
-                                                <td>'.str_replace('_', ' - ', $key).' Days</td>';
-                                foreach($current as $tax_key=>$tax){
-                                    $message .= '<td class="text-right">'.$tax.'</td>';
-                                    $total_tax_current[$tax_key] = ($total_tax_current[$tax_key] ?? 0) + $tax;
-                                }
-                                $message .= '</tr>';
-                            }
-                            $total_tax['dst'] = $tax_overdue['91_180']['dst'] + $tax_overdue['180_ABOVE']['dst'];
-                            $total_tax['cwt'] = $tax_overdue['91_180']['cwt'] + $tax_overdue['180_ABOVE']['cwt'];
-                            $grand_total = $total_current+$total_overdue+$total_tax['cwt']+$total_tax_current['cwt']+$total_tax['dst']+$total_tax_current['dst'];
-                $message .= '<tr class="bold">
+                            $message .= $tax_message;
+                            
+                            $message .= '<tr class="bold">
                                 <td>Total Current Accounts</td>
                                 <td class="text-right">'.$total_tax_current['dst'].'</td>
                                 <td class="text-right">'.$total_tax_current['cwt'].'</td>
@@ -362,8 +381,8 @@
                             </tr>
                             <tr class="bold">
                                 <td>TOTAL TAXES RECEIVABLE</td>
-                                <td class="text-right">'.$total_tax['dst']+$total_tax_current['dst'].'</td>
-                                <td class="text-right">'.$total_tax['cwt']+$total_tax_current['cwt'].'</td>
+                                <td class="text-right">'.$total_dst.'</td>
+                                <td class="text-right">'.$total_cwt.'</td>
                             </tr>
                             <tr class="bold">
                                 <td colspan="2">GRAND TOTAL</td>
@@ -397,8 +416,148 @@
                         <br>
                         <p>Thank you.</p>                    
                     ';
-            Shortcode::soaCollectionReminderLetterGeneration(1, '/upload/soa/', '', $message);
+            return $message;
+        }
 
+        public function generate3160DPDCollectionReminder($master_list_id){
+            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+
+            $message = '<div style="font-size: 10px; line-height: 1.5;">
+                            <div>
+                                <span>'.$master_list['source_name'].'</span><br>
+                                <span>'.$master_list['address'].'</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <p><strong>Subject: Reminder: Premium Payment Due for Accounts 31-60 Days</strong></p>
+                            </div>
+                            <p>Dear '.$master_list['source_name'].',</p>
+                            <p> We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
+                                31-60 days past due, you may refer to the previously submitted SOA for the list. As we near the end of the month, we would like to emphasize the importance of settling these outstanding 
+                                premiums promptly to avoid any potential issues in the future. 
+                            </p>
+
+                            <p>Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of 
+                                the policy holder in the event that the premium will not be paid. Failure to settle these premiums within the agreed credit term 
+                                may result in policy cancellation. Our intention is to prevent such circumstances and maintain a strong and mutually beneficial 
+                                relationship going forward. 
+                            </p>
+
+                            <p>We appreciate your attention and your immediate action in remitting the outstanding payments for the mentioned accounts.
+                                If you have any inquiries or concerns, please do not hesitate to contact me directly at '.$master_list['handler_contact_number'].'.
+                            </p>
+
+                            <p>Thank you for your cooperation.</p>
+                            <p>Sincerely Yours,</p>
+                            <div>
+                                <span style="font-weight: bold;">'.$master_list['handler'].'</span><br>
+                                <span>'.$master_list['handler_contact_number'].'</span><br>
+                                <span>'.$master_list['handler_email'].'</span>
+                            </div>
+
+                        </div>';
+            return $message;
+        }
+
+        public function generate6190DPDCollectionReminder($master_list_id){
+            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+
+            $message = '<div style="font-size: 10px; line-height: 1.5;">
+                            <div>
+                                <span>'.$master_list['source_name'].'</span><br>
+                                <span>'.$master_list['address'].'</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <p><strong>Subject: Reminder: Premium Payment Due for Accounts 61-90 Days</strong></p>
+                            </div>
+                            <p>Dear '.$master_list['source_name'].',</p>
+                            <p> We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
+                                61-90 days past due, you may refer to the previously submitted SOA for the list. As we near the end of the month, we would like to emphasize the importance of settling these outstanding 
+                                premiums promptly to avoid any potential issues in the future. 
+                            </p>
+
+                            <p>Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of 
+                                the policy holder in the event that the premium will not be paid. Failure to settle these premiums within the agreed credit term 
+                                may result in policy cancellation. Our intention is to prevent such circumstances and maintain a strong and mutually beneficial 
+                                relationship going forward. 
+                            </p>
+
+                            <p>We appreciate your attention and your immediate action in remitting the outstanding payments for the mentioned accounts.
+                                If you have any inquiries or concerns, please do not hesitate to contact me directly at '.$master_list['handler_contact_number'].'.
+                            </p>
+
+                            <p>Thank you for your cooperation.</p>
+                            <p>Sincerely Yours,</p>
+                            <div>
+                                <span style="font-weight: bold;">'.$master_list['handler'].'</span><br>
+                                <span>'.$master_list['handler_contact_number'].'</span><br>
+                                <span>'.$master_list['handler_email'].'</span>
+                            </div>
+
+                        </div>';
+            return $message;
+        }
+
+        public function generateFirstReminderwithNoticeofCancellation($master_list_id){
+            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+            $message = '
+                    <div style="font-size:10px; line-height:1.5; text-align:left;">
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <p style="font-weight:bold; text-decoration:underline; margin:0;">
+                                Above 90 Days Past Due Collection Reminder
+                            </p>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <span>'.$master_list['source_name'].'</span><br>
+                            <span>'.$master_list['address'].'</span>
+                        </div>
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <p style="margin:0;">
+                                Subject: Reminder: Payment Due for Outstanding Premiums
+                            </p>
+                        </div>
+
+                        <p>Dear '.$master_list['source_name'].',</p>
+
+                        <p>
+                            We are writing to follow up on the premium payment for the accounts that are overdue already
+                            aging 91 days and above. Despite our previous follow-up attempts these accounts remain unpaid as of today.
+                            We would like to emphasize the importance of settling these outstanding premiums promptly.
+                            Below is the details of the said outstanding policies:
+                        </p>
+                        $outstandingOverdueHtml
+
+                        <p>
+                            We understand that unforeseen circumstances can sometimes affect payment timelines. However,
+                            it is essential to address these outstanding balances to ensure the continuity of coverage.
+                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can
+                            terminate the insurance coverage of the policy holder in the event that the premium will not be paid.
+                            Failure to do so will compel us to cancel these policies.
+                        </p>
+
+                        <p>
+                            We appreciate your immediate action in remitting the outstanding payments for the mentioned accounts.
+                        </p>
+
+                        <p>
+                            If you have any inquiries or concerns, please do not hesitate to contact me directly at
+                            '.$master_list['handler_contact_number'].' & '.$master_list['handler_email'].'.
+                        </p>
+
+                        <p>
+                            Thank you for your cooperation, and we eagerly anticipate your prompt response.
+                        </p>
+
+                        <p style="font-weight:bold;">Sincerely Yours,</p>
+
+                        <div style="margin-top:12px;">
+                            <span style="font-weight:bold;">'.$master_list['handler'].'</span><br>
+                            <span>'.$master_list['handler_contact_number'].'</span><br>
+                            <span>'.$master_list['handler_email'].'</span>
+                        </div>
+
+                    </div>
+                    ';
+            return $message;
         }
     }
 ?>
