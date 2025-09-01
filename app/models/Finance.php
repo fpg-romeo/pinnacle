@@ -225,11 +225,11 @@ class Finance
     public static function getMasterlistById($id)
     {
         $result = mysql::select('soa_master_list sml 
-                                 INNER JOIN master_intermediaries mint ON mint.id = sml.intermediary_id
+                                 INNER JOIN master_intermediaries min ON min.id = sml.intermediary_id
                                  INNER JOIN master_handler mha ON mha.id = sml.handler_id
                                  INNER JOIN master_team_leader mtl ON mtl.id = sml.team_leader_id
                                 ',
-                                'sml.*',
+                                'sml.*, min.source_name, min.address, CONCAT(mha.first_name, " ", mha.last_name) as handler, mha.email as handler_email, mha.contact_number as handler_contact_number, CONCAT(mtl.first_name, " ", mtl.last_name) as team_leader',
                                 'sml.id = '.$id,
                                 '');
         return $result;
@@ -295,7 +295,7 @@ class Finance
     }
 
     public static function getSourceNameByCategories($categories){
-        $result = mysql::select('soa_master_list sml INNER JOIN master_intermediaries min ON sml.intermediary_id = min.id', 'min.id, min.source_name', 'sml.categories IN('.$categories.')', '');
+        $result = mysql::select('soa_master_list sml INNER JOIN master_intermediaries min ON sml.intermediary_id = min.id', 'sml.id, min.source_name', 'sml.categories IN('.$categories.')', '');
         return $result;
     }
 }

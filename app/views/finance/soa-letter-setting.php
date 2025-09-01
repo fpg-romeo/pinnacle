@@ -106,7 +106,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select id="source_name" name="as_of_date" placeholder="Period" class="select2 form-select">
+                            <select id="master_list_id" name="master_list_id" placeholder="Period" class="select2 form-select">
                                 <?=tool_dropdown_option($data['source_name'], '', 'source_name')?>
                             </select>
                         </div>
@@ -115,7 +115,7 @@
                 <div class="modal-footer">
                     <input type="hidden" value="" name="name">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary submit">Download</button>
+                    <button type="button" class="btn btn-primary download">Download</button>
                 </div>
             </div>
         </form>
@@ -206,5 +206,19 @@
             }
         });
 
+    });
+
+    $('.download').click(function(){
+        $.ajax({
+            url: '/finance/soaLetterDownload_json/',
+            method: 'POST',
+            data: {
+                id              : <?=getVar('id')?>,
+                master_list_id : $('[name="master_list_id"]').val()
+            },
+            success: function(data){
+                
+            }
+        });
     });
 </script>
