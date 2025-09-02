@@ -529,7 +529,7 @@
             
             $file_path = $directory . DIRECTORY_SEPARATOR . 'pinnacle' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'soa' . DIRECTORY_SEPARATOR . $folder; //pinnacle - update with correct project folder name
 
-            $document  = $file_name;
+            $document  = $id;
             $watermark = True;
             //$folder    = './upload/soa';
 
@@ -538,8 +538,8 @@
                 $filename = $document.'.pdf';
                 pdf::generate($filename, $body, 'invoice', 'attachment', $file_path, '');
                 $file = array(
-                            'location' => $folder, 
-                            'file'     => $filename
+                            'location'  => $file_path, 
+                            'file_name' => $filename
                             ); 
                 return $file;
             }

@@ -5,7 +5,13 @@ class Soa{
 
     }
 
-    public static function getCollectionReminder($date_start, $date_end){
+    public static function getCollectionReminder($date_start, $date_end, $limit=''){
+
+        $filter_limit = '';
+        if(!empty($limit)){
+            $filter_limit = $limit;
+        }
+        
         $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
                                 ',
                                 'smr.* 
@@ -20,11 +26,18 @@ class Soa{
                                  smr.file_excel_timestamp IS NOT NULL AND
                                  smr.created_when >= '".$date_start."' AND smr.created_when <= '".$date_end."'
                                 ",
-                                "smr.id ASC");
+                                "smr.id ASC",
+                                $filter_limit);
         return $result;
     }
 
-    public static function getCollectionReminderFilePdf($date_start, $date_end){
+    public static function getCollectionReminderFilePdf($date_start, $date_end, $limit=''){
+
+        $filter_limit = '';
+        if(!empty($limit)){
+            $filter_limit = $limit;
+        }
+
         $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
                                 ',
                                 'smr.* 
@@ -34,11 +47,18 @@ class Soa{
                                  (smr.file_pdf = '' OR smr.file_pdf IS NULL) AND
                                  smr.created_when >= '".$date_start."' AND smr.created_when <= '".$date_end."'
                                 ",
-                                "smr.id ASC");
+                                "smr.id ASC",
+                                $filter_limit);
         return $result;
     }
 
-    public static function getCollectionReminderFileExcel($date_start, $date_end){
+    public static function getCollectionReminderFileExcel($date_start, $date_end, $limit=''){
+
+        $filter_limit = '';
+        if(!empty($limit)){
+            $filter_limit = $limit;
+        }
+
         $result = mysql::select('soa_monthly_raw_data AS smr USE INDEX(created_when)
                                 ',
                                 'smr.* 
@@ -48,7 +68,8 @@ class Soa{
                                  (smr.file_excel = '' OR smr.file_excel IS NULL) AND
                                  smr.created_when >= '".$date_start."' AND smr.created_when <= '".$date_end."'
                                 ",
-                                "smr.id ASC");
+                                "smr.id ASC",
+                                $filter_limit);
         return $result;
     }
 

@@ -21,7 +21,7 @@
                                     <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
-                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
+                            <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
                                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
