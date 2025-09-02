@@ -1452,7 +1452,7 @@ class Master
            return $result;
         }
 
-    public static function getDST($policyno='',$as_of_date,$fields='',$source_name=''){
+    public static function getDST($policyno='',$as_of_date='',$fields='',$source_name=''){
              // For sheets
             $result = array();
             if($source_name != '' and $fields = ''){
@@ -1493,7 +1493,7 @@ class Master
         }
 
 
-    public static function getCWT($policyno='',$as_of_date,$fields='',$source_name=''){
+    public static function getCWT($policyno='',$as_of_date='',$fields='',$source_name=''){
              // For sheets
         
             $result = array();
@@ -1534,7 +1534,7 @@ class Master
             return $result;
         }
 
-    public static function getDetailed($policyno='',$as_of_date,$fields='',$source_name=''){
+    public static function getDetailed($policyno='',$as_of_date='',$fields='',$source_name=''){
          $result = array();
              // For sheets
             
@@ -1578,7 +1578,7 @@ class Master
         }
 
 
-        public static function getCOD($policyno='',$as_of_date,$fields='',$source_name=''){
+        public static function getCOD($policyno='',$as_of_date='',$fields='',$source_name=''){
          
          
          $result = array();
