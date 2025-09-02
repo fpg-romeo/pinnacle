@@ -1167,5 +1167,40 @@
             return $message;
         }
 
+        public static function soaCollectionReminderGeneric($master_list_id, $as_of_date){
+            includeModel('Finance');
+            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+            
+            $message = '
+                        <div class="text-xs space-y-5 flex flex-col">
+                            <p>'.date('F d, Y', strtotime('now')).'</p>
+                            <p>
+                                Subject: <span class="underline">Urgent: Unpaid Premiums - Immediate Action Required to Prevent Policy Cancellation.</span>
+                            </p>
+                            <p>Dear Valued Partner,</p>
+                            <p>
+                                We are writing to follow up on the premium payment for the accounts that are overdue. Despite our previous follow-up attempts these accounts remain unpaid.
+                            </p>
+                            <p>
+                                Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Failure to do so will compel us to cancel these policies by end of this month.
+                            </p>
+                            <p>
+                                If you have any questions or require further assistance, please do not hesitate to contact me at the details below.
+                            </p>
+                            <p>
+                                We trust that you will give this matter your immediate action.
+                            </p>
+                            <p></p>
+                            <p>Warm Regards,</p>
+                            <div style="margin-top:12px;">
+                                <span style="font-weight:bold;">'.$master_list['handler'].'</span><br>
+                                <span>'.$master_list['handler_contact_number'].'</span><br>
+                                <span>'.$master_list['handler_email'].'</span>
+                            </div>
+                        </div>
+                        ';
+
+            return $message;
+        }
 	}
 ?>

@@ -136,7 +136,7 @@
 
 
             // $message = Shortcode::soaCollectionReminderLettertogetherwithSOA(8, '2025-08-31');
-            $message = Shortcode::soaFinalReminderwithNoticeofCancellation(8, '2025-08-31');
+            $message = Shortcode::soaCollectionReminderGeneric(8, '2025-08-31');
 
             Shortcode::soaCollectionReminderLetterGeneration(1, '/upload/soa/', 'view', $message);
 
