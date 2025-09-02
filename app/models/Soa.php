@@ -495,4 +495,45 @@ class Soa{
             $result['id']      = mysql::insertedId();
         }
     }
+
+    public static function getOutstandingOverdue($policyno='',$as_of_date='',$fields='',$source_name=''){
+        $result = array();
+        // For sheets
+        if($source_name != '' and $fields = ''){
+            $fields = 'BOOKING_DATE, 
+                            INCEPTION_DATE, 
+                            EXPIRY_DATE, 
+                            EFFECTIVE_DATE, 
+                            VOUCHER_DEBIT_CREDIT_PREMIUM,
+                            VOUCHER_DEBIT_CREDIT_COMMISSION, 
+                            OVERIDING_VOUCHER_DEBIT_CREDIT, 
+                            REFNO, 
+                            DOCNO, 
+                            INSURED_NAME,
+                            POSTED_PAYMENT, 
+                            ORIGINAL_BASIC_PREMIUM, 
+                            PREMIUM, 
+                            STAMPDUTY, 
+                            LTO, 
+                            LGT, 
+                            FST, 
+                            PREMIUMTAX, 
+                            VAT, 
+                            GROSS_PREMIUM,
+                            OVERRIDING_DISCOUNT, 
+                            COMMISSION, 
+                            INPUT_VAT, 
+                            TAXRATE, 
+                            TAX_AMOUNT, 
+                            GROSS_COMMISSION, 
+                            NET_DUE, 
+                            AGING_DAYS, 
+                            AGING_BUCKET';
+        }else{    
+            $fields = '*';
+        }
+
+        $result = mysql::select('soa_monthly_raw_data', $fields, "as_of_date = '{$as_of_date}' and source_name = '{$source_name}' and AGING_DAYS > 90 AND is_detailed = 1");
+        return $result;
+    }
 }

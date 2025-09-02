@@ -610,13 +610,13 @@
         }
 
         public static function soaCollectionReminderLettertogetherwithSOA($master_list_id, $as_of_date){
-            includeModel(['Master', 'Finance']);
+            includeModel(['Soa', 'Finance']);
 
             $master_list        = recastArray(Finance::getMasterlistById($master_list_id));
-            $premium_receivable = Master::getDetailed('', '2025-08-31', '*', $master_list['source_name']);
-            $tax_receivable_dst = Master::getDST('', '2025-08-31', '*', $master_list['source_name']);
-            $tax_receivable_cwt = Master::getCWT('', '2025-08-31', '*', $master_list['source_name']);
-            $cod                = Master::getCOD('', '2025-08-31', '*', $master_list['source_name']);
+            $premium_receivable = Soa::getDetailed('', '2025-08-31', '*', $master_list['source_name']);
+            $tax_receivable_dst = Soa::getDST('', '2025-08-31', '*', $master_list['source_name']);
+            $tax_receivable_cwt = Soa::getCWT('', '2025-08-31', '*', $master_list['source_name']);
+            $cod                = Soa::getCOD('', '2025-08-31', '*', $master_list['source_name']);
 
             $cod_policies     = [
                                     '0_30'      => array_sum(array_column($cod ?? [], '0_30_DAYS')),
@@ -629,7 +629,7 @@
                                                     ),
                                     '180_ABOVE' => array_reduce(
                                                         $cod ?? [],
-                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'],
+                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
                                                         0
                                                     ),
                                 ];
@@ -647,7 +647,7 @@
                                                     ),
                                     '180_ABOVE' => array_reduce(
                                                         $premium_receivable ?? [],
-                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'],
+                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
                                                         0
                                                     ),
                                 ];
@@ -687,12 +687,12 @@
                 '180_ABOVE' => [
                                     'dst' => array_reduce(
                                                 $tax_receivable_dst ?? [],
-                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'],
+                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
                                                 0
                                             ),
                                     'cwt' => array_reduce(
                                                 $tax_receivable_cwt ?? [],
-                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'],
+                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
                                                 0
                                             ),
                                 ]
@@ -972,9 +972,27 @@
         }
 
         public static function soaFirstReminderwithNoticeofCancellation($master_list_id, $as_of_date){
-            includeModel('Finance');
+            includeModel(['Finance', 'Soa']);
             $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+            $get_outstanding = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+
+            $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
+            foreach($aging as $age){
+
+                $outstanding_overdue[$age] = array_sum(array_column($get_outstanding ?? [], $age));
+            }
+
             $message = '
+                    <style>
+                        table td{
+                            border: 1px solid black;
+                            text-align: center;
+                        }
+
+                        .header, .bold{
+                            font-weight: bold;
+                        }
+                    </style>
                     <div style="font-size:10px; line-height:1.5; text-align:left;">
                         <div style="text-align:center; margin-bottom:20px;">
                             <p style="font-weight:bold; text-decoration:underline; margin:0;">
@@ -999,8 +1017,33 @@
                             We would like to emphasize the importance of settling these outstanding premiums promptly.
                             Below is the details of the said outstanding policies:
                         </p>
-                        $outstandingOverdueHtml
-
+                        
+                        <table class="table" cellpadding="4">
+                            <tr>
+                                <td>No. of OUTSTANDING</td>
+                                <td>MONTH</td>
+                                <td>TOTAL NET DUE</td>
+                                <td>PAYMENT DUE DATE</td>
+                            </tr>';
+                        
+                        foreach($outstanding_overdue as $key=>$outstanding){
+                            $message .= '<tr>
+                                            <td>'.str_replace('_', ' ', $key).'</td>
+                                            <td></td>
+                                            <td>'.formatMoney($outstanding).'</td>
+                                            <td></td>
+                                        </tr>';
+                            
+                        }
+                        
+            $message .= '
+                            <tr class="bold">
+                                <td></td>
+                                <td>Total Overdue</td>
+                                <td>'.formatMoney(array_sum($outstanding_overdue)).'</td>
+                                <td></td>
+                            </tr>
+                        </table>
                         <p>
                             We understand that unforeseen circumstances can sometimes affect payment timelines. However,
                             it is essential to address these outstanding balances to ensure the continuity of coverage.
@@ -1022,6 +1065,95 @@
                             Thank you for your cooperation, and we eagerly anticipate your prompt response.
                         </p>
 
+                        <p style="font-weight:bold;">Sincerely Yours,</p>
+
+                        <div style="margin-top:12px;">
+                            <span style="font-weight:bold;">'.$master_list['handler'].'</span><br>
+                            <span>'.$master_list['handler_contact_number'].'</span><br>
+                            <span>'.$master_list['handler_email'].'</span>
+                        </div>
+
+                    </div>
+                    ';
+            return $message;
+        }
+
+        public static function soaFinalReminderwithNoticeofCancellation($master_list_id, $as_of_date){
+            includeModel(['Finance', 'Soa']);
+            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
+            $get_outstanding = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+
+            $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
+            foreach($aging as $age){
+
+                $outstanding_overdue[$age] = array_sum(array_column($get_outstanding ?? [], $age));
+            }
+
+            $message = '
+                    <style>
+                        table td{
+                            border: 1px solid black;
+                            text-align: center;
+                        }
+
+                        .header, .bold{
+                            font-weight: bold;
+                        }
+                    </style>
+                    <div style="font-size:10px; line-height:1.5; text-align:left;">
+                        <div style="margin-bottom:20px;">
+                            <span>'.$master_list['source_name'].'</span><br>
+                            <span>'.$master_list['address'].'</span>
+                        </div>
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <p style="margin:0;">
+                                Final Collection Reminder with notice of cancellation
+                            </p>
+                        </div>
+
+                        <p>Dear '.$master_list['source_name'].',</p>
+
+                        <p>
+                            This is to remind you of the unpaid premiums with FPG that are beyond the approved credit term. Below is the summary based on number of days past due:
+                        </p>
+                        
+                        <table class="table" cellpadding="4">
+                            <tr>
+                                <td>No. of OUTSTANDING</td>
+                                <td>MONTH</td>
+                                <td>TOTAL NET DUE</td>
+                                <td>PAYMENT DUE DATE</td>
+                            </tr>';
+                        
+                        foreach($outstanding_overdue as $key=>$outstanding){
+                            $message .= '<tr>
+                                            <td>'.str_replace('_', ' ', $key).'</td>
+                                            <td></td>
+                                            <td>'.formatMoney($outstanding).'</td>
+                                            <td></td>
+                                        </tr>';
+                            
+                        }
+                        
+            $message .= '
+                            <tr class="bold">
+                                <td></td>
+                                <td>Total Overdue</td>
+                                <td>'.formatMoney(array_sum($outstanding_overdue)).'</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <p>
+                            We’ve attached the complete list in this email for your reference
+                        </p>
+
+                        <p>
+                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Since these policies are still outstanding, we are compelled to cancel these policies within the month.
+                        </p>
+
+                        <p>
+                            We trust that you will give this matter your utmost attention.
+                        </p>
                         <p style="font-weight:bold;">Sincerely Yours,</p>
 
                         <div style="margin-top:12px;">
