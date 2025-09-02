@@ -522,14 +522,14 @@
             return false; // invalid recipient
         } 
         
-        public static function soaCollectionReminderLetterGeneration($id, $folder, $action="", $body=""){
+        public static function soaCollectionReminderLetterGeneration($id, $folder = '', $action="", $body = ''){
             includeDefault('pdf');
 
             $directory = realpath(__DIR__ . '/../../../'); // goes up 3 levels to pinnacle root
             
             $file_path = $directory . DIRECTORY_SEPARATOR . 'pinnacle' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'soa' . DIRECTORY_SEPARATOR . $folder; //pinnacle - update with correct project folder name
 
-            $document  = $file_name;
+            $document  = $id;
             $watermark = True;
             //$folder    = './upload/soa';
 
@@ -610,12 +610,13 @@
         }
 
         public static function soaCollectionReminderLettertogetherwithSOA($master_list_id, $as_of_date){
-            includeDefault(['shortcode']);
+            includeModel(['Master', 'Finance']);
+
             $master_list        = recastArray(Finance::getMasterlistById($master_list_id));
-            $premium_receivable = Master::getDetailed('', '202508290912', '*', $master_list['source_name']);
-            $tax_receivable_dst = Master::getDST('', '202508290912', '*', $master_list['source_name']);
-            $tax_receivable_cwt = Master::getCWT('', '202508290912', '*', $master_list['source_name']);
-            $cod                = Master::getCOD('', '202508290912', '*', $master_list['source_name']);
+            $premium_receivable = Master::getDetailed('', '2025-08-31', '*', $master_list['source_name']);
+            $tax_receivable_dst = Master::getDST('', '2025-08-31', '*', $master_list['source_name']);
+            $tax_receivable_cwt = Master::getCWT('', '2025-08-31', '*', $master_list['source_name']);
+            $cod                = Master::getCOD('', '2025-08-31', '*', $master_list['source_name']);
 
             $cod_policies     = [
                                     '0_30'      => array_sum(array_column($cod ?? [], '0_30_DAYS')),
@@ -773,7 +774,7 @@
                                 $as_of_date = new DateTime($as_of_date);
 
                                 foreach ($current_accounts as $key => $current_account) {
-                                    $month = Shortcode::addMonthNoOverflow($as_of_date, $counter);
+                                    $month = self::addMonthNoOverflow($as_of_date, $counter);
 
                                     $lastDay = (clone $month)->modify('last day of this month');
                                     $duedate = ($current_account > 0) ? $lastDay->format("F d, Y") : "";
@@ -891,6 +892,7 @@
         }
 
         public static function soa3160DPDCollectionReminder($master_list_id, $as_of_date){
+            includeModel('Finance');
             $master_list = recastArray(Finance::getMasterlistById($master_list_id));
 
             $message = '<div style="font-size: 10px; line-height: 1.5;">
@@ -930,6 +932,7 @@
         }
 
         public static function soa6190DPDCollectionReminder($master_list_id, $as_of_date){
+            includeModel('Finance');
             $master_list = recastArray(Finance::getMasterlistById($master_list_id));
 
             $message = '<div style="font-size: 10px; line-height: 1.5;">
@@ -969,6 +972,7 @@
         }
 
         public static function soaFirstReminderwithNoticeofCancellation($master_list_id, $as_of_date){
+            includeModel('Finance');
             $master_list = recastArray(Finance::getMasterlistById($master_list_id));
             $message = '
                     <div style="font-size:10px; line-height:1.5; text-align:left;">

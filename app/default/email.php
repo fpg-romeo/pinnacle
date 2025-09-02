@@ -713,7 +713,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function templateCollectionReminderLettertogetherwithSOA($post){
+    public static function soaCollectionReminderLettertogetherwithSOA($post){
 
         $message = '
                     <p>Dear Ma\'am/Sir,</p>
@@ -733,30 +733,16 @@ class Email{
                         <tr class="bold">
                             <td>AGING DAYS</td>
                             <td class="text-right">NET PREMIUM DUE</td>
-                        </tr>
-                        <tr>
-                            <td>0 - 30 Days</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>31 - 60 Days</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>61 - 90 Days</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>91 - 180 Days</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>Above 180 Days</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr class="bold">
+                        </tr>';
+                        foreach($post['cod_policies'] as $key=>$cod_policy){
+                            $message .= '<tr>
+                                            <td>'.str_replace('_', ' - ', $key).'</td>
+                                            <td>'.formatMoney($cod_policy).'</td>
+                                        </tr>';
+                        }
+                $message .= '<tr class="bold">
                             <td>TOTAL COD ACCOUNTS</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['total_cod']).'</td>
                         </tr>
                     </table>
                     <br>
@@ -768,50 +754,54 @@ class Email{
                             <td>AGING DAYS</td>
                             <td class="text-right">NET PREMIUM DUE</td>
                             <td>PAYMENT DUE DATE</td>
-                        </tr>
-                        <tr>
-                            <td>0 - 30 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>31 - 60 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>61 - 90 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr class="bold">
-                            <td>Total Current Accounts</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>91 - 180 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Above 180 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr class="bold">
-                            <td>Total Overdue Accounts</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                        <tr class="bold">
-                            <td>TOTAL PREMIUM RECEIVABLE</td>
-                            <td class="text-right">0.00</td>
-                            <td></td>
-                        </tr>
-                    </table>
+                        </tr>';
+                        ;
+                                $counter = 3;
+                                $as_of_date = new DateTime($post['as_of_date']);
+
+                                foreach ($post['premium_receivable'] as $key => $current_account) {
+                                    $month = Shortcode::addMonthNoOverflow($as_of_date, $counter);
+
+                                    $lastDay = (clone $month)->modify('last day of this month');
+                                    $duedate = ($current_account > 0) ? $lastDay->format("F d, Y") : "";
+
+                                    $message .= '<tr>
+                                                    <td>' . str_replace('_', ' - ', $key) . ' Days</td>
+                                                    <td class="text-right">' . formatMoney($current_account) . '</td>
+                                                    <td>' . $duedate . '</td>
+                                                </tr>';
+
+                                    $counter--;
+                                }
+
+                $message.=  '<tr class="bold">
+                                <td>Total Current Accounts</td>
+                                <td class="text-right">'.formatMoney($post['total_current_premium']).'</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>91 - 180 Days</td>
+                                <td class="text-right">'.formatMoney($post['overdue_premium']['91_180']).'</td>
+                                <td>'.(($post['overdue_premium']['91_180'] > 0) ? "Due Immediately" : "").'</td>
+                            </tr>
+                            <tr>
+                                <td>Above 180 Days</td>
+                                <td class="text-right">'.formatMoney($post['overdue_premium']['180_ABOVE']).'</td>
+                                <td>'.(($post['overdue_premium']['180_ABOVE'] > 0) ? "Due Immediately" : "").'</td>
+                            </tr>
+                            <tr class="bold">
+                                <td>Total Overdue Accounts</td>
+                                <td class="text-right">'.formatMoney($post['total_overdue_premium']).'</td>
+                                <td></td>
+                            </tr>
+                            <tr class="bold">
+                                <td>TOTAL PREMIUM RECEIVABLE</td>
+                                <td class="text-right">'.formatMoney($post['total_premium']).'</td>
+                                <td></td>
+                            </tr>
+                        </table>
                     <br>
-                    <table class="table">
+                    <table class="table" cellpadding="3">
                         <tr class="header">
                             <td colspan="3">TAXES RECEIVABLE</td>
                         </tr>
@@ -819,50 +809,44 @@ class Email{
                             <td>AGING DAYS</td>
                             <td class="text-right">OUTSTANDING DST</td>
                             <td class="text-right">OUTSTANDING CWT</td>
-                        </tr>
-                        <tr>
-                            <td>0 - 30 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>31 - 60 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr>
-                            <td>61 - 90 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
-                        </tr>
-                        <tr class="bold">
+                        </tr>';
+                        foreach($post['tax_current'] as $key=>$current){
+                            $message .= '<tr>
+                                            <td>'.str_replace('_', ' - ', $key).' Days</td>';
+                            foreach($current as $tax_key=>$tax){
+                                $message .= '<td class="text-right">'.formatMoney($tax).'</td>';
+                            }
+                            $message .= '</tr>';
+                        }
+                        
+                        $message .= '<tr class="bold">
                             <td>Total Current Accounts</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['total_tax_current']['dst']).'</td>
+                            <td class="text-right">'.formatMoney($post['total_tax_current']['cwt']).'</td>
                         </tr>
                         <tr>
                             <td>91 - 180 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['tax_overdue']['91_180']['dst']).'</td>
+                            <td class="text-right">'.formatMoney($post['tax_overdue']['91_180']['cwt']).'</td>
                         </tr>
                         <tr>
                             <td>Above 180 Days</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['tax_overdue']['180_ABOVE']['dst']).'</td>
+                            <td class="text-right">'.formatMoney($post['tax_overdue']['180_ABOVE']['cwt']).'</td>
                         </tr>
                         <tr class="bold">
                             <td>Total Overdue Accounts</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['total_tax']['dst']).'</td>
+                            <td class="text-right">'.formatMoney($post['total_tax']['cwt']).'</td>
                         </tr>
                         <tr class="bold">
                             <td>TOTAL TAXES RECEIVABLE</td>
-                            <td class="text-right">0.00</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.formatMoney($post['total_dst']).'</td>
+                            <td class="text-right">'.formatMoney($post['total_cwt']).'</td>
                         </tr>
                         <tr class="bold">
                             <td colspan="2">GRAND TOTAL</td>
-                            <td class="text-right">0.00</td>
+                            <td class="text-right">'.$post['grand_total'].'</td>
                         </tr>
                     </table>
                     <br>
@@ -896,7 +880,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function template3160CollectionReminder($post){
+    public static function soa3160CollectionReminder($post){
 
         $message = '
                     <div>
@@ -943,7 +927,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function templateCollectionReminderGeneric($post){
+    public static function soaCollectionReminderGeneric($post){
 
         $message = '
                     <p>Dear Valued Partner,</p>
@@ -971,7 +955,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function template6190CollectionReminder($post){
+    public static function soa6190CollectionReminder($post){
 
         $message = '
                     <div>
@@ -1018,7 +1002,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function templateFirstReminderwithNoticeofCancellation($post){
+    public static function soaFirstReminderwithNoticeofCancellation($post){
 
         $message = '
                     <div class="text-xs space-y-5 flex flex-col">
@@ -1149,7 +1133,7 @@ class Email{
         return self::templateSoa($message);
     }
 
-    public static function templateFinalReminderwithNoticeofCancellation($post){
+    public static function soaFinalReminderwithNoticeofCancellation($post){
         $message = '
                         <div class="text-xs space-y-5 flex flex-col">
                             <div class="flex flex-col">
