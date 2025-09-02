@@ -1025,14 +1025,17 @@
                                 <td>TOTAL NET DUE</td>
                                 <td>PAYMENT DUE DATE</td>
                             </tr>';
-                        
+                        $counter = 1;
                         foreach($outstanding_overdue as $key=>$outstanding){
                             $message .= '<tr>
                                             <td>'.str_replace('_', ' ', $key).'</td>
                                             <td></td>
-                                            <td>'.formatMoney($outstanding).'</td>
-                                            <td></td>
-                                        </tr>';
+                                            <td>'.formatMoney($outstanding).'</td>';
+                                            if($counter == 1){
+                                                $message .= '<td style="vertical-align: middle" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
+                                                $counter++;
+                                            }
+                            $message .= '</tr>';
                             
                         }
                         
@@ -1129,9 +1132,13 @@
                             $message .= '<tr>
                                             <td>'.str_replace('_', ' ', $key).'</td>
                                             <td></td>
-                                            <td>'.formatMoney($outstanding).'</td>
-                                            <td></td>
-                                        </tr>';
+                                            <td>'.formatMoney($outstanding).'</td>';
+                                            $counter = 1;
+                                            if($counter == 1){
+                                                $message .= '<td style="vertical-align: middle" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
+                                                $counter++;
+                                            }
+                            $message .= '</tr>';
                             
                         }
                         
