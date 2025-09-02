@@ -17,7 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
             require_once('app/library/spreadsheet/Spreadsheet.php');
             require_once('app/library/spreadsheet/IOFactory.php');
             require_once('app/library/spreadsheet/autoloader.php');
-            require_once('app/models/Master.php');
+            require_once('app/models/Soa.php');
             require_once('app/default/database.php');
             
 
@@ -74,7 +74,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                     $worksheet->setCellValue('B3', 'For the month of '.$cutoffdate); //cutoff date
                     
                     $premiumData = array();
-                    $premiumreceivable = Master::getDetailed('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
+                    $premiumreceivable = Soa::getDetailed('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
                    
                     if(!empty($premiumreceivable) && is_array($premiumreceivable)){
 
@@ -201,7 +201,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
                     //DST
                     $taxreceivable = array();
-                    $taxreceivable = Master::getDst('', $value['as_of_date'], '*', $value['SOURCE_NAME']); 
+                    $taxreceivable = Soa::getDst('', $value['as_of_date'], '*', $value['SOURCE_NAME']); 
                 
                     if (isset($taxreceivable) && is_array($taxreceivable)) {
                         
@@ -326,7 +326,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                     }
 
                     $taxreceivablecwt = array();
-                    $taxreceivablecwt = Master::getCWT('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
+                    $taxreceivablecwt = Soa::getCWT('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
 
                      if (isset($taxreceivablecwt)) {
 
@@ -444,7 +444,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                     }
 
                     $codreceivable = array();
-                    $codreceivable =  Master::getCOD('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
+                    $codreceivable =  Soa::getCOD('', $value['as_of_date'], '*', $value['SOURCE_NAME']);
                     
                     if (isset($codreceivable)) {
                       
