@@ -179,10 +179,11 @@
         public function syncSOA_json()
         {
       
+        includeModel(['Soa']);
         $cutoffmonth = date('m', strtotime('first day of last month'));
         $processingmonth = date('m');
         $cutoffdate  = strtoupper(date('Y-m-d', strtotime('last day of previous month'))); 
-        $data = Master::syncSOA();
+        $data = Soa::getSoa();
 
         $datacount = count($data) > 0 ? $data : [];
 
@@ -195,7 +196,7 @@
                             
                             if(date('m') == $processingmonth){
 
-                                $deleteDB = Master::deleteSoa($cutoffmonth);
+                                $deleteDB = Soa::deleteSoa($cutoffmonth);
                                 
                                 if($deleteDB['status'] != 'success'){
 
@@ -203,9 +204,9 @@
 
                                         $errmessage['status'] = "Insertion of new cutoff date: " . $cutoffmonth;
                                         $errmessage['job_type'] = 'syncSOA';
-                                        $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                        $errmessage['created_when'] = date('Y-m-d H:i:s');
                                         $errmessage['payload'] = '';
-                                        Master::addJobQueue($errmessage);
+                                        Soa::addJobQueue($errmessage);
                                         $batchnumber = ''; // Reset batch number on error
                                     
                                 } else {
@@ -213,9 +214,9 @@
 
                                         $errmessage['status'] = "replenish of cutoff date: " . $cutoffmonth;
                                         $errmessage['job_type'] = 'syncSOA';
-                                        $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                        $errmessage['created_when'] = date('Y-m-d H:i:s');
                                         $errmessage['payload'] = '';
-                                        Master::addJobQueue($errmessage);
+                                        Soa::addJobQueue($errmessage);
                                         $batchnumber = ''; // Reset batch number on error
                                     
                                 }
@@ -245,24 +246,24 @@
                             $cleanRecord['as_of_date']   = strtoupper(date('Y-m-d', strtotime('last day of previous month')));
 
                             //perform the zero effect already. those policies with zero gross premium in total will not be included in the insert
-                            $zeroeffect = Master::checkZeroEffect($cleanRecord['A_POLICYNO']);
+                            $zeroeffect = Soa::checkZeroEffect($cleanRecord['A_POLICYNO']);
                             if ($zeroeffect) {
                                 continue; // Skip this record and move to the next one
                             }
                             
 
                     
-                                $insertDB = Master::addSoa($cleanRecord);
+                                $insertDB = Soa::addSoa($cleanRecord);
                                 if ($insertDB['status'] != 'success') {
                                     
                                     $errmessage = array();
 
                                     $errmessage['status'] = "Error inserting record: " . json_encode($insertDB);
                                     $errmessage['job_type'] = 'syncSOA';
-                                    $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                    $errmessage['created_when'] = date('Y-m-d H:i:s');
                                     $errmessage['payload'] = json_encode($cleanRecord);
 
-                                    $result = Master::addJobQueue($errmessage);
+                                    $result = Soa::addJobQueue($errmessage);
                                     $batchnumber = ''; // Reset batch number on error
                                     break;
                                 } 
@@ -272,13 +273,13 @@
 
                                 $successmessage['status'] = "Successfully insert Care " . count($datacount) . " records.";
                                 $successmessage['job_type'] = 'syncSOA';
-                                $successmessage['created_at'] = date('Y-m-d H:i:s');
+                                $successmessage['created_when'] = date('Y-m-d H:i:s');
                                 $successmessage['payload'] = '';
 
-                                $result = Master::addJobQueue($successmessage);
+                                $result = Soa::addJobQueue($successmessage);
 
                                 //after getting the raw data, scan the fetched records then do the distribution
-                                $record = Master::checkDistribution($cutoffdate);
+                                $record = Soa::checkDistribution($cutoffdate);
                                 
 
                     } else {
@@ -286,10 +287,10 @@
 
                                 $errmessage['status'] = "No data found";
                                 $errmessage['job_type'] = 'syncSOA';
-                                $errmessage['created_at'] = date('Y-m-d H:i:s');
+                                $errmessage['created_when'] = date('Y-m-d H:i:s');
                                 $errmessage['payload'] = json_encode($cleanRecord) ? json_encode($cleanRecord) : '';
 
-                                $result = Master::addJobQueue($errmessage);
+                                $result = Soa::addJobQueue($errmessage);
                     }
 
         }

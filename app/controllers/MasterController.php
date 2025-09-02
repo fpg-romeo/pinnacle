@@ -765,9 +765,6 @@ class MasterController
 
     public function intermediary_json()
     {
-
-
-
         if (isset($_POST) && $_POST['action'] === 'sync') {
             $data = array();
 
