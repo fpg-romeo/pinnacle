@@ -52,8 +52,8 @@ class soaFile extends TCPDF{
         $CONFIGURATION = Configuration::general();
 
         $image = getSiteUrl().'/template/image/soa_footer.jpg';
-
-        $this->Image($image, 10, -10, 30, 15, 'JPG', '', 'N', false, 300, '', false, false, 0, false, false, false);
+        $this->SetY(-18); 
+        $this->Image($image, 50, '', 110, '', 'JPG', '', 'N', false, 300, '', false, false, 0, false, false, false);
 
         // if( !$this->last_page_flag ){
         //     $this->SetY(-5);
