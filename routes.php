@@ -32,6 +32,9 @@
                                                     'manual', 'automatic',
                                                     'account'
                                                    ],
+                            'underwriting'      => [
+                                                    'renewal'
+                                                   ],
                             'master'            => [
                                                     'topro', 'topro_json',
                                                     'branch', 'branch_json',

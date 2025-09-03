@@ -138,6 +138,21 @@
 								<div data-i18n="Collection">Collection</div>
 							</a>
 						</li>
+						<hr>
+						<li class="menu-item <?php activeView(['underwriting'], ['renewal'], 'active open'); ?>">
+							<a href="javascript:void(0);" class="menu-link menu-toggle">
+								<i class="menu-icon icon-base ti tabler-settings"></i>
+								<div data-i18n="Underwriting">Underwriting</div>
+							</a>
+							<ul class="menu-sub">
+								<li class="menu-item <?php activeView(['underwriting'], ['renewal'], 'active open'); ?>">
+									<a href="/underwriting/renewal/1" class="menu-link">
+										<div data-i18n="Renewal">Renewal</div>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<hr>
 						<li class="menu-item <?php activeView(['report'], ['manual', 'automatic'], 'active open'); ?>">
 							<a href="javascript:void(0);" class="menu-link menu-toggle">
 								<i class="menu-icon icon-base ti tabler-settings"></i>
