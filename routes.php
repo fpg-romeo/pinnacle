@@ -33,7 +33,7 @@
                                                     'account'
                                                    ],
                             'underwriting'      => [
-                                                    'renewal'
+                                                    'renewalSummary'
                                                    ],
                             'master'            => [
                                                     'topro', 'topro_json',
