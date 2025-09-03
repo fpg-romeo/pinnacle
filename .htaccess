@@ -62,7 +62,7 @@ RewriteRule ^account/profile/([^/]+)/?$ index.php?controller=account&view=profil
 RewriteRule ^account/all/([0-9]+)/?$ index.php?controller=account&view=all&page=$1 [NC,L]
 RewriteRule ^account/user/([0-9]+)/?$ index.php?controller=account&view=user&page=$1 [NC,L]
 
-### FINANCE - SOA
+### FINANCE
 RewriteRule ^finance/soa-immediate/([0-9]+)/?$ index.php?controller=finance&view=soa-immediate&page=$1 [NC,L]
 RewriteRule ^finance/soa-scheduled/([0-9]+)/?$ index.php?controller=finance&view=soa-scheduled&page=$1 [NC,L]
 RewriteRule ^finance/soa-master/([0-9]+)/?$ index.php?controller=finance&view=soa-master&page=$1 [NC,L]
@@ -73,6 +73,9 @@ RewriteRule ^finance/soa-letter/([0-9]+)/?$ index.php?controller=finance&view=so
 
 ### COLLECTION
 RewriteRule ^collection/all/([0-9]+)/?$ index.php?controller=collection&view=all&page=$1 [NC,L]
+
+### UNDERWRITING
+RewriteRule ^underwriting/renewal/([0-9]+)/?$ index.php?controller=underwriting&view=renewal&page=$1 [NC,L]
 
 ### REPORT
 RewriteRule ^report/automatic/([0-9]+)/?$ index.php?controller=report&view=automatic&page=$1 [NC,L]
