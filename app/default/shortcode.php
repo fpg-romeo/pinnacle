@@ -729,6 +729,10 @@
                             .header, .bold{
                                 font-weight: bold;
                             }
+                            .title-text{
+                                text-decoration: underline;
+                                font-weight: bold;
+                            }
                         </style>
                         <p>Dear Ma\'am/Sir,</p>
                         <p>Our records as of July 31, 2025 show that you have outstanding premiums of <b>PHP '.$grand_total.'</b>.</p>
@@ -860,27 +864,20 @@
                                 </tr>
                             </table>
                         </div>
-                        <br>
                         <p class="title-text">Overdue Accounts:</p>
-                        <br>
                         <p>We have already given sufficient time to settle the policies by giving you a credit term.
                             Thus, immediate payments are requested for all
                             <span class="font-bold">overdue accounts amounting to <strong>Php '.$grand_total.'</strong></span>.
                             Failure to comply will compel us to <strong>CANCEL these policies within the month.</strong>
                         </p>
                         <br>
-                        <br>
                         <p class="title-text">Review SOA Details:</p>
-                        <br>
                         <p>Due to timing difference, there may be policies wherein payments have been remitted to us but we have not posted yet and therefore not considered in our month end SOA extraction.
                         Kindly disregard if payment for these policies has been settled. Please refer to the Payments section below for additional reminders.
                         </p>
                         <br>
-                        <br>
                         <p class="title-text">Payments:</p>
-                        <br>
                         <p>We\'ve attached our preferred payment channel together with the payment guidelines.</p>
-                        <br>
                         <p>Should you have further concerns, kindly reply to this email for us to assist you better.</p>
                         <p>For further inquiries, please reply to this email for us to assist you better.</p>
                         <p>We trust that you will give this matter your utmost attention and we look forward to hearing from you soon.</p>
@@ -904,7 +901,7 @@
                                 <p><strong>Subject: Reminder: Premium Payment Due for Accounts 31-60 Days</strong></p>
                             </div>
                             <p>Dear '.$master_list['source_name'].',</p>
-                            <p> We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
+                            <p>We trust this message finds you well. We are writing to follow up on the premium payment for the accounts that are currently 
                                 31-60 days past due, you may refer to the previously submitted SOA for the list. As we near the end of the month, we would like to emphasize the importance of settling these outstanding 
                                 premiums promptly to avoid any potential issues in the future. 
                             </p>
@@ -919,12 +916,12 @@
                                 If you have any inquiries or concerns, please do not hesitate to contact me directly at '.$master_list['handler_contact_number'].'.
                             </p>
 
-                            <p>Thank you for your cooperation.</p>
-                            <p>Sincerely Yours,</p>
+                            <p>Thank you for your cooperation.</p><br>
                             <div>
-                                <span style="font-weight: bold;">'.$master_list['handler'].'</span><br>
-                                <span>'.$master_list['handler_contact_number'].'</span><br>
-                                <span>'.$master_list['handler_email'].'</span>
+                                Sincerely Yours,<br>
+                                <b>'.$master_list['handler'].'</b><br>
+                               '.$master_list['handler_contact_number'].'<br>
+                                '.$master_list['handler_email'].'
                             </div>
 
                         </div>';
@@ -960,11 +957,11 @@
                             </p>
 
                             <p>Thank you for your cooperation.</p>
-                            <p>Sincerely Yours,</p>
                             <div>
-                                <span style="font-weight: bold;">'.$master_list['handler'].'</span><br>
-                                <span>'.$master_list['handler_contact_number'].'</span><br>
-                                <span>'.$master_list['handler_email'].'</span>
+                                Sincerely Yours,<br>
+                                <b>'.$master_list['handler'].'</b><br>
+                               '.$master_list['handler_contact_number'].'<br>
+                                '.$master_list['handler_email'].'
                             </div>
 
                         </div>';
@@ -1004,22 +1001,18 @@
                             <span>'.$master_list['address'].'</span>
                         </div>
                         <div style="text-align:center; margin-bottom:20px;">
-                            <p style="margin:0;">
-                                Subject: Reminder: Payment Due for Outstanding Premiums
-                            </p>
+                            <p style="margin:0;">Subject: Reminder: Payment Due for Outstanding Premiums</p>
                         </div>
 
                         <p>Dear '.$master_list['source_name'].',</p>
 
-                        <p>
-                            We are writing to follow up on the premium payment for the accounts that are overdue already
+                        <p>We are writing to follow up on the premium payment for the accounts that are overdue already
                             aging 91 days and above. Despite our previous follow-up attempts these accounts remain unpaid as of today.
                             We would like to emphasize the importance of settling these outstanding premiums promptly.
-                            Below is the details of the said outstanding policies:
-                        </p>
+                            Below is the details of the said outstanding policies:</p>
                         
                         <table class="table" cellpadding="4">
-                            <tr>
+                            <tr class="header">
                                 <td>No. of OUTSTANDING</td>
                                 <td>MONTH</td>
                                 <td>TOTAL NET DUE</td>
@@ -1047,33 +1040,24 @@
                                 <td></td>
                             </tr>
                         </table>
-                        <p>
-                            We understand that unforeseen circumstances can sometimes affect payment timelines. However,
+                        <p>We understand that unforeseen circumstances can sometimes affect payment timelines. However,
                             it is essential to address these outstanding balances to ensure the continuity of coverage.
                             Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can
                             terminate the insurance coverage of the policy holder in the event that the premium will not be paid.
-                            Failure to do so will compel us to cancel these policies.
-                        </p>
+                            Failure to do so will compel us to cancel these policies.</p>
 
-                        <p>
-                            We appreciate your immediate action in remitting the outstanding payments for the mentioned accounts.
-                        </p>
+                        <p>We appreciate your immediate action in remitting the outstanding payments for the mentioned accounts.</p>
 
-                        <p>
-                            If you have any inquiries or concerns, please do not hesitate to contact me directly at
-                            '.$master_list['handler_contact_number'].' & '.$master_list['handler_email'].'.
-                        </p>
+                        <p>If you have any inquiries or concerns, please do not hesitate to contact me directly at
+                            '.$master_list['handler_contact_number'].' & '.$master_list['handler_email'].'.</p>
 
-                        <p>
-                            Thank you for your cooperation, and we eagerly anticipate your prompt response.
-                        </p>
+                        <p>Thank you for your cooperation, and we eagerly anticipate your prompt response.</p>
 
-                        <p style="font-weight:bold;">Sincerely Yours,</p>
-
-                        <div style="margin-top:12px;">
-                            <span style="font-weight:bold;">'.$master_list['handler'].'</span><br>
-                            <span>'.$master_list['handler_contact_number'].'</span><br>
-                            <span>'.$master_list['handler_email'].'</span>
+                        <div>
+                            Sincerely Yours,<br>
+                            <b>'.$master_list['handler'].'</b><br>
+                            '.$master_list['handler_contact_number'].'<br>
+                            '.$master_list['handler_email'].'
                         </div>
 
                     </div>
@@ -1116,26 +1100,24 @@
 
                         <p>Dear '.$master_list['source_name'].',</p>
 
-                        <p>
-                            This is to remind you of the unpaid premiums with FPG that are beyond the approved credit term. Below is the summary based on number of days past due:
-                        </p>
+                        <p>This is to remind you of the unpaid premiums with FPG that are beyond the approved credit term. Below is the summary based on number of days past due:</p>
                         
                         <table class="table" cellpadding="4">
-                            <tr>
+                            <tr class="header">
                                 <td>No. of OUTSTANDING</td>
                                 <td>MONTH</td>
                                 <td>TOTAL NET DUE</td>
                                 <td>PAYMENT DUE DATE</td>
                             </tr>';
                         
+                        $counter = 1;
                         foreach($outstanding_overdue as $key=>$outstanding){
                             $message .= '<tr>
                                             <td>'.str_replace('_', ' ', $key).'</td>
                                             <td></td>
                                             <td>'.formatMoney($outstanding).'</td>';
-                                            $counter = 1;
                                             if($counter == 1){
-                                                $message .= '<td style="vertical-align: middle" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
+                                                $message .= '<td style="vertical-align: middle; font-weight: bold" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
                                                 $counter++;
                                             }
                             $message .= '</tr>';
@@ -1150,23 +1132,16 @@
                                 <td></td>
                             </tr>
                         </table>
-                        <p>
-                            We’ve attached the complete list in this email for your reference
-                        </p>
+                        <p>We\'ve attached the complete list in this email for your reference</p>
 
-                        <p>
-                            Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Since these policies are still outstanding, we are compelled to cancel these policies within the month.
-                        </p>
+                        <p>Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Since these policies are still outstanding, we are compelled to cancel these policies within the month.</p>
 
-                        <p>
-                            We trust that you will give this matter your utmost attention.
-                        </p>
-                        <p style="font-weight:bold;">Sincerely Yours,</p>
-
-                        <div style="margin-top:12px;">
-                            <span style="font-weight:bold;">'.$master_list['handler'].'</span><br>
-                            <span>'.$master_list['handler_contact_number'].'</span><br>
-                            <span>'.$master_list['handler_email'].'</span>
+                        <p>We trust that you will give this matter your utmost attention.</p>
+                        <div>
+                            <b>Sincerely Yours,<br>
+                            '.$master_list['handler'].'</b><br>
+                            '.$master_list['handler_contact_number'].'<br>
+                            '.$master_list['handler_email'].'
                         </div>
 
                     </div>
@@ -1179,24 +1154,19 @@
             $master_list = recastArray(Finance::getMasterlistById($master_list_id));
             
             $message = '
+                        <style>
+                            *{
+                                font-size: 10px;
+                            }
+                        </style>
                         <div class="text-xs space-y-5 flex flex-col">
                             <p>'.date('F d, Y', strtotime('now')).'</p>
-                            <p>
-                                Subject: <span class="underline">Urgent: Unpaid Premiums - Immediate Action Required to Prevent Policy Cancellation.</span>
-                            </p>
+                            <p>Subject: <span class="underline">Urgent: Unpaid Premiums - Immediate Action Required to Prevent Policy Cancellation.</span></p>
                             <p>Dear Valued Partner,</p>
-                            <p>
-                                We are writing to follow up on the premium payment for the accounts that are overdue. Despite our previous follow-up attempts these accounts remain unpaid.
-                            </p>
-                            <p>
-                                Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Failure to do so will compel us to cancel these policies by end of this month.
-                            </p>
-                            <p>
-                                If you have any questions or require further assistance, please do not hesitate to contact me at the details below.
-                            </p>
-                            <p>
-                                We trust that you will give this matter your immediate action.
-                            </p>
+                            <p>We are writing to follow up on the premium payment for the accounts that are overdue. Despite our previous follow-up attempts these accounts remain unpaid.</p>
+                            <p>Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can terminate the insurance coverage of the policy holder in the event that the premium will not be paid. Failure to do so will compel us to cancel these policies by end of this month.</p>
+                            <p>If you have any questions or require further assistance, please do not hesitate to contact me at the details below.</p>
+                            <p>We trust that you will give this matter your immediate action.</p>
                             <p></p>
                             <p>Warm Regards,</p>
                             <div style="margin-top:12px;">
