@@ -1,8 +1,12 @@
 <?php
 	class Shortcode{
 
+        private static $aging = ['0 - 30 DPD', '31 - 60 DPD', '61 - 90 DPD'];
+        private static $aging_overdue = ['91 - 180 DPD', 'Above 180'];
+
 	    public function __construct() {
 	        //checkLoggedIn('true');
+
 	    }
 
         public static function concatId($value=''){
@@ -617,102 +621,43 @@
             $tax_receivable_dst = Soa::getDST('', '2025-08-31', '*', $master_list['source_name']);
             $tax_receivable_cwt = Soa::getCWT('', '2025-08-31', '*', $master_list['source_name']);
             $cod                = Soa::getCOD('', '2025-08-31', '*', $master_list['source_name']);
+            $category           = ($master_list['categories'] == '["Direct"]') ? "GROSS_PREMIUM" : "NET_DUE";
+            
+            foreach(self::$aging as $age){
+                $current_accounts[$age] = array_sum(array_column(array_filter($premium_receivable ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $cod_policies[$age] = array_sum(array_column(array_filter($cod ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $tax_current[$age]['dst'] = array_sum(array_column(array_filter($tax_receivable_dst ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $tax_current[$age]['cwt'] = array_sum(array_column(array_filter($tax_receivable_cwt ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+            }
 
-            $cod_policies     = [
-                                    '0_30'      => array_sum(array_column($cod ?? [], '0_30_DAYS')),
-                                    '31_60'     => array_sum(array_column($cod ?? [], '31_60_DAYS')),
-                                    '61_90'     => array_sum(array_column($cod ?? [], '61_90_DAYS')),
-                                    '91_180'    => array_reduce(
-                                                        $cod ?? [],
-                                                        fn($total, $row) => $total + $row['91_120_DAYS'] + $row['121_150_DAYS'] + $row['151_180_DAYS'],
-                                                        0
-                                                    ),
-                                    '180_ABOVE' => array_reduce(
-                                                        $cod ?? [],
-                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
-                                                        0
-                                                    ),
-                                ];
-
-            $current_accounts = [
-                                    '0_30'   => array_sum(array_column($premium_receivable ?? [], '0_30_DAYS')),
-                                    '31_60'  => array_sum(array_column($premium_receivable ?? [], '31_60_DAYS')),
-                                    '61_90'  => array_sum(array_column($premium_receivable ?? [], '61_90_DAYS')),
-                                ];
-            $overdue_accounts = [
-                                    '91_180'    => array_reduce(
-                                                        $premium_receivable ?? [],
-                                                        fn($total, $row) => $total + $row['91_120_DAYS'] + $row['121_150_DAYS'] + $row['151_180_DAYS'],
-                                                        0
-                                                    ),
-                                    '180_ABOVE' => array_reduce(
-                                                        $premium_receivable ?? [],
-                                                        fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
-                                                        0
-                                                    ),
-                                ];
+            foreach(self::$aging_overdue as $age){
+                $overdue_accounts[$age] = array_sum(array_column(array_filter($premium_receivable ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $cod_policies[$age] = array_sum(array_column(array_filter($cod ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $tax_overdue[$age]['dst'] = array_sum(array_column(array_filter($tax_receivable_dst ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+                $tax_overdue[$age]['cwt'] = array_sum(array_column(array_filter($tax_receivable_cwt ?? [], fn($row) => $row['AGING_BUCKET'] == $age), $category));
+            }
 
             $total_current = array_sum($current_accounts);
             $total_overdue = array_sum($overdue_accounts);
             $total_cod = array_sum($cod_policies);
 
-            $tax_current = [
-                    '0_30'   => [
-                                    'dst' => array_sum(array_column($tax_receivable_dst ?? [], '0_30_DAYS')),
-                                    'cwt' => array_sum(array_column($tax_receivable_cwt ?? [], '0_30_DAYS')),
-                                ],
-                    '31_60'  => [
-                                    'dst' => array_sum(array_column($tax_receivable_dst ?? [], '31_60_DAYS')),
-                                    'cwt' => array_sum(array_column($tax_receivable_cwt ?? [], '31_60_DAYS')),
-                                ],
-                    '61_90'  => [
-                                    'dst' => array_sum(array_column($tax_receivable_dst ?? [], '61_90_DAYS')),
-                                    'cwt' => array_sum(array_column($tax_receivable_cwt ?? [], '61_90_DAYS')),
-                                ]
-            ];
-
-            $tax_overdue = [
-                '91_180'    => [
-                                    'dst' => array_reduce(
-                                        $tax_receivable_dst ?? [],
-                                        fn($total, $row) => $total + $row['91_120_DAYS'] + $row['121_150_DAYS'] + $row['151_180_DAYS'],
-                                        0
-                                    ),
-                                    'cwt' => array_reduce(
-                                        $tax_receivable_cwt ?? [],
-                                        fn($total, $row) => $total + $row['91_120_DAYS'] + $row['121_150_DAYS'] + $row['151_180_DAYS'],
-                                        0
-                                    ),
-                                ],
-                '180_ABOVE' => [
-                                    'dst' => array_reduce(
-                                                $tax_receivable_dst ?? [],
-                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
-                                                0
-                                            ),
-                                    'cwt' => array_reduce(
-                                                $tax_receivable_cwt ?? [],
-                                                fn($total, $row) => $total + $row['181_210_DAYS'] + $row['211_360_DAYS'] + $row['DAYS_OVER_361'],
-                                                0
-                                            ),
-                                ]
-            ];
-
             $total_premium  = $total_current+$total_overdue;
+
 
             $total_tax_current = array();
             $tax_message = '';
             foreach($tax_current as $key=>$current){
                 $tax_message .= '<tr>
-                                <td>'.str_replace('_', ' - ', $key).' Days</td>';
+                                <td>'.str_replace('DPD', 'Days', $key).'</td>';
                 foreach($current as $tax_key=>$tax){
                     $tax_message .= '<td class="text-right">'.formatMoney($tax).'</td>';
                     $total_tax_current[$tax_key] = ($total_tax_current[$tax_key] ?? 0) + $tax;
                 }
                 $tax_message .= '</tr>';
             }
-            $total_tax['dst'] = $tax_overdue['91_180']['dst'] + $tax_overdue['180_ABOVE']['dst'];
-            $total_tax['cwt'] = $tax_overdue['91_180']['cwt'] + $tax_overdue['180_ABOVE']['cwt'];
+            
+            $total_tax['dst'] = $tax_overdue['91 - 180 DPD']['dst'] + $tax_overdue['Above 180']['dst'];
+            $total_tax['cwt'] = $tax_overdue['91 - 180 DPD']['cwt'] + $tax_overdue['Above 180']['cwt'];
             $grand_total = $total_current+$total_overdue+$total_tax['cwt']+$total_tax_current['cwt']+$total_tax['dst']+$total_tax_current['dst']+$total_cod;
             $grand_total = formatMoney($grand_total);
 
@@ -748,12 +693,12 @@
                                 </tr>
                                 <tr class="bold">
                                     <td>AGING DAYS</td>
-                                    <td class="text-right">NET PREMIUM DUE</td>
+                                    <td class="text-right">'.($master_list['categories'] == '["Direct"]' ? "GROSS PREMIUM DUE" : "NET PREMIUM DUE").'</td>
                                 </tr>';
 
                                 foreach($cod_policies as $key=>$cod_policy){
                                     $message .= '<tr>
-                                                    <td>'.str_replace('_', ' - ', $key).'</td>
+                                                    <td>'.str_replace('DPD', ' Days ', $key).'</td>
                                                     <td>'.formatMoney($cod_policy).'</td>
                                                 </tr>';
                                 }
@@ -771,7 +716,7 @@
                                 </tr>
                                 <tr class="bold">
                                     <td>AGING DAYS</td>
-                                    <td class="text-right">NET PREMIUM DUE</td>
+                                    <td class="text-right">'.($master_list['categories'] == '["Direct"]' ? "GROSS PREMIUM DUE" : "NET PREMIUM DUE").'</td>
                                     <td>PAYMENT DUE DATE</td>
                                 </tr>';
                                 $counter = 3;
@@ -784,7 +729,7 @@
                                     $duedate = ($current_account > 0) ? $lastDay->format("F d, Y") : "";
 
                                     $message .= '<tr>
-                                                    <td>' . str_replace('_', ' - ', $key) . ' Days</td>
+                                                    <td>' . str_replace('DPD', 'Days', $key) . '</td>
                                                     <td class="text-right">' . formatMoney($current_account) . '</td>
                                                     <td>' . $duedate . '</td>
                                                 </tr>';
@@ -837,18 +782,17 @@
                                     <td>Total Current Accounts</td>
                                     <td class="text-right">'.formatMoney($total_tax_current['dst']).'</td>
                                     <td class="text-right">'.formatMoney($total_tax_current['cwt']).'</td>
-                                </tr>
-                                <tr>
-                                    <td>91 - 180 Days</td>
-                                    <td class="text-right">'.formatMoney($tax_overdue['91_180']['dst']).'</td>
-                                    <td class="text-right">'.formatMoney($tax_overdue['91_180']['cwt']).'</td>
-                                </tr>
-                                <tr>
-                                    <td>Above 180 Days</td>
-                                    <td class="text-right">'.formatMoney($tax_overdue['180_ABOVE']['dst']).'</td>
-                                    <td class="text-right">'.formatMoney($tax_overdue['180_ABOVE']['cwt']).'</td>
-                                </tr>
-                                <tr class="bold">
+                                </tr>';
+                                
+                                foreach($tax_overdue as $key=>$tax){
+                                    $message .= '<tr>
+                                                    <td>'.str_replace('DPD','Days', $key).'</td>
+                                                    <td class="text-right">'.formatMoney($tax['dst']).'</td>
+                                                    <td class="text-right">'.formatMoney($tax['cwt']).'</td>
+                                                </tr>';
+                                }
+
+                     $message .= '<tr class="bold">
                                     <td>Total Overdue Accounts</td>
                                     <td class="text-right">'.formatMoney($total_tax['dst']).'</td>
                                     <td class="text-right">'.formatMoney($total_tax['cwt']).'</td>
@@ -970,14 +914,32 @@
 
         public static function soaFirstReminderwithNoticeofCancellation($master_list_id, $as_of_date){
             includeModel(['Finance', 'Soa']);
-            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
-            $get_outstanding = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+            $master_list            = recastArray(Finance::getMasterlistById($master_list_id));
+            $get_outstanding        = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+            $column                 = ($master_list['categories'] == '["Direct"]') ? "GROSS_PREMIUM" : "NET_DUE";
+            $outstanding_overdue    = array();
 
             $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
-            foreach($aging as $age){
+            foreach ($aging as $age) {
+                foreach ($get_outstanding as $row) {
+                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                    $value = $row[$age] ?? 0;
 
-                $outstanding_overdue[$age] = array_sum(array_column($get_outstanding ?? [], $age));
+                    if ($value != 0) {
+                        $outstanding_overdue[$age][$month] = 
+                            ($outstanding_overdue[$age][$month] ?? 0) + $value;
+                    }
+                }
             }
+
+            // pre($outstanding_overdue);
+
+            // foreach($outstanding_overdue as $key=>$outstanding){
+            //     pre(count($outstanding));
+            //     foreach($outstanding as $month_key=>$permonth){
+            //     }
+            // }
+            // die;
 
             $message = '
                     <style>
@@ -1015,31 +977,45 @@
                             <tr class="header">
                                 <td>No. of OUTSTANDING</td>
                                 <td>MONTH</td>
-                                <td>TOTAL NET DUE</td>
+                                <td>TOTAL '.str_replace('_', ' ', $column).'</td>
                                 <td>PAYMENT DUE DATE</td>
                             </tr>';
                         $counter = 1;
+                        $days = '';
+                        $rowspan = 0;
+                        foreach ($outstanding_overdue as $months) {
+                            $rowspan += count($months);
+                        }
+                        
                         foreach($outstanding_overdue as $key=>$outstanding){
-                            $message .= '<tr>
-                                            <td>'.str_replace('_', ' ', $key).'</td>
-                                            <td></td>
-                                            <td>'.formatMoney($outstanding).'</td>';
-                                            if($counter == 1){
-                                                $message .= '<td style="vertical-align: middle" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
-                                                $counter++;
-                                            }
-                            $message .= '</tr>';
-                            
+                            foreach($outstanding as $month_key=>$permonth){
+                                $message .= '<tr>';
+                                                if($days != $key){
+                                                    $message .= '<td rowspan="'.count($outstanding).'">'.str_replace('_', ' ', $key).'</td>';
+                                                    $days = $key;
+                                                }
+                                $message .=    '<td>'.$month_key.'</td>
+                                                <td>'.formatMoney($permonth).'</td>';
+                                                if($counter == 1){
+                                                    $message .= '<td style="vertical-align: middle" rowspan="'.$rowspan.'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
+                                                    
+                                                    $counter++;
+                                                }
+                                $message .= '</tr>';
+                                
+                            }
                         }
                         
             $message .= '
                             <tr class="bold">
                                 <td></td>
                                 <td>Total Overdue</td>
-                                <td>'.formatMoney(array_sum($outstanding_overdue)).'</td>
+                                <td>'.formatMoney(array_sum(
+                                            array_map('array_sum', $outstanding_overdue)
+                                        )).'</td>
                                 <td></td>
                             </tr>
-                        </table>
+                        </table><br><br>
                         <p>We understand that unforeseen circumstances can sometimes affect payment timelines. However,
                             it is essential to address these outstanding balances to ensure the continuity of coverage.
                             Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can
@@ -1067,13 +1043,22 @@
 
         public static function soaFinalReminderwithNoticeofCancellation($master_list_id, $as_of_date){
             includeModel(['Finance', 'Soa']);
-            $master_list = recastArray(Finance::getMasterlistById($master_list_id));
-            $get_outstanding = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+            $master_list            = recastArray(Finance::getMasterlistById($master_list_id));
+            $get_outstanding        = Soa::getOutstandingOverdue('', $as_of_date, '', $master_list['source_name']);
+            $column                 = ($master_list['categories'] == '["Direct"]') ? "GROSS_PREMIUM" : "NET_DUE";
+            $outstanding_overdue    = array();
 
             $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
-            foreach($aging as $age){
+            foreach ($aging as $age) {
+                foreach ($get_outstanding as $row) {
+                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                    $value = $row[$age] ?? 0;
 
-                $outstanding_overdue[$age] = array_sum(array_column($get_outstanding ?? [], $age));
+                    if ($value != 0) {
+                        $outstanding_overdue[$age][$month] = 
+                            ($outstanding_overdue[$age][$month] ?? 0) + $value;
+                    }
+                }
             }
 
             $message = '
@@ -1106,29 +1091,42 @@
                             <tr class="header">
                                 <td>No. of OUTSTANDING</td>
                                 <td>MONTH</td>
-                                <td>TOTAL NET DUE</td>
+                                <td>TOTAL '.str_replace('_', ' ', $column).'</td>
                                 <td>PAYMENT DUE DATE</td>
                             </tr>';
-                        
                         $counter = 1;
+                        $days = '';
+                        $rowspan = 0;
+                        foreach ($outstanding_overdue as $months) {
+                            $rowspan += count($months);
+                        }
+                        
                         foreach($outstanding_overdue as $key=>$outstanding){
-                            $message .= '<tr>
-                                            <td>'.str_replace('_', ' ', $key).'</td>
-                                            <td></td>
-                                            <td>'.formatMoney($outstanding).'</td>';
-                                            if($counter == 1){
-                                                $message .= '<td style="vertical-align: middle; font-weight: bold" rowspan="'.count($outstanding_overdue).'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
-                                                $counter++;
-                                            }
-                            $message .= '</tr>';
-                            
+                            foreach($outstanding as $month_key=>$permonth){
+                                $message .= '<tr>';
+                                                if($days != $key){
+                                                    $message .= '<td rowspan="'.count($outstanding).'">'.str_replace('_', ' ', $key).'</td>';
+                                                    $days = $key;
+                                                }
+                                $message .=    '<td>'.$month_key.'</td>
+                                                <td>'.formatMoney($permonth).'</td>';
+                                                if($counter == 1){
+                                                    $message .= '<td style="vertical-align: middle" rowspan="'.$rowspan.'">FOR CANCELLATION / FOR IMMEDIATE PAYMENT</td>';
+                                                    
+                                                    $counter++;
+                                                }
+                                $message .= '</tr>';
+                                
+                            }
                         }
                         
             $message .= '
                             <tr class="bold">
                                 <td></td>
                                 <td>Total Overdue</td>
-                                <td>'.formatMoney(array_sum($outstanding_overdue)).'</td>
+                                <td>'.formatMoney(array_sum(
+                                            array_map('array_sum', $outstanding_overdue)
+                                        )).'</td>
                                 <td></td>
                             </tr>
                         </table>
