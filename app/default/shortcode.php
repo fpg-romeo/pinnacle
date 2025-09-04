@@ -1015,7 +1015,7 @@
                                         )).'</td>
                                 <td></td>
                             </tr>
-                        </table><br><br>
+                        </table>
                         <p>We understand that unforeseen circumstances can sometimes affect payment timelines. However,
                             it is essential to address these outstanding balances to ensure the continuity of coverage.
                             Please note that Under Sec. 65 of the Insurance code (R.A. 10607), the Insurance Company can

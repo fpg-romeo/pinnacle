@@ -68,7 +68,7 @@ class pdf{
     public static function generate($filename="", $body="", $template="", $option="", $filepath="", $watermark="",$other_header_details=""){
         
         $pdf = new soaFile(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->SetAutoPageBreak(TRUE, 15);
+        $pdf->SetAutoPageBreak(TRUE, 30);
         $margin_top = 20;
 
         $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
