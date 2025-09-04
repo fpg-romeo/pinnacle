@@ -146,7 +146,7 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item <?php activeView(['underwriting'], ['renewal'], 'active open'); ?>">
-									<a href="/underwriting/renewal/1" class="menu-link">
+									<a href="/underwriting/renewal-summary/1" class="menu-link">
 										<div data-i18n="Renewal">Renewal</div>
 									</a>
 								</li>

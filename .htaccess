@@ -76,6 +76,8 @@ RewriteRule ^collection/all/([0-9]+)/?$ index.php?controller=collection&view=all
 
 ### UNDERWRITING
 RewriteRule ^underwriting/renewal/([0-9]+)/?$ index.php?controller=underwriting&view=renewal&page=$1 [NC,L]
+RewriteRule ^underwriting/renewal-summary/([0-9]+)/?$ index.php?controller=underwriting&view=renewal-summary&page=$1 [NC,L]
+RewriteRule ^underwriting/declaration/([0-9]+)/?$ index.php?controller=underwriting&view=declaration&page=$1 [NC,L]
 
 ### REPORT
 RewriteRule ^report/automatic/([0-9]+)/?$ index.php?controller=report&view=automatic&page=$1 [NC,L]
