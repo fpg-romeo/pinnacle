@@ -19,7 +19,7 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                <select name="pagination_limit" class="form-select select2 pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
                                     <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
@@ -36,7 +36,16 @@
                                         <th>SOURCE NAME</th>
                                         <th>HANDLERS</th>
                                         <th>TEAM LEADER</th>
-                                        <th></th>
+                                        <th class="text-center">
+                                            <label class="switch">
+                                              <input type="checkbox" id="main-switch" value='<?= json_encode(array_column($data['masterlists'], 'id'));?>' class="switch-input is-valid is-active" <?=array_sum(array_column($data['masterlists'], 'is_active')) === count(array_column($data['masterlists'], 'id')) ? "checked" : ""?> />
+                                              <span class="switch-toggle-slider">
+                                                <span class="switch-on"></span>
+                                                <span class="switch-off"></span>
+                                              </span>
+                                              <span class="switch-label"></span>
+                                            </label>
+                                        </th>
                                         <th>STATUS</th>
                                         <th></th>
                                     </tr>
@@ -50,8 +59,16 @@
                                                     <td><?=$masterlist['source_name']?></td>
                                                     <td><?=$masterlist['handler']?></td>
                                                     <td><?=$masterlist['team_leader']?></td>
-                                                    <td></td>
-                                                    <td><?=$masterlist['is_active'] == 1 ? "Active" : "Inactive"?></td>
+                                                    <td>
+                                                      <label class="switch">
+                                                        <input type="checkbox" value="<?=$masterlist['id']?>" class="switch-input is-valid is-active" <?=($masterlist['is_active']) ? "checked" : ""?> />
+                                                        <span class="switch-toggle-slider">
+                                                          <span class="switch-on"></span>
+                                                          <span class="switch-off"></span>
+                                                        </span>
+                                                      </label>
+                                                    </td>
+                                                    <td class="status" id="status<?=$masterlist['id']?>"><?=$masterlist['is_active'] == 1 ? "Active" : "Inactive"?></td>
                                                     <td>
                                                         <div class="dropdown">
                                                             <button type="button" class="btn px-3 py-1 dropdown-toggle btn-outline-secondary" data-bs-toggle="dropdown">
@@ -242,11 +259,7 @@
     </form>
   </div>
 </div>
-
 <script>
-    // $('#masterlistModal .select2').select2({
-    //     dropdownParent: $('#masterlistModal')
-    // });
 
     const tagifyBasicEl = document.querySelector("#or_recipients");
     const TagifyBasicOr = new Tagify(tagifyBasicEl);
@@ -324,4 +337,72 @@
           }
         });
     });
+
+    $('.is-active').on('click', function () {
+        let id      = $(this).val();
+        let parsed  = JSON.parse(id);
+
+        let status = $(this).is(':checked') ? 1 : 0;
+
+        if (!Array.isArray(parsed)) {
+            let statusText = status ? "Active" : "Inactive";
+            $('#status' + parsed).html(statusText);
+
+            let allChecked = $('.is-active')
+                .not('[value^="["]')
+                .length === $('.is-active:checked')
+                .not('[value^="["]')
+                .length;
+
+            if (allChecked) {
+                $('.is-active[value^="["]').prop('checked', true);
+            } else {
+                $('.is-active[value^="["]').prop('checked', false);
+            }
+        } 
+        else {
+            if (status) {
+                $('.is-active').not('[value^="["]').prop('checked', true).trigger('change');
+                $('.status').html('Active');
+            } else {
+                $('.is-active').not('[value^="["]').prop('checked', false).trigger('change');
+                $('.status').html('Inactive');
+            }
+        }
+
+        $.ajax({
+            url: '/finance/soaMasterStatus_json/',
+            method: 'POST',
+            data: {
+                id: id,
+                status: status
+            },
+            success: function (data) {
+                showToast(data.status, data.message);
+            }
+        });
+    });
+
+
+    
+    function showToast(status, message) {
+      // Create a Notyf instance
+      const notyf = new Notyf({
+        duration: 3000, // 3 seconds (default auto-hide)
+        position: {
+          x: "right", // 'left' or 'right'
+          y: "top", // 'top' or 'bottom'
+        },
+      });
+
+      // Show a success message
+      if (status == "success") {
+        notyf.success(message);
+      }
+      // Show an error message
+      if (status == "failed") {
+        notyf.error(message);
+      }
+    }
+
 </script>

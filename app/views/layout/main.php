@@ -60,6 +60,7 @@
 
 		<script src="/public/vendor/libs/quill/katex.js"></script>
 		<script src="/public/vendor/libs/quill/quill.js"></script>
+		<script src="/public/vendor/libs/notyf/notyf.js"></script>
 		<script src="/public/vendor/libs/highlight/highlight.js"></script>
 		
 	</head>
