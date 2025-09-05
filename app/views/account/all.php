@@ -17,21 +17,21 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_limit" class="form-control select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                <select name="pagination_limit" class="form-control select2 pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
                                     <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-3 col-12 mb-0">
                                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
-                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_department" class="form-control select pagination" data-placeholder="Department">
+                            <div class="mb-6 col-lg-6 col-xl-2 col-12 mb-0">
+                                <select name="pagination_department" class="form-control select2 pagination" data-placeholder="Department">
                                     <option value="all">All</option>
                                     <?php echo tool_dropdown_option($data['account_department'], (getVar('department') ? getVar('department') : 1), 'name'); ?>
                                 </select>
                             </div>
-                            <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
+                            <div class="mb-6 col-lg-6 col-xl-2 col-12 mb-0">
+                                <select name="pagination_status" class="form-control select2 pagination" data-placeholder="Status">
                                     <option value="all">All</option>
                                     <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 0), 'name'); ?>
                                 </select>
@@ -145,14 +145,14 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label" for="multicol-birthdate">Role</label>
-                                        <select name="account_role_id" id="account_role_id" class="form-control select" data-placeholder="Status">
+                                        <select name="account_role_id" id="account_role_id" class="form-control select2" data-placeholder="Status">
                                             <?php echo tool_dropdown_option($data['account_role'], null, 'name'); ?>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label" for="multicol-status">Status</label>
-                                        <select name="account_status_id" id="account_status_id" class="form-control select" data-placeholder="Status">
+                                        <select name="account_status_id" id="account_status_id" class="form-control select2" data-placeholder="Status">
                                             <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
                                         </select>
                                     </div>

@@ -19,7 +19,7 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                <select name="pagination_limit" class="form-select select2 pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
                                     <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
@@ -27,7 +27,7 @@
                                 <input name="pagination_keyword" type="text" class="form-control pd-x-10 pagination" data-parameter="keyword" placeholder="Search..." value="<?php echo getVar('keyword'); ?>">
                             </div>
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_status" class="form-control select pagination" data-placeholder="Status">
+                                <select name="pagination_status" class="form-control select2 pagination" data-placeholder="Status">
                                     <?php echo tool_dropdown_option($data['account_status'], (getVar('status') ? getVar('status') : 1), 'name'); ?>
                                 </select>
                             </div>
@@ -169,7 +169,7 @@
                         <div class="row g-4">
                             <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
                                 <label for="is_active" class="form-label">Status</label>
-                                <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
+                                <select id="is_active" class="form-control select2" name="is_active" data-style="btn-default">
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
