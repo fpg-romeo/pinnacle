@@ -136,10 +136,19 @@
 
 
             // $message = Shortcode::soaCollectionReminderLettertogetherwithSOA(8, '2025-08-31');
-            $message = Shortcode::soaFinalReminderwithNoticeofCancellation(8, '2025-08-31');
+            $message = Shortcode::soaFirstReminderwithNoticeofCancellation(8, '2025-08-31');
 
             Shortcode::soaCollectionReminderLetterGeneration(1, '/upload/soa/', 'view', $message);
 
+        }
+
+        public function soaMasterStatus_json(){
+            $id                  = $_POST['id'];
+            $field['is_active']  = $_POST['status'];
+
+            $result = Finance::updateMasterListStatus($id, $field);
+
+            echo json_encode($result);
         }
 
     }

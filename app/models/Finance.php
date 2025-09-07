@@ -298,5 +298,33 @@ class Finance
         $result = mysql::select('soa_master_list sml INNER JOIN master_intermediaries min ON sml.intermediary_id = min.id', 'sml.id, min.source_name', 'sml.categories IN('.$categories.')', '');
         return $result;
     }
+
+    public static function updateMasterListStatus($id, $field){
+        $id = json_decode($id);
+
+        if(is_array($id)){
+            $id = implode(',', $id);
+            if(mysql::query('UPDATE soa_master_list SET is_active = '.$field['is_active'].' where id IN('.$id.')', 'update')){
+                $result['status']  = 'success';
+                $result['message'] = 'Records Successfully Updated';
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        }
+        else{
+            $fields = mysql::buildFields($field, ", ");
+            if(mysql::update('soa_master_list', $fields, 'id='.$id)){
+                $result['status']  = 'success';
+                $result['message'] = 'Record Successfully Updated';
+            }else{
+                $result['status']  = 'failed';
+                $result['message'] = 'Encounter technical error. Pls try again';
+            }
+        }
+
+        
+        return $result;
+    }
 }
 ?>
