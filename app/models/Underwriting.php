@@ -7,26 +7,26 @@ class Underwriting{
 
     public static function getPolicyById($id)
     {
-        $result = mysql::select('underwriting_policy gpo LEFT JOIN underwriting_batch_declaration gbd on gbd.batch_number = gpo.batch_number',
-                                'gpo.*, gbd.workflow_number, gbd.endorsement_number',
-                                "gpo.id = '{$id}'");
+        $result = mysql::select('underwriting_policy upo',
+                                'upo.*',
+                                "upo.id = '{$id}'");
         return $result;
     }
 
     public static function getPolicyByPolicyId($policy_id)
     {
-        $result = mysql::select('underwriting_policy gpo',
-                                'gpo.*',
-                                "gpo.policy_id = '{$policy_id}'"
+        $result = mysql::select('underwriting_policy upo',
+                                'upo.*',
+                                "upo.policy_no = '{$policy_id}'"
         );
         return $result;
     }
 
     public static function getPolicyByName($name)
     {
-        $result = mysql::select('underwriting_policy gpo',
-                                'gpo.*',
-                                "CONCAT(gpo.first_name, ' ', gpo.last_name, ' ', gpo.middle_name) = '{$name}'"
+        $result = mysql::select('underwriting_policy upo',
+                                'upo.*',
+                                "CONCAT(upo.first_name, ' ', upo.last_name, ' ', upo.middle_name) = '{$name}'"
         );
         return $result;
     }
@@ -35,9 +35,9 @@ class Underwriting{
     {
 
         if(!empty($batch_no)){
-            $filter_batch_number = " AND gpo.batch_number = '{$batch_no}'";
+            $filter_batch_number = " AND upo.batch_number = '{$batch_no}'";
         }else{
-            $filter_batch_number = " AND gpo.batch_number = (SELECT MAX(batch_number) FROM underwriting_batch_declaration) ";
+            $filter_batch_number = " AND upo.batch_number = (SELECT MAX(batch_number) FROM underwriting_batch_declaration) ";
         }
 
         if (!empty(trim($keyword))) {
@@ -45,43 +45,39 @@ class Underwriting{
             $keyword = " '%{$keyword}%' ";
             $filter_keyword  = " AND 
                             (
-                                gpo.first_name LIKE {$keyword}
+                                upo.first_name LIKE {$keyword}
                                 OR
-                                gpo.middle_name LIKE {$keyword}
+                                upo.middle_name LIKE {$keyword}
                                 OR
-                                gpo.last_name LIKE {$keyword}
+                                upo.last_name LIKE {$keyword}
                                 OR
-                                gpo.date_of_birth LIKE {$keyword}
+                                upo.date_of_birth LIKE {$keyword}
                                 OR
-                                gpo.mobile_number LIKE {$keyword}
+                                upo.mobile_number LIKE {$keyword}
                                 OR
-                                gpo.email_address LIKE {$keyword}
+                                upo.email_address LIKE {$keyword}
                                 OR
-                                gpo.date_of_transaction LIKE {$keyword}
+                                upo.date_of_transaction LIKE {$keyword}
                                 OR
-                                gpo.reference_number LIKE {$keyword}
+                                upo.reference_number LIKE {$keyword}
                                 OR
-                                gpo.load_amount LIKE {$keyword}
+                                upo.load_amount LIKE {$keyword}
                                 OR
-                                gpo.load_status LIKE {$keyword}
+                                upo.load_status LIKE {$keyword}
                                 OR
-                                gpo.consent_status LIKE {$keyword}
+                                upo.consent_status LIKE {$keyword}
                                 OR
-                                gpo.policy_id LIKE {$keyword}
+                                upo.policy_id LIKE {$keyword}
                                 OR
-                                gpo.policy_status LIKE {$keyword}
+                                upo.policy_status LIKE {$keyword}
                                 OR
-                                gpo.protect_premium_taxes LIKE {$keyword}
+                                upo.protect_premium_taxes LIKE {$keyword}
                                 OR
-                                gpo.date_insurance_start LIKE {$keyword}
+                                upo.date_insurance_start LIKE {$keyword}
                                 OR
-                                gpo.date_insurance_end LIKE {$keyword}
+                                upo.date_insurance_end LIKE {$keyword}
                                 OR
-                                gpo.batch_number LIKE {$keyword}
-                                OR
-                                gbd.endorsement_number LIKE {$keyword}
-                                OR
-                                gbd.workflow_number LIKE {$keyword}
+                                upo.batch_number LIKE {$keyword}
                             )
                           ";
         } else {
@@ -89,31 +85,28 @@ class Underwriting{
         }
 
         if($query_type == 'main'){
-            $select         = 'gpo.*,
+            $select         = 'upo.*,
                                  (CASE 
                                     WHEN ape.alias = "" OR ape.alias IS NULL
                                         THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
                                     ELSE 
                                         ape.alias
                                     END
-                               ) AS account_name, 
-                               gbd.workflow_number, 
-                               gbd.endorsement_number
+                               ) AS account_name
                               ';
             $startLimit     = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
         }else{
-            $select         = 'COUNT(gpo.id) AS count';
+            $select         = 'COUNT(upo.id) AS count';
             $startLimit     = '';
         }
 
         $result = mysql::select(
-                                'underwriting_policy gpo USE INDEX(batch_number)
+                                'underwriting_policy upo USE INDEX(batch_number)
                                  LEFT JOIN account_personal ape
-                                 ON ape.account_id = gpo.created_by
-                                 LEFT JOIN underwriting_batch_declaration gbd ON gbd.batch_number = gpo.batch_number',
+                                 ON ape.account_id = upo.created_by',
                                  $select,
-                                "gpo.id IS NOT NULL AND (gpo.duplicate IS NULL OR gpo.duplicate = 'No') " . $filter_batch_number . $filter_keyword,
-                                "gpo.id DESC",
+                                "upo.id IS NOT NULL AND (upo.duplicate IS NULL OR upo.duplicate = 'No') " . $filter_batch_number . $filter_keyword,
+                                "upo.id DESC",
             $startLimit
         );
 
@@ -128,43 +121,39 @@ class Underwriting{
             $keyword = " '%{$keyword}%' ";
             $filter_keyword  = " AND 
                             (
-                                gpo.first_name LIKE {$keyword}
+                                upo.first_name LIKE {$keyword}
                                 OR
-                                gpo.middle_name LIKE {$keyword}
+                                upo.middle_name LIKE {$keyword}
                                 OR
-                                gpo.last_name LIKE {$keyword}
+                                upo.last_name LIKE {$keyword}
                                 OR
-                                gpo.date_of_birth LIKE {$keyword}
+                                upo.date_of_birth LIKE {$keyword}
                                 OR
-                                gpo.mobile_number LIKE {$keyword}
+                                upo.mobile_number LIKE {$keyword}
                                 OR
-                                gpo.email_address LIKE {$keyword}
+                                upo.email_address LIKE {$keyword}
                                 OR
-                                gpo.date_of_transaction LIKE {$keyword}
+                                upo.date_of_transaction LIKE {$keyword}
                                 OR
-                                gpo.reference_number LIKE {$keyword}
+                                upo.reference_number LIKE {$keyword}
                                 OR
-                                gpo.load_amount LIKE {$keyword}
+                                upo.load_amount LIKE {$keyword}
                                 OR
-                                gpo.load_status LIKE {$keyword}
+                                upo.load_status LIKE {$keyword}
                                 OR
-                                gpo.consent_status LIKE {$keyword}
+                                upo.consent_status LIKE {$keyword}
                                 OR
-                                gpo.policy_id LIKE {$keyword}
+                                upo.policy_id LIKE {$keyword}
                                 OR
-                                gpo.policy_status LIKE {$keyword}
+                                upo.policy_status LIKE {$keyword}
                                 OR
-                                gpo.protect_premium_taxes LIKE {$keyword}
+                                upo.protect_premium_taxes LIKE {$keyword}
                                 OR
-                                gpo.date_insurance_start LIKE {$keyword}
+                                upo.date_insurance_start LIKE {$keyword}
                                 OR
-                                gpo.date_insurance_end LIKE {$keyword}
+                                upo.date_insurance_end LIKE {$keyword}
                                 OR
-                                gpo.batch_number LIKE {$keyword}
-                                OR
-                                gbd.endorsement_number LIKE {$keyword}
-                                OR
-                                gbd.workflow_number LIKE {$keyword}
+                                upo.batch_number LIKE {$keyword}
                             )
                           ";
         } else {
@@ -172,31 +161,29 @@ class Underwriting{
         }
 
         if($query_type == 'main'){
-            $select         = 'gpo.*,
+            $select         = 'upo.*,
                                  (CASE 
                                     WHEN ape.alias = "" OR ape.alias IS NULL
                                         THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
                                     ELSE 
                                         ape.alias
                                     END
-                               ) AS account_name, 
-                               gbd.workflow_number, 
-                               gbd.endorsement_number
+                               ) AS account_name, ups.id as batch_id
                               ';
             $startLimit     = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
         }else{
-            $select         = 'COUNT(gpo.id) AS count';
+            $select         = 'COUNT(upo.id) AS count';
             $startLimit     = '';
         }
 
         $result = mysql::select(
-                                'underwriting_policy gpo
+                                'underwriting_policy upo
                                  LEFT JOIN account_personal ape
-                                 ON ape.account_id = gpo.created_by
-                                 LEFT JOIN underwriting_batch_declaration gbd ON gbd.batch_number = gpo.batch_number',
+                                 ON ape.account_id = upo.created_by
+                                 LEFT JOIN underwriting_policy_summary ups ON ups.id = upo.policy_summary_id',
                                  $select,
-                                "gpo.id IS NOT NULL AND (gpo.duplicate IS NULL OR gpo.duplicate = 'No') " . $filter_keyword,
-                                "gpo.id DESC",
+                                "upo.id IS NOT NULL AND (ups.duplicate IS NULL OR ups.duplicate = 'No') " . $filter_keyword,
+                                "upo.id DESC",
             $startLimit
         );
 
@@ -261,12 +248,12 @@ class Underwriting{
     }
 
     public static function editPolicyByPolicyId($post){
-        $policy_id = $post['policy_id'];
+        $policy_id = $post['policy_no'];
         $record    = self::getPolicyByPolicyId($policy_id);
 
         if(is_array($record)){   
             $fields = mysql::buildFields($post, ", ");
-            if(mysql::update("underwriting_policy", $fields, "policy_id = '{$policy_id}'")){
+            if(mysql::update("underwriting_policy", $fields, "policy_no = '{$policy_id}'")){
                 $result['status']  = 'success';
                 $result['message'] = 'Record Successfully Updated';
             }else{
@@ -301,9 +288,9 @@ class Underwriting{
     }  
 
     public static function managePolicy($post){
-        $record = self::getPolicyByPolicyId($post['policy_id']);
+        $record = self::getPolicyByPolicyId($post['policy_no']);
 
-        if(is_array($record) && !empty($post['policy_id'])){  
+        if(is_array($record) && !empty($post['policy_no'])){  
             $post['updated_by']   = ACCOUNT_ID;
             $post['updated_when'] = dateTimeStamp();
             $result = self::editPolicyByPolicyId($post);
@@ -316,46 +303,10 @@ class Underwriting{
         return $result;
     }
 
-    /*
-    public static function addPolicy($post)
-    {
-        $record = self::getPolicyByPolicyId($post['policy_id']);
-        if (is_array($record) && $post['policy_id'] != '') {
-            $post['batch_id'] = $record[0]['batch_id'];
-            $fields = mysql::buildFields($post, ", ");
-            if (mysql::update('underwriting_policy', $fields, "policy_id = '{$post['policy_id']}'")) {
-                $result['status']  = 'success';
-                $result['message'] = 'Record Successfully Updated';
-            } else {
-                $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
-            }
-        } else {
-            $fields = mysql::buildFields($post, ", ");
-            if (mysql::insert('underwriting_policy', $fields)) {
-                $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            } else {
-                $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
-            }
-        }
-
-        return $result;
-    }
-    */
-
     public static function addPolicyBulk($post)
     {
         if (mysql::query(
-                    "INSERT INTO underwriting_policy (
-                                            first_name, last_name, middle_name, date_of_birth, mobile_number,
-                                            email_address, date_of_transaction, reference_number, load_amount,
-                                            load_status, consent_status, policy_id, policy_status,
-                                            protect_premium_taxes, date_insurance_start, date_insurance_end, 
-                                            batch_number,created_by, created_when, batch_id
-                                            ) VALUES " . implode(",\n", $post), "insert")) {
+                    "INSERT INTO underwriting_policy (`policy_summary_id`,`policy_no`,`remarks`,`occupancy`,`tariff_code`,`expiring_rate`,`renewal_rate`,`endorsement_no`,`renewal_no`,`ci_no`,`reference_no`,`co_insurance`,`insured_name`,`contact_numbers`,`inception_date`,`expiry_date`,`booking_date`,`branch`,`branch_name`,`channel`,`channel_2`,`channel_3`,`toc`,`cob`,`fob`,`policy_type`,`mo`,`segment`,`segment_desc`,`ourshare`,`gross`,`pctshare`,`facultative`,`fshare`,`total_sum_insured`,`basic_premium`,`dst`,`vat`,`fst`,`lgt`,`total_premium`,`coverage`,`bscode`,`bsname`,`fee`,`discount`,`nofclaim`,`os_claim`,`settled_claim`,`premiumpaid`,`loss_ratio`,`location_of_risk`,`vehicle_unit`,`type_of_body`,`plate_no`,`engine_no`,`chassis_no`,`renewal_premium`,`renewal_tsi`,`renewal_status`,`location_of_risk_2`,`mailing_address`,`lgt_rate_per_branch`,`created_by`,`created_when`) VALUES " . implode(",\n", $post), "insert")) {
             $result['status']  = 'success';
             $result['message'] = 'New Record Saved';
         } else {
@@ -475,163 +426,6 @@ class Underwriting{
         return $result;
     }
 
-    public static function getDeclaration($keyword = '', $start = '', $limit = '')
-    {
-
-        if (!empty(trim($keyword))) {
-
-            $keyword = " '%{$keyword}%' ";
-            $filter  = " AND 
-                            (
-                                gbd.batch_number LIKE {$keyword}
-                                OR
-                                gbd.workflow_number LIKE {$keyword}
-                                OR
-                                gbd.endorsement_number LIKE {$keyword}
-                            )
-                          ";
-        } else {
-            $filter = '';
-        }
-
-        $startLimit = (trim($start) != "" && trim($limit) != "") ? $start . ', ' . $limit : '';
-
-        $result = mysql::select('underwriting_batch_declaration gbd
-                                 LEFT JOIN account_personal ape
-                                 ON gbd.created_by = ape.account_id',
-                                'gbd.*,
-                                 (CASE 
-                                    WHEN ape.alias = "" OR ape.alias IS NULL
-                                        THEN CONCAT(COALESCE(ape.first_name, "")," ",COALESCE(ape.last_name, ""))
-                                    ELSE 
-                                        ape.alias
-                                    END
-                                 ) AS account_name',
-                                "gbd.id IS NOT NULL " . $filter,
-                                "CAST(REGEXP_SUBSTR(gbd.batch_number, '[0-9]+') AS UNSIGNED) DESC",
-                                $startLimit
-        );
-
-        return $result;
-    }
-
-    public static function countDeclaration($keyword = '')
-    {
-        $result = self::getDeclaration($keyword);
-        if (is_array($result)) {
-            return count($result);
-        } else {
-            return 0;
-        }
-    }
-
-    public static function getDeclarationById($id){
-        $result = mysql::select("underwriting_batch_declaration", '*', "id = '{$id}'");       
-        return $result;
-    }
-
-    public static function getDeclarationByBatchNumber($batch_number){
-        $result = mysql::select("underwriting_batch_declaration", '*', "batch_number = '{$batch_number}'");
-        return $result;
-    }
-
-    public static function validateDeclarationByBatchNumber($id, $batch_number){
-        $result = mysql::select("underwriting_batch_declaration", '*', "id != '{$id}' AND batch_number = '{$batch_number}'");
-        return $result;
-    }
-
-    public static function getDeclarationLatestId(){
-        $result = mysql::query(
-                               "
-                                SELECT 
-                                    id
-                                FROM underwriting_batch_declaration USE INDEX(batch_number)
-                                WHERE 
-                                    CAST(REGEXP_SUBSTR(batch_number, '[0-9]+') AS UNSIGNED) = (
-                                    SELECT MAX(CAST(REGEXP_SUBSTR(batch_number, '[0-9]+') AS UNSIGNED))
-                                    FROM underwriting_batch_declaration
-                                    WHERE LOWER(batch_number) LIKE 'batch%'
-                                )
-                                LIMIT 1
-                               "
-                              );       
-        return $result;
-    }
-
-    public static function getDeclarationLatestBatchNo(){
-        $result = mysql::select("underwriting_batch_declaration", 'MAX(CAST(SUBSTRING(batch_number, 7) AS UNSIGNED)) AS batch_number', "batch_number != '' OR batch_number IS NOT NULL");       
-        return $result;
-    }
-
-    public static function addDeclaration($post){
-        $batch_number = $post['batch_number'];
-        $record       = self::getDeclarationByBatchNumber($batch_number);
-
-        if(!is_array($record)){  
-            $fields = mysql::buildFields($post, ", ");
-            if(mysql::insert("underwriting_batch_declaration", $fields)){
-                $result['status']  = 'success';
-                $result['message'] = 'New Record Saved';
-                $result['id']      = mysql::insertedId();
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Encounter technical error. Pls try again';
-            }
-        }else{
-            $result['status']  = 'failed';
-            $result['message'] = 'Record already exist';
-        }
-        return $result;
-    }
-
-    public static function editDeclaration($post){
-        $id           = $post['id'];
-        $batch_number = $post['batch_number'];
-        $record       = self::getDeclarationById($id);
-        $validate     = self::validateDeclarationByBatchNumber($id, $batch_number);
-
-        if(is_array($record)){   
-            if(empty($validate)){
-                $fields = mysql::buildFields($post, ", ");
-                if(mysql::update("underwriting_batch_declaration", $fields, "id = '{$id}'")){
-                    $result['status']  = 'success';
-                    $result['message'] = 'Record Successfully Updated';
-                    $result['id']      = $id;
-                }else{
-                    $result['status']  = 'failed';
-                    $result['message'] = 'Encounter technical error. Pls try again';                
-                }
-            }else{
-                $result['status']  = 'failed';
-                $result['message'] = 'Duplicate Record Found';
-            }
-        }else{
-            $result['status']  = 'failed';
-            $result['message'] = 'No Record Found';
-        }
-        return $result;        
-    }
-
-    public static function deleteDeclaration($id){
-        $record = self::getDeclarationById($id);
-
-        if(is_array($record)){
-            if(mysql::delete("underwriting_batch_declaration", "id = '{$id}'")){
-                $result['status']   = 'success';
-                $result['message']  = 'Record Successfully Deleted';
-                $result['record']   = recastArray($record);
-            }else{
-                $result['status']   = 'failed';
-                $result['message']  = 'Encounter technical error. Pls try again';
-            }
-        }else{
-            $result['status']  = 'failed';
-            $result['message'] = 'No Record Found';
-        }
-
-        return $result;
-    }   
-
     public static function validatePolicy($post){
         $result = mysql::select("underwriting_policy", 
                                 '*', 
@@ -654,23 +448,5 @@ class Underwriting{
                                  date_insurance_end     = '{$post['date_insurance_end']}' AND
                                  batch_number           = '{$post['batch_number']}'");
         return $result;
-    }
-
-    public static function migrateBatchNoFromPolicyGoingToBatchDeclaration(){
-        $result = mysql::query(
-                               "
-                                INSERT INTO underwriting_batch_declaration (batch_number, workflow_number, endorsement_number, created_when)
-                                SELECT 
-                                    gp.batch_number, NULL, NULL, MIN(gp.created_when)
-                                FROM underwriting_policy gp
-                                LEFT JOIN underwriting_batch_declaration gbd
-                                    ON gp.batch_number = gbd.batch_number
-                                WHERE 
-                                    gbd.batch_number IS NULL AND
-                                    gp.batch_number IS NOT NULL AND
-                                    TRIM(gp.batch_number) <> ''
-                                GROUP BY gp.batch_number
-                               "
-                              );
     }
 }

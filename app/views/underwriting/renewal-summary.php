@@ -4,7 +4,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row justify-content-between">
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
-                <h4 class="lh-lg mb-0 fw-bolder">Underwriting <span class="text-primary">[ Renewal ]</span></h4>
+                <h4 class="lh-lg mb-0 fw-bolder">Underwriting <span class="text-primary">[ Renewal Summary ]</span></h4>
             </div>
             <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
                 <a class="btn btn-info text-white import" action="add" data-bs-toggle="modal" data-bs-target="#modal-import">
