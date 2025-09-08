@@ -11,7 +11,7 @@
                     <div class="card-header pb-0">
                         <div class="row">
                             <div class="mb-6 col-lg-6 col-xl-1 col-12 mb-0">
-                                <select name="pagination_limit" class="form-select select pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
+                                <select name="pagination_limit" class="form-select select2 pagination" data-parameter="limit" data-placeholder="Limit" autocomplete="off">
                                     <?php echo tool_dropdown_value(value_pagination_limit(), (getVar('limit') ? getVar('limit') : 10)); ?>
                                 </select>
                             </div>
@@ -143,7 +143,7 @@
                     <div class="row mg-b-20">
                         <label class="col-sm-5 form-control-label">Department<span class="tx-danger">*</span></label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="account_department_id" class="form-control select" data-width="100%" required>
+                            <select name="account_department_id" class="form-control select2" data-width="100%" required>
                                 <?php echo tool_dropdown_option($data['account_department'], '', 'name'); ?>
                             </select>
                         </div>
@@ -151,7 +151,7 @@
                     <div class="row mg-b-20">
                         <label class="col-sm-5 form-control-label">Team</label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="account_team_id" class="form-control select" data-width="100%">
+                            <select name="account_team_id" class="form-control select2" data-width="100%">
                                 <?php echo tool_dropdown_option($data['account_team'], '', 'name'); ?>
                             </select>
                         </div>
@@ -159,7 +159,7 @@
                     <div class="row mg-b-20 account_designation">
                         <label class="col-sm-5 form-control-label">Designation<span class="tx-danger"></span></label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="account_designation_id" class="form-control select" data-width="100%" disabled>
+                            <select name="account_designation_id" class="form-control select2" data-width="100%" disabled>
 
                             </select>
                         </div>
@@ -167,7 +167,7 @@
                     <div class="row mg-b-20">
                         <label class="col-sm-5 form-control-label">Level<span class="tx-danger"></span></label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="account_level_id" class="form-control select" data-width="100%">
+                            <select name="account_level_id" class="form-control select2" data-width="100%">
                                 <?php echo tool_dropdown_option($data['account_level'], '', 'name'); ?>
                             </select>
                         </div>
@@ -175,7 +175,7 @@
                     <div class="row mg-b-20">
                         <label class="col-sm-5 form-control-label">Report To<span class="tx-danger"></span></label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="report_to" class="form-control select" data-width="100%">
+                            <select name="report_to" class="form-control select2" data-width="100%">
                                 <?php echo tool_dropdown_option($data['account_all'], '', 'full_name'); ?>
                             </select>
                         </div>
@@ -183,7 +183,7 @@
                     <div class="row mg-b-20">
                         <label class="col-sm-5 form-control-label">Employment Type</label>
                         <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                            <select name="employment_type_id" class="form-control select" data-width="100%">
+                            <select name="employment_type_id" class="form-control select2" data-width="100%">
                                 <?php echo tool_dropdown_option($data['employment_type'], '', 'name'); ?>
                             </select>
                         </div>
@@ -281,14 +281,14 @@
 
                         <div class="col-md-6">
                             <label class="form-label" for="multicol-birthdate">Role</label>
-                            <select name="account_role_id" id="account_role_id" class="form-control select" data-placeholder="Status">
+                            <select name="account_role_id" id="account_role_id" class="form-control select2" data-placeholder="Status">
                                 <?php echo tool_dropdown_option($data['account_role'], null, 'name'); ?>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label" for="multicol-status">Status</label>
-                            <select name="account_status_id" id="account_status_id" class="form-control select" data-placeholder="Status">
+                            <select name="account_status_id" id="account_status_id" class="form-control select2" data-placeholder="Status">
                                 <?php echo tool_dropdown_option($data['account_status'], null, 'name'); ?>
                             </select>
                         </div>
