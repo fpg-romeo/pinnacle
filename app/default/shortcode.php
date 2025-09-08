@@ -919,27 +919,34 @@
             $column                 = ($master_list['categories'] == '["Direct"]') ? "GROSS_PREMIUM" : "NET_DUE";
             $outstanding_overdue    = array();
 
-            $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
-            foreach ($aging as $age) {
-                foreach ($get_outstanding as $row) {
-                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
-                    $value = $row[$age] ?? 0;
+            // $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
+            $startPoints = range(91, 331, 30);
+            $endPoints = range(120, 360, 30);
 
-                    if ($value != 0) {
-                        $outstanding_overdue[$age][$month] = 
-                            ($outstanding_overdue[$age][$month] ?? 0) + $value;
-                    }
+            for ($i = 0; $i < count($startPoints); $i++) {
+                $key = $startPoints[$i] . ' - ' . $endPoints[$i] . ' Days';
+
+                $filtered = array_filter($get_outstanding ?? [], fn($data) =>
+                    $data['AGING_DAYS'] >= $startPoints[$i] &&
+                    $data['AGING_DAYS'] <= $endPoints[$i]
+                );
+
+                foreach ($filtered as $row) {
+                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                    $outstanding_overdue[$key][$month] =
+                        ($outstanding_overdue[$key][$month] ?? 0) + $row[$column];
                 }
             }
 
-            // pre($outstanding_overdue);
+            $filtered = array_filter($get_outstanding ?? [], fn($data) =>
+                $data['AGING_DAYS'] >= 361
+            );
 
-            // foreach($outstanding_overdue as $key=>$outstanding){
-            //     pre(count($outstanding));
-            //     foreach($outstanding as $month_key=>$permonth){
-            //     }
-            // }
-            // die;
+            foreach ($filtered as $row) {
+                $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                $outstanding_overdue["Above 361 Days"][$month] =
+                    ($outstanding_overdue["Above 361 Days"][$month] ?? 0) + $row[$column];
+            }
 
             $message = '
                     <style>
@@ -1048,17 +1055,32 @@
             $column                 = ($master_list['categories'] == '["Direct"]') ? "GROSS_PREMIUM" : "NET_DUE";
             $outstanding_overdue    = array();
 
-            $aging = ['91_120_DAYS', '121_150_DAYS', '151_180_DAYS', '181_210_DAYS', '211_360_DAYS', 'DAYS_OVER_361']; 
-            foreach ($aging as $age) {
-                foreach ($get_outstanding as $row) {
-                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
-                    $value = $row[$age] ?? 0;
+            $startPoints = range(91, 331, 30);
+            $endPoints = range(120, 360, 30);
 
-                    if ($value != 0) {
-                        $outstanding_overdue[$age][$month] = 
-                            ($outstanding_overdue[$age][$month] ?? 0) + $value;
-                    }
+            for ($i = 0; $i < count($startPoints); $i++) {
+                $key = $startPoints[$i] . ' - ' . $endPoints[$i] . ' Days';
+
+                $filtered = array_filter($get_outstanding ?? [], fn($data) =>
+                    $data['AGING_DAYS'] >= $startPoints[$i] &&
+                    $data['AGING_DAYS'] <= $endPoints[$i]
+                );
+
+                foreach ($filtered as $row) {
+                    $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                    $outstanding_overdue[$key][$month] =
+                        ($outstanding_overdue[$key][$month] ?? 0) + $row[$column];
                 }
+            }
+
+            $filtered = array_filter($get_outstanding ?? [], fn($data) =>
+                $data['AGING_DAYS'] >= 361
+            );
+
+            foreach ($filtered as $row) {
+                $month = date("F Y", strtotime($row['EFFECTIVE_DATE']));
+                $outstanding_overdue["Above 361 Days"][$month] =
+                    ($outstanding_overdue["Above 361 Days"][$month] ?? 0) + $row[$column];
             }
 
             $message = '
