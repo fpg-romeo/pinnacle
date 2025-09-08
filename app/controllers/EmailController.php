@@ -1,7 +1,14 @@
 <?php
 
+require_once('app/library/spreadsheet/autoloader.php');
+require_once('app/models/Soa.php');
+require_once('app/default/database.php');
+            
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;    
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
     class EmailController{
     
@@ -11,17 +18,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
             checkLoggedIn('true');
         }
 
-        public function generateAttachment(){
+        public function generateSoaAttachment(){
          
-            require_once __DIR__ . '/../controllers/MasterController.php';
-            require_once('app/library/spreadsheet/Spreadsheet.php');
-            require_once('app/library/spreadsheet/IOFactory.php');
-            require_once('app/library/spreadsheet/autoloader.php');
-            require_once('app/models/Soa.php');
-            require_once('app/default/database.php');
-            
-
-          
             $cutoffdate = strtoupper(date('F Y', strtotime('last month')));
             $getprocessingdate = date('YmdH');
             
@@ -571,6 +569,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
                 }
             }
         }
-    }
+
+       
+}
    
           

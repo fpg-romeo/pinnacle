@@ -2955,4 +2955,20 @@ function zipFolder($sourceFolder, $zipFilePath) {
     }
 
     return $zip->close();
+
+function styleExcelCell($worksheet, $cell, $alignment){
+
+
+	$worksheet->getStyle($cell)->applyFromArray([
+        'alignment' => [
+            'horizontal' => $alignment,
+        ],
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+                'color' => ['argb' => 'FF000000'],
+            ],
+        ],
+    ]);
+}
 }
