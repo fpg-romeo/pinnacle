@@ -151,5 +151,17 @@
             echo json_encode($result);
         }
 
+        public function soaReminderExcelDownload_json(){
+            $master_list_id = 1;
+            $as_of_date     = "2025-08-31";
+            Shortcode::soaReminderExcel($master_list_id, $as_of_date);
+        }
+
+        public function soaExcelDownload_json(){
+            $master_list_id = 1;
+            $as_of_date     = "2025-08-31";
+            Shortcode::soaExcel($master_list_id, $as_of_date);
+
+        }
     }
 ?>

@@ -22,7 +22,8 @@
                             'finance'           => [
                                                     'soa-dashboard', 'soaMaster', 'soaMaster_json', 'soaEmailTemplate',
                                                     'soaLetter', 'soaLetterManage', 'soaLogsEmail',
-                                                    'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json', 'soaLetterDownload_json', 'soaMasterStatus_json'
+                                                    'importSoaDownload', 'importSoaDownloadJson', 'soaLetter_json', 'soaLetterDownload_json', 'soaMasterStatus_json',
+                                                    'soaReminderExcelDownload_json','soaExcelDownload_json'
                                                    ],
                             'collection'        => [
                                                     'all', 'manage'
@@ -71,7 +72,8 @@
                                                     'manual', 'comingSoon', 'underMaintenance'
                                                     ],
                             'email'             => [
-                                                    'generateAttachment'
+                                                    'generateSoaAttachment',
+                                                    'generateReminder',
                                                    ]
                         );
 

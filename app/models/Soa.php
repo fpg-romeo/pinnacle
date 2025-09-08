@@ -381,10 +381,11 @@ class Soa{
         return $result;
     }
 
-    public static function getDetailed($policyno='',$as_of_date,$fields='',$source_name=''){
+    public static function getDetailed($policyno='',$as_of_date,$fields='',$source_name='',$ageing =''){
         $result = array();
         // For sheets
-        if($source_name != '' and $fields = ''){
+        $ageingsql = "";
+        if($source_name != '' and $fields = '' and $ageing = ''){
             $fields = 'BOOKING_DATE, 
                             INCEPTION_DATE, 
                             EXPIRY_DATE, 
@@ -418,7 +419,12 @@ class Soa{
             $fields = '*';
         }
 
-        $result = mysql::select('soa_monthly_raw_data', $fields, "as_of_date = '{$as_of_date}' and source_name = '{$source_name}' and is_detailed = 1");
+        if($ageing != ''){
+              $fields = '*';
+              $ageingsql = "and AGING_DAYS > 90";
+        }
+
+        $result = mysql::select('soa_monthly_raw_data', $fields, "as_of_date = '{$as_of_date}' and source_name = '{$source_name}' and is_detailed = 1 {$ageingsql}");
         return $result;
     }
 

@@ -326,5 +326,61 @@ class Finance
         
         return $result;
     }
+
+    public static function getReminderByPeriod($period,$source_name){ 
+
+        $result = array();
+        $agingparams = "";
+        
+      
+        switch($period){
+            
+            case "90 - 120":
+                $agingparams = "AGING_DAYS between 90 and 120";
+                 
+                break;
+            case "121 - 150":
+                $agingparams = "AGING_DAYS between 121 and 150";
+                break;
+            case "151 - 180":
+                $agingparams = "AGING_DAYS between 151 and 180";
+                break;
+            case "181 - 210":
+                $agingparams = "AGING_DAYS between 180 and 210";
+                break;
+            case "211 - 240":
+                $agingparams = "AGING_DAYS between 211 and 240";
+                break;
+            case "241 - 270":
+                $agingparams = "AGING_DAYS between 241 and 270";
+                break;
+            case "271 - 300":
+                $agingparams = "AGING_DAYS between 271 and 300";
+                break;
+            case "301 - 300":
+                $agingparams = "AGING_DAYS between 301 and 300";
+                break;
+            case "301 - 330":
+                $agingparams = "AGING_DAYS between 301 and 330";
+                break;
+            case "331 - 360":
+                $agingparams = "AGING_DAYS between 331 and 360";
+                break;    
+            case "361 and above":
+                $agingparams = "AGING_DAYS > 361";
+                break;
+
+        }
+        
+        $result = mysql::query("select SOURCE_NAME, DATE_FORMAT(EFFECTIVE_DATE, '%M %Y') AS Month,sum(net_due) as net_due  from soa_monthly_raw_data where is_processed is null and  
+                                {$agingparams} and source_name = '{$source_name}'
+                                group by SOURCE_NAME, DATE_FORMAT(EFFECTIVE_DATE, '%M %Y') ORDER BY SOURCE_NAME");
+                                    
+        if(is_array($result)){
+           return $result;
+        }else{
+            return false;
+        }    
+    }
 }
 ?>
