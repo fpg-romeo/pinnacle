@@ -6,11 +6,18 @@
       <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
         <h4 class="lh-lg mb-0 fw-bolder">Intermediaries <span class="text-primary">[ List ]</span></h4>
       </div>
-      <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+      <!-- <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
         <button type="button" class="btn btn-primary text-white" action="sync" id="syncBtn">
           <i class="icon-base ti tabler-plus me-2"></i>
           <span class="align-middle">Sync</span>
         </button>
+      </div> -->
+
+      <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0 text-end">
+        <a class="btn btn-primary text-white showModal" action="add" data-bs-toggle="modal" data-bs-target="#intermediaryModal">
+          <i class="icon-base ti tabler-plus me-2"></i>
+          <span class="align-middle">Add Record</span>
+        </a>
       </div>
     </div>
     <div class="row">
@@ -90,64 +97,6 @@
 
               </div>
             <?php } ?>
-
-            <div class="row justify-content-between">
-              <!-- <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
-                <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">
-                  Showing 1 to 10 of 100 entries
-                </div>
-              </div>
-              <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto mt-5">
-                <div class="dt-paging">
-                  <nav aria-label="pagination">
-                    <ul class="pagination">
-                      <li class="dt-paging-button page-item disabled">
-                        <button class="page-link first" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">
-                          <i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>
-                        </button>
-                      </li>
-                      <li class="dt-paging-button page-item disabled">
-                        <button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">
-                          <i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>
-                        </button>
-                      </li>
-                      <li class="dt-paging-button page-item active">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" aria-current="page" data-dt-idx="0">1</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="1">2</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="2">3</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="3">4</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="4">5</button>
-                      </li>
-                      <li class="dt-paging-button page-item disabled">
-                        <button class="page-link ellipsis" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" data-dt-idx="ellipsis" tabindex="-1">…</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="9">10</button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Next" data-dt-idx="next">
-                          <i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>
-                        </button>
-                      </li>
-                      <li class="dt-paging-button page-item">
-                        <button class="page-link last" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Last" data-dt-idx="last">
-                          <i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div> -->
-
             </div>
           </div>
         </div>
@@ -167,26 +116,25 @@
               <div>
                 <input type="hidden" name="idItem" id="idItem">
               </div>
-              <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
+              <div class="col-lg-12 col-md-6 col-xs-12 mb-4">
+                <label for="sourcename" class="form-label">Parent Source Name</label>
+                <select name="parent_source_name" class="form-control select2">
+                  <?php echo tool_dropdown_option($data['active_intermediary'], '', 'source_name'); ?>
+                </select>
+              </div>
+              <div class="col-lg-12 col-md-6 col-xs-12 mb-4">
                 <label for="sourcename" class="form-label">Source Name</label>
-                <input type="text" id="sourcename" name="sourcename" class="form-control">
+                <input type="text" id="sourcename" name="source_name" class="form-control">
               </div>
               <div class="col-lg-12 col-md-6 col-xs-12 mb-4">
                 <label for="address" class="form-label">Address</label>
                 <input type="text" id="address" name="address" class="form-control">
               </div>
-              <div class="col-lg-6 col-md-6 col-xs-12 mb-4">
-                <label for="category" class="form-label">Category</label>
-                <select id="category" class="form-control select2" name="category" data-style="btn-default">
-                  <option value="1">Agent</option>
-                  <option value="0">Broker</option>
-                </select>
-              </div>
             </div>
             <div class="row g-4">
               <div class="col-lg-4 col-md-4 col-xs-12 mb-4">
                 <label for="is_active" class="form-label">Status</label>
-                <select id="is_active" class="form-control" name="is_active" data-style="btn-default">
+                <select id="is_active" class="form-control select2" name="is_active" data-style="btn-default">
                   <option value="1">Active</option>
                   <option value="0">Inactive</option>
                 </select>
@@ -197,7 +145,7 @@
             <input type="hidden" value="" name="action">
             <input type="hidden" value="" name="id">
             <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" action="save" id="saveItem">Save Changes</button>
+            <button type="submit" class="btn btn-primary submit">Save Changes</button>
           </div>
         </div>
       </form>
@@ -221,7 +169,43 @@
     });
   </script>
 
-  <script>
+  
+<script>
+    $('.showModal').click(function(e) {
+
+        e.preventDefault();
+        $('#intermediaryModal').find('form')[0].reset();
+        $('#intermediaryModal').find('input').prop('readonly', false);
+        $('#intermediaryModal').find('select').prop('disabled', false);
+        var action = $(this).attr('action');
+        $('[name="action"]').val(action);
+        $('.submit').css('display', 'block');
+
+        if (action != 'add') {
+            $.ajax({
+                url: '/master/branch_json/',
+                method: 'POST',
+                data: {
+                    id: $(this).data('id')
+                },
+                success: function(data) {
+                    $('[name="id"]').val(data.id);
+                    $('#code').val(data.code);
+                    $('#name').val(data.name);
+                    $('#is_active').val(data.is_active);
+                }
+            });
+
+            if (action == "show") {
+                $('#intermediaryModal').find('input').prop('readonly', true);
+                $('#intermediaryModal').find('select').prop('disabled', true);
+                $('.submit').css('display', 'none');
+            }
+        }
+    });
+</script>
+
+  <!-- <script>
     $(document).ready(function() {
       $('#syncBtn').on('click', function(e) {
         e.preventDefault();
@@ -304,4 +288,4 @@
       });
 
     });
-  </script>
+  </script> -->

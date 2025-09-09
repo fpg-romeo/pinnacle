@@ -545,7 +545,7 @@ class MasterController
 
     public function branch()
     {
-        
+
         // $data['branches']   = Master::getBranch();
         $keyword                    = urldecode(getVar('keyword'));
         $status                     = getVar('status');
@@ -565,10 +565,6 @@ class MasterController
                 $id = $_POST['id'];
                 $update = Master::updateBranch($id, $field);
             }
-            $id = $_POST['id'];
-        pre($id);
-        die;
-
             header('Location: /master/branch');
         }
 
@@ -753,12 +749,32 @@ class MasterController
         $CONFIGURATION = Configuration::general();
 
         // $data['record'] = Master::getIntermediary();
-        $keyword                    = urldecode(getVar('keyword'));
-        $status                     = getVar('status');
-        $data['account_status']     = Master::getMaintenanceStatus();
-        $data['record']             = Master::getallIntermediary($status, $keyword, pagination('start'), pagination('limit')) ?: [];
-        $data['total_record']       = Master::countAllIntermediary($keyword);
-        $data['total_page']         = pagination('total', $data['total_record']);
+        $keyword                        = urldecode(getVar('keyword'));
+        $status                         = getVar('status');
+        $data['account_status']         = Master::getMaintenanceStatus();
+        $data['record']                 = Master::getallIntermediary($status, $keyword, pagination('start'), pagination('limit')) ?: [];
+        $data['total_record']           = Master::countAllIntermediary($keyword);
+        $data['active_intermediary']    = Master::getActiveIntermediary();
+        $data['total_page']             = pagination('total', $data['total_record']);
+
+        if (isset($_POST['action'])) {
+            $field['parent_id']             = postVar('parent_source_name');
+            $field['source_name']           = postVar('source_name');
+            $field['address']               = postVar('address');
+            $field['is_active']             = $_POST['is_active'];
+
+
+            if ($_POST['action'] == 'add') {
+                $field['created_at']          = date('Y-m-d H:i:s');
+                Master::addIntermediary($field);
+            } else if ($_POST['action'] == 'edit') {
+                $id = $_POST['id'];
+                $field['updated_at']          = date('Y-m-d H:i:s');
+                Master::updateIntermediary($id, $field);
+            }
+
+            header('Location: /master/intermediary');
+        }
 
         views('master.intermediary', $data);
     }
@@ -839,6 +855,4 @@ class MasterController
 
         exit;
     }
-
-    
 }
